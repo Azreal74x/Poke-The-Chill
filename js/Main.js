@@ -73,7 +73,7 @@ function DoDamageToEnemies() {
       // We increase the score
       m_GameScore += m_CurrentEnemy.pointValue;
       // We spawn a new enemy
-      setTimeout(SpawnNewEnemy, 2000);
+      setTimeout(SpawnNewEnemies, 2000);
     }
   }
 }
