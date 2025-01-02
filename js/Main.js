@@ -16,27 +16,37 @@ tileImage.onload = function () {
 };
 tileImage.src = "images/bgPattern.png";
 
-
 // Handle keyboard controls
 var keysDown = {};
 
-addEventListener("keydown", function (e) {
-  keysDown[e.keyCode] = true;
-}, false);
+addEventListener(
+  "keydown",
+  function (e) {
+    keysDown[e.keyCode] = true;
+  },
+  false
+);
 
-addEventListener("keyup", function (e) {
-  delete keysDown[e.keyCode];
-}, false);
+addEventListener(
+  "keyup",
+  function (e) {
+    delete keysDown[e.keyCode];
+  },
+  false
+);
 
-
-addEventListener("click", function (e) {
-  // Get the coordinates in which we are clicking
-  var clickX = e.offsetX;
-  var clickY = e.offsetY;
-  // Call our click function
-  Click(clickX, clickY);
-}, false);
-
+canvas.addEventListener(
+  "click",
+  function (event) {
+    var rect = canvas.getBoundingClientRect();
+    var mouseX = event.clientX - rect.left;
+    var mouseY = event.clientY - rect.top;
+    console.log("Mouse click at:", mouseX, mouseY);
+    // Call our click function
+    Click(mouseX, mouseY);
+  },
+  false
+);
 
 function Click(clickX, clickY) {
   //console.log("clickeeed");
@@ -44,27 +54,44 @@ function Click(clickX, clickY) {
   CheckClickOnThisButton(clickX, clickY, m_Button1);
 }
 
-
 function CheckClickOnThisButton(clickX, clickY, thisButton) {
-  if (clickX > thisButton.posX &&
-    clickX < (thisButton.posX + thisButton.width) &&
+  if (
+    clickX > thisButton.posX &&
+    clickX < thisButton.posX + thisButton.width &&
     clickY > thisButton.posY &&
-    clickY < (thisButton.posY + thisButton.height)
+    clickY < thisButton.posY + thisButton.height
   ) {
     thisButton.buttonPressed();
   }
 }
-
-function CheckClickOnEnemies(clickX, clickY) {
-  if (clickX > m_CurrentEnemy.posX &&
-    clickX < (m_CurrentEnemy.posX + m_CurrentEnemy.currentSpriteSheet.width) &&
-    clickY > m_CurrentEnemy.posY &&
-    clickY < (m_CurrentEnemy.posY + m_CurrentEnemy.currentSpriteSheet.height)
+function CheckClickOnEnemies(mouseX, mouseY) {
+  if (
+    m_CurrentEnemy &&
+    m_CurrentEnemy.posX != null &&
+    m_CurrentEnemy.posY != null
   ) {
-    DoDamageToEnemies();
+    console.log("Enemy position:", m_CurrentEnemy.posX, m_CurrentEnemy.posY);
+    console.log(
+      "Enemy dimensions:",
+      m_CurrentEnemy.width,
+      m_CurrentEnemy.height
+    );
+    if (
+      mouseX >= m_CurrentEnemy.posX &&
+      mouseX <= m_CurrentEnemy.posX + m_CurrentEnemy.width &&
+      mouseY >= m_CurrentEnemy.posY &&
+      mouseY <= m_CurrentEnemy.posY + m_CurrentEnemy.height
+    ) {
+      console.log("Enemy clicked!");
+      m_CurrentEnemy.GetDamage();
+      if (m_CurrentEnemy.lifePoints == 0 && !m_CurrentEnemy.pointsAwarded) {
+        m_GameScore += m_CurrentEnemy.pointValue;
+        m_CurrentEnemy.pointsAwarded = true; // Ensure points are awarded only once
+        setTimeout(SpawnNewEnemies, 2000);
+      }
+    }
   }
 }
-
 
 function DoDamageToEnemies() {
   if (!m_CurrentEnemy.enemyIsDead) {
@@ -80,28 +107,45 @@ function DoDamageToEnemies() {
 
 function SpawnNewEnemies() {
   var random = Math.random();
-  if (random < 0.5) { // 50% Chance
-    m_CurrentEnemy = new GreenEnemy(canvas.width / 2, canvas.height / 2, 3, 100, "Green");
-  }
-  else if (random < 0.75) { // 25% Chance
-    m_CurrentEnemy = new BlueEnemy(canvas.width / 2, canvas.height / 2, 3, 100, "Blue");
-  }
-  else if (random < 0.9) { // 15% Chance
-    m_CurrentEnemy = new RedEnemy(canvas.width / 2, canvas.height / 2, 3, 100, "Red");
-  }
-  else { // 10% Chance
-    m_CurrentEnemy = new YellowEnemy(canvas.width / 2, canvas.height / 2, 3, 100, "Yellow");
+  if (random < 0.5) {
+    // 50% Chance
+    m_CurrentEnemy = new EnemyTypes(
+      canvas.width / 2,
+      canvas.height / 2,
+
+      "Green"
+    );
+  } else if (random < 0.75) {
+    // 25% Chance
+    m_CurrentEnemy = new EnemyTypes(
+      canvas.width / 2,
+      canvas.height / 2,
+
+      "Blue"
+    );
+  } else if (random < 0.9) {
+    // 15% Chance
+    m_CurrentEnemy = new EnemyTypes(
+      canvas.width / 2,
+      canvas.height / 2,
+
+      "Red"
+    );
+  } else {
+    // 10% Chance
+    m_CurrentEnemy = new EnemyTypes(
+      canvas.width / 2,
+      canvas.height / 2,
+
+      "Yellow"
+    );
   }
 
   //m_CurrentEnemy = new Enemy(canvas.width / 2, canvas.height / 2, 3, 100, "Blue");
 }
 
-
 // Reset the game when needed
-var reset = function () {
-
-};
-
+var reset = function () {};
 
 // Start function, initialize everything you need here
 var start = function () {
@@ -119,8 +163,7 @@ function AutoClick(dt) {
   if (m_CurrentTimeBetweenAutoClicks > m_TimeBetweenAutoClicks) {
     m_CurrentTimeBetweenAutoClicks = 0;
     DoDamageToEnemies();
-  }
-  else {
+  } else {
     m_CurrentTimeBetweenAutoClicks += dt;
   }
 }
@@ -139,10 +182,9 @@ var render = function () {
   m_Button1.render();
 
   // Finally, we render the UI, an score for example
-  ctx.font = '40px Arial';
-  ctx.fillStyle = 'white';
-  ctx.fillText("Score: " + m_GameScore,
-    30, 60);
+  ctx.font = "40px Arial";
+  ctx.fillStyle = "white";
+  ctx.fillText("Score: " + m_GameScore, 30, 60);
 };
 
 // The main game loop
@@ -161,9 +203,11 @@ var main = function () {
 
 // Cross-browser support for requestAnimationFrame
 var w = window;
-requestAnimationFrame = w.requestAnimationFrame ||
-  w.webkitRequestAnimationFrame || w.msRequestAnimationFrame
-  || w.mozRequestAnimationFrame;
+requestAnimationFrame =
+  w.requestAnimationFrame ||
+  w.webkitRequestAnimationFrame ||
+  w.msRequestAnimationFrame ||
+  w.mozRequestAnimationFrame;
 
 async function initGame() {
   // Wait for all images to be ready
