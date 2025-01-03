@@ -89,19 +89,19 @@ function CheckClickOnEnemies(clickX, clickY) {
 function PayoutReward() {
   //check if its not "teachers (red), simona (blue) or show guy (yellow)"
   if (
-    m_CurrentEnemy.enemyName != "Red" &&
-    m_CurrentEnemy.enemyName != "Blue" &&
-    m_CurrentEnemy.enemyName != "Yellow"
+    m_CurrentEnemy.enemyName != "Teacher" &&
+    m_CurrentEnemy.enemyName != "Moni" &&
+    m_CurrentEnemy.enemyName != "ShowGuy"
   ) {
-    m_CurrencyManager.AddCurrencyAmount("noChill", m_CurrentEnemy.GetReward());
+    m_CurrencyManager.AddCurrencyAmount("noChill", m_CurrentEnemy.GetReward() * scoreMultiplier);
   }
   //check if it is "teacher1 (red)"
-  else if (m_CurrentEnemy.enemyName == "Red") {
-    m_CurrencyManager.AddCurrencyAmount("fGrade", m_CurrentEnemy.GetReward());
+  else if (m_CurrentEnemy.enemyName == "Teacher") {
+    m_CurrencyManager.AddCurrencyAmount("fGrade", m_CurrentEnemy.GetReward() * scoreMultiplier);
   }
   //check if it is "simona (blue)"
-  else if (m_CurrentEnemy.enemyName == "Blue") {
-    m_CurrencyManager.AddCurrencyAmount("moni", m_CurrentEnemy.GetReward());
+  else if (m_CurrentEnemy.enemyName == "Moni") {
+    m_CurrencyManager.AddCurrencyAmount("moni", m_CurrentEnemy.GetReward() * scoreMultiplier);
   }
   //check if it is "showGuy (yellow)"
   else {
@@ -114,11 +114,6 @@ function DoDamageToEnemies(damageScore) {
     m_CurrentEnemy.GetDamage(damageScore);
     if (m_CurrentEnemy.lifePoints <= 0) {
       // We increase the score
-      m_CurrencyManager.AddCurrencyAmount(
-        "noChill",
-        m_CurrentEnemy.GetReward() * scoreMultiplier
-      );
-
       PayoutReward();
 
       // We spawn a new enemy
@@ -174,6 +169,7 @@ var render = function () {
   // Render everything else from back to front
   enemySpawner.render();
   m_Coin.render();
+  m_Explosion.render();
   m_BtnClickUpdate.render();
   m_BtnRarityUpdate.render();
   if (!isAutoClickActive) {
@@ -183,9 +179,7 @@ var render = function () {
   m_CurrencyManager.render();
 
   // Finally, we render the UI, an score for example
-  ctx.font = "40px Arial";
-  ctx.fillStyle = "white";
-  ctx.fillText("Score: " + Math.floor(m_GameScore), 30, 60);
+  ctx.font = "30px Arial";
 };
 
 // The main game loop
@@ -217,6 +211,7 @@ async function initGame() {
 
   // We wait for the explosion to finish loading
   await m_Coin.coinReady;
+  await m_Explosion;
 
   // Let's play this game!
   then = Date.now();
@@ -247,27 +242,28 @@ var autoClickDamageMult = 0.1;
 var m_GameScore = 0;
 var m_CurrentEnemy = null;
 var m_Coin = new Coin(canvas.width / 2, canvas.height / 2);
+var m_Explosion = new Explosion(canvas.width / 2, canvas.height / 2);
 
 var m_TimeBetweenAutoClicks = 5;
 var m_CurrentTimeBetweenAutoClicks = 0;
 var m_BtnClickUpdate = new Button(
-  canvas.width - 80 * 5 - 50,
+  canvas.width - 75 * 5 - 50,
   100,
-  80,
+  75,
   "Upgrade click mult.",
   50
 );
 var m_BtnRarityUpdate = new Button(
-  canvas.width - 80 * 5 - 50,
+  canvas.width - 75 * 5 - 50,
   200,
-  80,
+  75,
   "Upgrade score mult",
   50
 );
 var m_BtnAutoClick = new Button(
-  canvas.width - 80 * 5 - 50,
+  canvas.width - 75 * 5 - 50,
   300,
-  80,
+  75,
   "Auto Click",
   50
 );

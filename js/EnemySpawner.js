@@ -8,13 +8,13 @@ class EnemySpawner {
     let enemyName;
 
     if (random < 0.5) {
-      enemyName = "Green";
+      enemyName = "Default";
     } else if (random < 0.75) {
-      enemyName = "Blue";
+      enemyName = "Moni";
     } else if (random < 0.9) {
-      enemyName = "Red";
+      enemyName = "Teacher";
     } else {
-      enemyName = "Yellow";
+      enemyName = "ShowGuy";
     }
 
     const enemy = new EnemyTypes(
