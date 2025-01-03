@@ -99,8 +99,7 @@ function DoDamageToEnemies(damageScore) {
     m_CurrentEnemy.GetDamage(damageScore);
     if (m_CurrentEnemy.lifePoints <= 0) {
       // We increase the score
-      m_GameScore += m_CurrentEnemy.pointValue * scoreMultiplier;
-      //m_GameScore += m_CurrentEnemy.GetReward();
+      m_CurrencyManager.AddCurrencyAmount("noChill", m_CurrentEnemy.GetReward() * scoreMultiplier);
 
       PayoutReward();
 
@@ -114,19 +113,15 @@ function SpawnNewEnemies() {
   var random = Math.random();
   if (random < 0.5) { // 50% Chance
     m_CurrentEnemy = new GreenEnemy(canvas.width / 2, canvas.height / 2);
-    console.log("Current enemy name:", m_CurrentEnemy.enemyName);
   }
   else if (random < 0.75) { // 25% Chance
     m_CurrentEnemy = new BlueEnemy(canvas.width / 2, canvas.height / 2);
-    console.log("Current enemy name:", m_CurrentEnemy.enemyName);
   }
   else if (random < 0.9) { // 15% Chance
     m_CurrentEnemy = new RedEnemy(canvas.width / 2, canvas.height / 2);
-    console.log("Current enemy name:", m_CurrentEnemy.enemyName);
   }
   else { // 10% Chance
     m_CurrentEnemy = new YellowEnemy(canvas.width / 2, canvas.height / 2);
-    console.log("Current enemy name:", m_CurrentEnemy.enemyName);
   }
 
   //m_CurrentEnemy = new Enemy(canvas.width / 2, canvas.height / 2, 3, 100, "Blue");
@@ -217,12 +212,14 @@ async function initGame() {
   // Wait for all images to be ready
   //await m_Paddle.allImagesLoadedPromise;
   SpawnNewEnemies();
+
   // We wait for the explosion to finish loading
   await m_Explosion.explosionReady;
 
   // Let's play this game!
   then = Date.now();
   start();
+
   main();
 }
 
@@ -252,9 +249,9 @@ var m_Explosion = new Explosion(canvas.width / 2, canvas.height / 2);
 
 var m_TimeBetweenAutoClicks = 5;
 var m_CurrentTimeBetweenAutoClicks = 0;
-var m_BtnClickUpdate = new Button(10, 100, 80, "Upgrade click mult.", 50);
-var m_BtnRarityUpdate = new Button(10,200, 100, "Upgrade score mult", 50);
-var m_BtnAutoClick = new Button(10,320, 80, "Auto Click",50);
+var m_BtnClickUpdate = new Button(canvas.width - (80 * 5) - 50, 100, 80, "Upgrade click mult.", 50);
+var m_BtnRarityUpdate = new Button(canvas.width - (80 * 5) - 50,200, 80, "Upgrade score mult", 50);
+var m_BtnAutoClick = new Button(canvas.width - (80 * 5) - 50,300, 80, "Auto Click",50);
 
 var m_CurrencyManager = new CurrencyManager(10, 200, 0, 0, 0, 10);
 

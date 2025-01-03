@@ -14,13 +14,13 @@ class Button{
 	}
 
 	update(dt){
-		this.canBeBought = m_GameScore >= this.price;
+		this.canBeBought = m_CurrencyManager.getNoChillToken() >= this.price;
 	}
 
 	buttonPressed(){
 		if(this.canBeBought){
 			this.canBeBought = false;
-			m_GameScore -= this.price;
+			m_CurrencyManager.RemoveCurrencyAmount("noChill", this.price);
 			this.price = parseInt(this.price * this.priceMultiplier);
 			// Apply the effect
 		}
