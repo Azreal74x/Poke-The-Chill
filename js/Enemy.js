@@ -126,10 +126,6 @@ class Enemy {
           // ALSO 0, then, the enemy is no longer "ready"
           if (this.lifePoints == 0) {
             this.enemyReady = false;
-            m_Explosion.DoRenderOnce(
-              this.posX + this.currentSpriteSheet.width / 2,
-              this.posY + this.currentSpriteSheet.height / 2
-            );
           }
         }
       } else {

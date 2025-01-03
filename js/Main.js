@@ -69,13 +69,7 @@ function CheckClickOnEnemies(mouseX, mouseY) {
     m_CurrentEnemy &&
     m_CurrentEnemy.posX != null &&
     m_CurrentEnemy.posY != null
-  ) {
-    console.log("Enemy position:", m_CurrentEnemy.posX, m_CurrentEnemy.posY);
-    console.log(
-      "Enemy dimensions:",
-      m_CurrentEnemy.width,
-      m_CurrentEnemy.height
-    );
+  )
     if (
       mouseX >= m_CurrentEnemy.posX &&
       mouseX <= m_CurrentEnemy.posX + m_CurrentEnemy.width &&
@@ -90,7 +84,6 @@ function CheckClickOnEnemies(mouseX, mouseY) {
         setTimeout(SpawnNewEnemies, 2000);
       }
     }
-  }
 }
 
 function DoDamageToEnemies() {
@@ -105,43 +98,10 @@ function DoDamageToEnemies() {
   }
 }
 
+var enemySpawner = new EnemySpawner();
+
 function SpawnNewEnemies() {
-  var random = Math.random();
-  if (random < 0.5) {
-    // 50% Chance
-    m_CurrentEnemy = new EnemyTypes(
-      canvas.width / 2,
-      canvas.height / 2,
-
-      "Green"
-    );
-  } else if (random < 0.75) {
-    // 25% Chance
-    m_CurrentEnemy = new EnemyTypes(
-      canvas.width / 2,
-      canvas.height / 2,
-
-      "Blue"
-    );
-  } else if (random < 0.9) {
-    // 15% Chance
-    m_CurrentEnemy = new EnemyTypes(
-      canvas.width / 2,
-      canvas.height / 2,
-
-      "Red"
-    );
-  } else {
-    // 10% Chance
-    m_CurrentEnemy = new EnemyTypes(
-      canvas.width / 2,
-      canvas.height / 2,
-
-      "Yellow"
-    );
-  }
-
-  //m_CurrentEnemy = new Enemy(canvas.width / 2, canvas.height / 2, 3, 100, "Blue");
+  m_CurrentEnemy = enemySpawner.spawnEnemy();
 }
 
 // Reset the game when needed
@@ -157,6 +117,7 @@ var start = function () {
 var update = function (dt) {
   AutoClick(dt);
   m_Button1.update();
+  enemySpawner.update(dt);
 };
 
 function AutoClick(dt) {
@@ -177,8 +138,8 @@ var render = function () {
   }
 
   // Render everything else from back to front
-  m_CurrentEnemy.render();
-  m_Explosion.render();
+  enemySpawner.render();
+  m_Coin.render();
   m_Button1.render();
 
   // Finally, we render the UI, an score for example
@@ -214,7 +175,7 @@ async function initGame() {
   //await m_Paddle.allImagesLoadedPromise;
   SpawnNewEnemies();
   // We wait for the explosion to finish loading
-  await m_Explosion.explosionReady;
+  await m_Coin.coinReady;
 
   // Let's play this game!
   then = Date.now();
@@ -228,7 +189,7 @@ var then = 0;
 // We initialize the GameObjects and variables
 var m_GameScore = 0;
 var m_CurrentEnemy = null;
-var m_Explosion = new Explosion(canvas.width / 2, canvas.height / 2);
+var m_Coin = new Coin(canvas.width / 2, canvas.height / 2);
 
 var m_TimeBetweenAutoClicks = 5;
 var m_CurrentTimeBetweenAutoClicks = 0;
