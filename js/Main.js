@@ -51,7 +51,9 @@ canvas.addEventListener(
 function Click(clickX, clickY) {
   //console.log("clickeeed");
   CheckClickOnEnemies(clickX, clickY);
-  CheckClickOnThisButton(clickX, clickY, m_Button1);
+  CheckClickOnThisButton(clickX, clickY, m_BtnClickUpdate);
+  CheckClickOnThisButton(clickX, clickY, m_BtnRarityUpdate);
+  CheckClickOnThisButton(clickX, clickY, m_BtnAutoClick);
 }
 
 function CheckClickOnThisButton(clickX, clickY, thisButton) {
@@ -61,37 +63,64 @@ function CheckClickOnThisButton(clickX, clickY, thisButton) {
     clickY > thisButton.posY &&
     clickY < thisButton.posY + thisButton.height
   ) {
+    if (thisButton === m_BtnClickUpdate) {
+      damageScore += damageScoreMultiplier;
+    } else if (thisButton === m_BtnRarityUpdate) {
+      scoreMultiplier += scoreMultUpgrade;
+    } else if (thisButton === m_BtnAutoClick) {
+      isAutoClickActive = true;
+      m_BtnAutoClick = null;
+    }
     thisButton.buttonPressed();
   }
 }
-function CheckClickOnEnemies(mouseX, mouseY) {
+
+function CheckClickOnEnemies(clickX, clickY) {
   if (
-    m_CurrentEnemy &&
-    m_CurrentEnemy.posX != null &&
-    m_CurrentEnemy.posY != null
-  )
-    if (
-      mouseX >= m_CurrentEnemy.posX &&
-      mouseX <= m_CurrentEnemy.posX + m_CurrentEnemy.width &&
-      mouseY >= m_CurrentEnemy.posY &&
-      mouseY <= m_CurrentEnemy.posY + m_CurrentEnemy.height
-    ) {
-      console.log("Enemy clicked!");
-      m_CurrentEnemy.GetDamage();
-      if (m_CurrentEnemy.lifePoints == 0 && !m_CurrentEnemy.pointsAwarded) {
-        m_GameScore += m_CurrentEnemy.pointValue;
-        m_CurrentEnemy.pointsAwarded = true; // Ensure points are awarded only once
-        setTimeout(SpawnNewEnemies, 2000);
-      }
-    }
+    clickX > m_CurrentEnemy.posX &&
+    clickX < m_CurrentEnemy.posX + m_CurrentEnemy.currentSpriteSheet.width &&
+    clickY > m_CurrentEnemy.posY &&
+    clickY < m_CurrentEnemy.posY + m_CurrentEnemy.currentSpriteSheet.height
+  ) {
+    DoDamageToEnemies(damageScore);
+  }
 }
 
-function DoDamageToEnemies() {
+function PayoutReward() {
+  //check if its not "teachers (red), simona (blue) or show guy (yellow)"
+  if (
+    m_CurrentEnemy.enemyName != "Red" &&
+    m_CurrentEnemy.enemyName != "Blue" &&
+    m_CurrentEnemy.enemyName != "Yellow"
+  ) {
+    m_CurrencyManager.AddCurrencyAmount("noChill", m_CurrentEnemy.GetReward());
+  }
+  //check if it is "teacher1 (red)"
+  else if (m_CurrentEnemy.enemyName == "Red") {
+    m_CurrencyManager.AddCurrencyAmount("fGrade", m_CurrentEnemy.GetReward());
+  }
+  //check if it is "simona (blue)"
+  else if (m_CurrentEnemy.enemyName == "Blue") {
+    m_CurrencyManager.AddCurrencyAmount("moni", m_CurrentEnemy.GetReward());
+  }
+  //check if it is "showGuy (yellow)"
+  else {
+    //trigger wheel spinning event here
+  }
+}
+
+function DoDamageToEnemies(damageScore) {
   if (!m_CurrentEnemy.enemyIsDead) {
-    m_CurrentEnemy.GetDamage();
-    if (m_CurrentEnemy.lifePoints == 0) {
+    m_CurrentEnemy.GetDamage(damageScore);
+    if (m_CurrentEnemy.lifePoints <= 0) {
       // We increase the score
-      m_GameScore += m_CurrentEnemy.pointValue;
+      m_CurrencyManager.AddCurrencyAmount(
+        "noChill",
+        m_CurrentEnemy.GetReward() * scoreMultiplier
+      );
+
+      PayoutReward();
+
       // We spawn a new enemy
       setTimeout(SpawnNewEnemies, 2000);
     }
@@ -115,15 +144,20 @@ var start = function () {
 // Actual gameplay, call all functions needed to make you game work
 // Game's logic
 var update = function (dt) {
-  AutoClick(dt);
-  m_Button1.update();
-  enemySpawner.update(dt);
+  if (isAutoClickActive) {
+    AutoClick(dt);
+  }
+  m_BtnClickUpdate.update();
+  m_BtnRarityUpdate.update();
+  if (!isAutoClickActive) {
+    m_BtnAutoClick.update();
+  }
 };
 
 function AutoClick(dt) {
   if (m_CurrentTimeBetweenAutoClicks > m_TimeBetweenAutoClicks) {
     m_CurrentTimeBetweenAutoClicks = 0;
-    DoDamageToEnemies();
+    DoDamageToEnemies(1);
   } else {
     m_CurrentTimeBetweenAutoClicks += dt;
   }
@@ -140,12 +174,18 @@ var render = function () {
   // Render everything else from back to front
   enemySpawner.render();
   m_Coin.render();
-  m_Button1.render();
+  m_BtnClickUpdate.render();
+  m_BtnRarityUpdate.render();
+  if (!isAutoClickActive) {
+    m_BtnAutoClick.render();
+  }
+
+  m_CurrencyManager.render();
 
   // Finally, we render the UI, an score for example
   ctx.font = "40px Arial";
   ctx.fillStyle = "white";
-  ctx.fillText("Score: " + m_GameScore, 30, 60);
+  ctx.fillText("Score: " + Math.floor(m_GameScore), 30, 60);
 };
 
 // The main game loop
@@ -174,17 +214,34 @@ async function initGame() {
   // Wait for all images to be ready
   //await m_Paddle.allImagesLoadedPromise;
   SpawnNewEnemies();
+
   // We wait for the explosion to finish loading
   await m_Coin.coinReady;
 
   // Let's play this game!
   then = Date.now();
   start();
+
   main();
 }
 
 // We initialize the initial time of the game
 var then = 0;
+
+//After upgrading each click will give 0.1 click more
+var damageScore = 1;
+var damageScoreMultiplier = 0.1;
+
+//After upgrading each enemy will give 1.1 more score
+var scoreMultiplier = 1;
+var scoreMultUpgrade = 0.1;
+
+//Check if auto click is active
+var isAutoClickActive = false;
+
+//Auto click damage score
+var autoClickDamage = 1;
+var autoClickDamageMult = 0.1;
 
 // We initialize the GameObjects and variables
 var m_GameScore = 0;
@@ -193,6 +250,28 @@ var m_Coin = new Coin(canvas.width / 2, canvas.height / 2);
 
 var m_TimeBetweenAutoClicks = 5;
 var m_CurrentTimeBetweenAutoClicks = 0;
-var m_Button1 = new Button(10, 100, 70, "This is a button", 100);
+var m_BtnClickUpdate = new Button(
+  canvas.width - 80 * 5 - 50,
+  100,
+  80,
+  "Upgrade click mult.",
+  50
+);
+var m_BtnRarityUpdate = new Button(
+  canvas.width - 80 * 5 - 50,
+  200,
+  80,
+  "Upgrade score mult",
+  50
+);
+var m_BtnAutoClick = new Button(
+  canvas.width - 80 * 5 - 50,
+  300,
+  80,
+  "Auto Click",
+  50
+);
+
+var m_CurrencyManager = new CurrencyManager(10, 200, 0, 0, 0, 10);
 
 initGame();

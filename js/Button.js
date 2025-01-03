@@ -14,18 +14,13 @@ class Button{
 	}
 
 	update(dt){
-		if(m_GameScore >= this.price){
-			this.canBeBought = true;
-		}
-		else{
-			this.canBeBought = false;
-		}
+		this.canBeBought = m_CurrencyManager.getNoChillToken() >= this.price;
 	}
 
 	buttonPressed(){
 		if(this.canBeBought){
 			this.canBeBought = false;
-			m_GameScore -= this.price;
+			m_CurrencyManager.RemoveCurrencyAmount("noChill", this.price);
 			this.price = parseInt(this.price * this.priceMultiplier);
 			// Apply the effect
 		}
@@ -53,7 +48,7 @@ class Button{
 			this.width);
 
 		ctx.fillText(
-			"price: " + this.price + " points",
+			"price: " + this.price + " credits",
 			this.posX + 30,
 			this.posY + 60,
 			this.width);
