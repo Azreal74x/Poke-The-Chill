@@ -16,6 +16,7 @@ tileImage.onload = function () {
 };
 tileImage.src = "images/bgPattern.png";
 
+
 // Handle keyboard controls
 var keysDown = {};
 
@@ -74,6 +75,24 @@ function CheckClickOnEnemies(clickX, clickY) {
   }
 }
 
+function PayoutReward() {
+  //check if its not "teachers (red), simona (blue) or show guy (yellow)"
+  if (m_CurrentEnemy.enemyName != "Red" && m_CurrentEnemy.enemyName != "Blue" && m_CurrentEnemy.enemyName != "Yellow") {
+    m_CurrencyManager.AddCurrencyAmount("noChill", m_CurrentEnemy.GetReward());
+  }
+  //check if it is "teacher1 (red)"
+  else if (m_CurrentEnemy.enemyName == "Red") {
+    m_CurrencyManager.AddCurrencyAmount("fGrade", m_CurrentEnemy.GetReward());
+  }
+  //check if it is "simona (blue)"
+  else if (m_CurrentEnemy.enemyName == "Blue") {
+    m_CurrencyManager.AddCurrencyAmount("moni", m_CurrentEnemy.GetReward());
+  }
+  //check if it is "showGuy (yellow)"
+  else {
+    //trigger wheel spinning event here
+  }
+}
 
 function DoDamageToEnemies(damageScore) {
   if (!m_CurrentEnemy.enemyIsDead) {
@@ -81,6 +100,10 @@ function DoDamageToEnemies(damageScore) {
     if (m_CurrentEnemy.lifePoints <= 0) {
       // We increase the score
       m_GameScore += m_CurrentEnemy.pointValue * scoreMultiplier;
+      //m_GameScore += m_CurrentEnemy.GetReward();
+
+      PayoutReward();
+
       // We spawn a new enemy
       setTimeout(SpawnNewEnemies, 2000);
     }
@@ -90,16 +113,20 @@ function DoDamageToEnemies(damageScore) {
 function SpawnNewEnemies() {
   var random = Math.random();
   if (random < 0.5) { // 50% Chance
-    m_CurrentEnemy = new GreenEnemy(canvas.width / 2, canvas.height / 2, 3, 100, "Green");
+    m_CurrentEnemy = new GreenEnemy(canvas.width / 2, canvas.height / 2);
+    console.log("Current enemy name:", m_CurrentEnemy.enemyName);
   }
   else if (random < 0.75) { // 25% Chance
-    m_CurrentEnemy = new BlueEnemy(canvas.width / 2, canvas.height / 2, 3, 100, "Blue");
+    m_CurrentEnemy = new BlueEnemy(canvas.width / 2, canvas.height / 2);
+    console.log("Current enemy name:", m_CurrentEnemy.enemyName);
   }
   else if (random < 0.9) { // 15% Chance
-    m_CurrentEnemy = new RedEnemy(canvas.width / 2, canvas.height / 2, 3, 100, "Red");
+    m_CurrentEnemy = new RedEnemy(canvas.width / 2, canvas.height / 2);
+    console.log("Current enemy name:", m_CurrentEnemy.enemyName);
   }
   else { // 10% Chance
-    m_CurrentEnemy = new YellowEnemy(canvas.width / 2, canvas.height / 2, 3, 100, "Yellow");
+    m_CurrentEnemy = new YellowEnemy(canvas.width / 2, canvas.height / 2);
+    console.log("Current enemy name:", m_CurrentEnemy.enemyName);
   }
 
   //m_CurrentEnemy = new Enemy(canvas.width / 2, canvas.height / 2, 3, 100, "Blue");
@@ -156,6 +183,8 @@ var render = function () {
   if (!isAutoClickActive) {
     m_BtnAutoClick.render();
   }
+
+  m_CurrencyManager.render();
 
   // Finally, we render the UI, an score for example
   ctx.font = '40px Arial';
@@ -226,5 +255,7 @@ var m_CurrentTimeBetweenAutoClicks = 0;
 var m_BtnClickUpdate = new Button(10, 100, 80, "Upgrade click mult.", 50);
 var m_BtnRarityUpdate = new Button(10,200, 100, "Upgrade score mult", 50);
 var m_BtnAutoClick = new Button(10,320, 80, "Auto Click",50);
+
+var m_CurrencyManager = new CurrencyManager(10, 200, 0, 0, 0, 10);
 
 initGame();

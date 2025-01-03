@@ -1,12 +1,15 @@
 class Enemy {
 
-  constructor(posX, posY, lifePoints, pointValue, enemyName) {
+  constructor(posX, posY, lifePoints, reward, enemyName) {
+
+
     //positions
     this.posX = posX;
     this.posY = posY;
 
     this.lifePoints = lifePoints;
-    this.pointValue = pointValue;
+    this.reward = reward;
+    this.enemyName = enemyName;
 
     //spritesheet
     //image thatg render on each frame
@@ -101,6 +104,11 @@ class Enemy {
   }
 
   GetDamage(damageScore) {
+  GetReward() {
+    return this.reward;
+  }
+
+  GetDamage() {
     if (this.lifePoints > 0 && !this.beingDamaged) {
       this.lifePoints -= damageScore;
       this.beingDamaged = true;

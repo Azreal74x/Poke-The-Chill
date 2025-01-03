@@ -1,8 +1,8 @@
 class YellowEnemy extends Enemy{
 	constructor(posX, posY){
 		var lifePoints = 25;
-		var pointValue = 1000;
+		var reward = 1000;
 		var enemyName = "Yellow";
-		super(posX, posY, lifePoints, pointValue, enemyName);
+		super(posX, posY, lifePoints, reward, enemyName);
 	}
 }
