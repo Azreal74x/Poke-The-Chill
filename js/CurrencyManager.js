@@ -114,4 +114,16 @@ class CurrencyManager {
       });
     }
   }
+
+  getNoChillToken() {
+    return this.noChillAmount;
+  }
+
+  getMoniToken() {
+    return this.moniAmount;
+  }
+
+  getFGradeToken() {
+    return this.fGradeAmount;
+  }
 }
