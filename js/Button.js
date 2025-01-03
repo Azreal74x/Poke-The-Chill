@@ -14,12 +14,7 @@ class Button{
 	}
 
 	update(dt){
-		if(m_GameScore >= this.price){
-			this.canBeBought = true;
-		}
-		else{
-			this.canBeBought = false;
-		}
+		this.canBeBought = m_GameScore >= this.price;
 	}
 
 	buttonPressed(){
@@ -53,7 +48,7 @@ class Button{
 			this.width);
 
 		ctx.fillText(
-			"price: " + this.price + " points",
+			"price: " + this.price + " credits",
 			this.posX + 30,
 			this.posY + 60,
 			this.width);

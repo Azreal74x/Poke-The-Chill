@@ -40,30 +40,30 @@ class Enemy {
       this.height = this.image.height;
 
       this.idleSpriteSheet =
-      {
-        img: this.images[0],
-        frequency: 5,
-        curerentFrame: -1,
-        totalFrames: this.images[0].width / this.images[0].height,
-        x: 0,
-        y: 0,                        //---------------------totalFrames-----------//
-        width: this.images[0].height * this.scale, // Each frame is a square, so width = height * scale
-        height: this.images[0].height * this.scale // Changed
+          {
+            img: this.images[0],
+            frequency: 5,
+            curerentFrame: -1,
+            totalFrames: this.images[0].width / this.images[0].height,
+            x: 0,
+            y: 0,                        //---------------------totalFrames-----------//
+            width: this.images[0].height * this.scale, // Each frame is a square, so width = height * scale
+            height: this.images[0].height * this.scale // Changed
 
-      }
+          }
 
       this.damageSpriteSheet =
-      {
-        img: this.images[1],
-        frequency: 5,
-        curerentFrame: -1,
-        totalFrames: this.images[1].width / this.images[1].height,
-        x: 0,
-        y: 0,                        //---------------------totalFrames-----------//
-        width: this.images[1].height * this.scale, // Each frame is a square, so width = height * scale
-        height: this.images[1].height * this.scale // Changed
+          {
+            img: this.images[1],
+            frequency: 5,
+            curerentFrame: -1,
+            totalFrames: this.images[1].width / this.images[1].height,
+            x: 0,
+            y: 0,                        //---------------------totalFrames-----------//
+            width: this.images[1].height * this.scale, // Each frame is a square, so width = height * scale
+            height: this.images[1].height * this.scale // Changed
 
-      }
+          }
 
       this.enemyReady = true;
     });
@@ -78,7 +78,7 @@ class Enemy {
         //on "images" i insert the each one of thne images of the spritesheets(image)
         this.images.splice(index, 0, image);
         if (index == 0)
-        //if the index was set to 0, it means is the "initial" image
+            //if the index was set to 0, it means is the "initial" image
         {
           this.image = image;
         }
@@ -100,11 +100,11 @@ class Enemy {
 
   }
 
-  GetDamage() {
+  GetDamage(damageScore) {
     if (this.lifePoints > 0 && !this.beingDamaged) {
-      this.lifePoints--;
+      this.lifePoints -= damageScore;
       this.beingDamaged = true;
-      if (this.lifePoints == 0) {
+      if (this.lifePoints <= 0) {
         this.enemyIsDead = true;
       }
     }
@@ -134,10 +134,10 @@ class Enemy {
           }
           // If by the end of the damage animation, the lifepoints are
           // ALSO 0, then, the enemy is no longer "ready"
-          if (this.lifePoints == 0) {
+          if (this.lifePoints <= 0) {
             this.enemyReady = false;
             m_Explosion.DoRenderOnce(this.posX + this.currentSpriteSheet.width / 2,
-              this.posY + this.currentSpriteSheet.height / 2);
+                this.posY + this.currentSpriteSheet.height / 2);
           }
         }
       }
@@ -146,21 +146,21 @@ class Enemy {
       }
 
       ctx.drawImage(
-        // Which spritesheet to render
-        this.currentSpriteSheet.img,
-        // Start point in x
-        this.currentSpriteSheet.img.width / this.currentSpriteSheet.totalFrames * this.currentSpriteSheet.curerentFrame,
-        // Start point in y
-        0,
-        // Final X coordinates relative to the origin
-        this.currentSpriteSheet.img.width / this.currentSpriteSheet.totalFrames,
-        // Final X coordinates relative to the origin
-        this.currentSpriteSheet.img.height,
-        // Now where we draw it 
-        this.posX,
-        this.posY,
-        this.currentSpriteSheet.width,
-        this.currentSpriteSheet.height,
+          // Which spritesheet to render
+          this.currentSpriteSheet.img,
+          // Start point in x
+          this.currentSpriteSheet.img.width / this.currentSpriteSheet.totalFrames * this.currentSpriteSheet.curerentFrame,
+          // Start point in y
+          0,
+          // Final X coordinates relative to the origin
+          this.currentSpriteSheet.img.width / this.currentSpriteSheet.totalFrames,
+          // Final X coordinates relative to the origin
+          this.currentSpriteSheet.img.height,
+          // Now where we draw it
+          this.posX,
+          this.posY,
+          this.currentSpriteSheet.width,
+          this.currentSpriteSheet.height,
       );
     }
   }
