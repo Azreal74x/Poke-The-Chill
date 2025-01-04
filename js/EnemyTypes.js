@@ -1,6 +1,6 @@
 class EnemyTypes extends Enemy {
   constructor(posX, posY, enemyName) {
-    var lifePoints = [3, 5, 8, 10];
+    var lifePoints = [3, 5, 8, 2];
     var rewards = [100, 250, 500, 0];
     var enemyNames = ["Moni", "Default", "Teacher", "ShowGuy"];
     var index = enemyNames.indexOf(enemyName);
