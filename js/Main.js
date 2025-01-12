@@ -44,6 +44,7 @@ canvas.addEventListener(
     console.log("Mouse click at:", mouseX, mouseY);
     // Call our click function
     Click(mouseX, mouseY);
+    m_CoinMinigame.click(mouseX, mouseY);
   },
   false
 );
@@ -114,18 +115,28 @@ function PayoutReward() {
     m_CurrentEnemy.enemyName != "Moni" &&
     m_CurrentEnemy.enemyName != "ShowGuy"
   ) {
-    m_CurrencyManager.AddCurrencyAmount("noChill", m_CurrentEnemy.GetReward() * scoreMultiplier);
+      m_CurrencyManager.AddCurrencyAmount(
+          "noChill",
+          m_CurrentEnemy.GetReward() * scoreMultiplier
+      );
   }
   //check if it is "teacher1 (red)"
   else if (m_CurrentEnemy.enemyName == "Teacher") {
-    m_CurrencyManager.AddCurrencyAmount("fGrade", m_CurrentEnemy.GetReward() * scoreMultiplier);
+    m_CurrencyManager.AddCurrencyAmount(
+      "fGrade",
+      m_CurrentEnemy.GetReward() * scoreMultiplier
+    );
   }
   //check if it is "simona (blue)"
   else if (m_CurrentEnemy.enemyName == "Moni") {
-    m_CurrencyManager.AddCurrencyAmount("moni", m_CurrentEnemy.GetReward() * scoreMultiplier);
+    m_CurrencyManager.AddCurrencyAmount(
+      "moni",
+      m_CurrentEnemy.GetReward() * scoreMultiplier
+    );
   }
   //check if it is "showGuy (yellow)"
   else {
+    m_Wheel.DoRenderOnce();
     //trigger wheel spinning event here
   }
 }
@@ -194,6 +205,7 @@ var render = function () {
   enemySpawner.render();
   m_Coin.render();
   m_Explosion.render();
+  m_Wheel.render();
   m_BtnClickUpdate.render();
   m_BtnScoreUpdate.render();
   if (isAutoClickActive) {
@@ -205,6 +217,9 @@ var render = function () {
   if (m_TierLevel < m_maxTierLevel) {
     m_BtnRarityUpdate.render();
   }
+
+  m_CoinMinigame.render();
+
   m_CurrencyManager.render();
 
   // Finally, we render the UI, an score for example
@@ -274,9 +289,13 @@ var autoClickDamageMult = 0.1;
 var m_CurrentEnemy = null;
 var m_Coin = new Coin(canvas.width / 2, canvas.height / 2);
 var m_Explosion = new Explosion(canvas.width / 2, canvas.height / 2);
+var m_Wheel = new Wheel(canvas.width / 2, canvas.height / 2);
 
 var m_TimeBetweenAutoClicks = 5;
 var m_CurrentTimeBetweenAutoClicks = 0;
+
+var m_CoinMinigame = new CoinMinigame(30); // 30 seconds minigame
+
 var m_BtnClickUpdate = new Button(
   canvas.width - 75 * 5 - 50,
   100,
