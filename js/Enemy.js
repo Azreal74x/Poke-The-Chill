@@ -108,6 +108,7 @@ class Enemy {
   }
 
   GetDamage(damageScore) {
+    console.log(this.enemyName + " get " + damageScore + " damage");
     if (this.lifePoints > 0 && !this.beingDamaged) {
       this.lifePoints -= damageScore;
       this.beingDamaged = true;
