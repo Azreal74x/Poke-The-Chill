@@ -30,7 +30,7 @@ class Button{
 		if(this.canBeBought){
 			ctx.fillStyle = "Yellow";
 		}
-		else{
+		else if (this.canBeBought !== null) {
 			ctx.fillStyle = "Gray";
 		}
 		ctx.fillRect(
@@ -54,6 +54,17 @@ class Button{
 			this.width);
 	}
 
-
+	remove() {
+		// Set the button properties to null to stop updating and rendering it
+		this.posX = null;
+		this.posY = null;
+		this.scale = null;
+		this.width = null;
+		this.height = null;
+		this.price = null;
+		this.priceMultiplier = null;
+		this.canBeBought = null;
+		this.text = null;
+	}
 }
 

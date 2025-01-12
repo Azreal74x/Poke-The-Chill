@@ -53,8 +53,13 @@ function Click(clickX, clickY) {
   //console.log("clickeeed");
   CheckClickOnEnemies(clickX, clickY);
   CheckClickOnThisButton(clickX, clickY, m_BtnClickUpdate);
+  CheckClickOnThisButton(clickX, clickY, m_BtnScoreUpdate);
+  if (!isAutoClickActive) {
+    CheckClickOnThisButton(clickX, clickY, m_BtnAutoClickUnlock);
+  } else {
+    CheckClickOnThisButton(clickX, clickY, m_BtnAutoClickDmgUpgrade);
+  }
   CheckClickOnThisButton(clickX, clickY, m_BtnRarityUpdate);
-  CheckClickOnThisButton(clickX, clickY, m_BtnAutoClick);
 }
 
 function CheckClickOnThisButton(clickX, clickY, thisButton) {
@@ -66,13 +71,28 @@ function CheckClickOnThisButton(clickX, clickY, thisButton) {
   ) {
     if (thisButton === m_BtnClickUpdate) {
       damageScore += damageScoreMultiplier;
-    } else if (thisButton === m_BtnRarityUpdate) {
+    } else if (thisButton === m_BtnScoreUpdate) {
       scoreMultiplier += scoreMultUpgrade;
-    } else if (thisButton === m_BtnAutoClick) {
+    } else if (thisButton === m_BtnAutoClickUnlock) {
       isAutoClickActive = true;
-      m_BtnAutoClick = null;
+      m_BtnAutoClickUnlock.remove();
+      m_BtnAutoClickDmgUpgrade = new Button(
+          canvas.width - 75 * 5 - 50,
+          300,
+          75,
+          "Auto Click Damage",
+          50
+      );
+    } else if (thisButton === m_BtnAutoClickDmgUpgrade) {
+      autoClickDamage += autoClickDamageMult;
+    } else if (thisButton === m_BtnRarityUpdate)  {
+      if (m_TierLevel < m_maxTierLevel) {
+        m_TierLevel++;
+      } else {
+        m_BtnRarityUpdate.remove();
+      }
     }
-
+    console.log(`${thisButton.text} button clicked`);
     thisButton.buttonPressed();
   }
 }
@@ -95,10 +115,10 @@ function PayoutReward() {
     m_CurrentEnemy.enemyName != "Moni" &&
     m_CurrentEnemy.enemyName != "ShowGuy"
   ) {
-    m_CurrencyManager.AddCurrencyAmount(
-      "noChill",
-      m_CurrentEnemy.GetReward() * scoreMultiplier
-    );
+      m_CurrencyManager.AddCurrencyAmount(
+          "noChill",
+          m_CurrentEnemy.GetReward() * scoreMultiplier
+      );
   }
   //check if it is "teacher1 (red)"
   else if (m_CurrentEnemy.enemyName == "Teacher") {
@@ -152,20 +172,22 @@ var start = function () {
 // Game's logic
 var update = function (dt) {
   if (isAutoClickActive) {
+    m_BtnAutoClickDmgUpgrade.update();
     AutoClick(dt);
+  } else {
+    m_BtnAutoClickUnlock.update();
+  }
+  if (m_TierLevel < m_maxTierLevel) {
+    m_BtnRarityUpdate.update();
   }
   m_BtnClickUpdate.update();
-  m_BtnRarityUpdate.update();
-  if (!isAutoClickActive) {
-    m_BtnAutoClick.update();
-  }
-  m_CoinMinigame.update(dt);
+  m_BtnScoreUpdate.update();
 };
 
 function AutoClick(dt) {
   if (m_CurrentTimeBetweenAutoClicks > m_TimeBetweenAutoClicks) {
     m_CurrentTimeBetweenAutoClicks = 0;
-    DoDamageToEnemies(1);
+    DoDamageToEnemies(autoClickDamage);
   } else {
     m_CurrentTimeBetweenAutoClicks += dt;
   }
@@ -185,9 +207,15 @@ var render = function () {
   m_Explosion.render();
   m_Wheel.render();
   m_BtnClickUpdate.render();
-  m_BtnRarityUpdate.render();
-  if (!isAutoClickActive) {
-    m_BtnAutoClick.render();
+  m_BtnScoreUpdate.render();
+  if (isAutoClickActive) {
+    m_BtnAutoClickDmgUpgrade.render();
+  } else {
+    m_BtnAutoClickUnlock.render();
+  }
+
+  if (m_TierLevel < m_maxTierLevel) {
+    m_BtnRarityUpdate.render();
   }
 
   m_CoinMinigame.render();
@@ -236,6 +264,9 @@ async function initGame() {
   main();
 }
 
+var m_TierLevel = 0;
+var m_maxTierLevel = 1
+
 // We initialize the initial time of the game
 var then = 0;
 
@@ -255,7 +286,6 @@ var autoClickDamage = 1;
 var autoClickDamageMult = 0.1;
 
 // We initialize the GameObjects and variables
-var m_GameScore = 0;
 var m_CurrentEnemy = null;
 var m_Coin = new Coin(canvas.width / 2, canvas.height / 2);
 var m_Explosion = new Explosion(canvas.width / 2, canvas.height / 2);
@@ -273,19 +303,27 @@ var m_BtnClickUpdate = new Button(
   "Upgrade click mult.",
   50
 );
-var m_BtnRarityUpdate = new Button(
+var m_BtnScoreUpdate = new Button(
   canvas.width - 75 * 5 - 50,
   200,
   75,
   "Upgrade score mult",
   50
 );
-var m_BtnAutoClick = new Button(
+var m_BtnAutoClickUnlock = new Button(
   canvas.width - 75 * 5 - 50,
   300,
   75,
-  "Auto Click",
+  "Unlock Auto Click",
   50
+);
+var m_BtnAutoClickDmgUpgrade = null;
+var m_BtnRarityUpdate = new Button(
+    canvas.width - 75 * 5 - 50,
+    400,
+    75,
+    "Rarity Update",
+    50
 );
 
 var m_CurrencyManager = new CurrencyManager(10, 200, 0, 0, 0, 10);
