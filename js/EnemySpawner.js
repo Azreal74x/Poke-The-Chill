@@ -9,9 +9,9 @@ class EnemySpawner {
 
     if (random < 0.5) {
       enemyName = "Default";
-    } else if (random < 0.75) {
+    } else if (random < 0.25) {
       enemyName = "Moni";
-    } else if (random < 0.9) {
+    } else if (random < 0.3) {
       enemyName = "Teacher";
     } else {
       enemyName = "ShowGuy";
