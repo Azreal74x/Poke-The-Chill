@@ -18,6 +18,9 @@ class Wheel {
     // Target rotation amount
     this.targetRotation = 0;
 
+    this.holdTimer = 0; //time to hold final position before disappearing
+    this.holdDuration = 2000; //hold time (2 seconds)
+
     //we create a promise with the image we need
     var spritesheetPath = "images/Wheel.png";
     const promise = this.loadImage(spritesheetPath);
@@ -51,70 +54,127 @@ class Wheel {
     });
   }
 
-  reset() {}
+  reset() { }
 
-  start() {}
+  start() { }
 
-  update(dt) {}
+  update(dt) { }
 
   DoRenderOnce() {
     if (this.turnReady && !this.doRender) {
+      // Start a new spin
       this.doRender = true;
       this.posX = (window.innerWidth - this.spriteSheet.width) / 2;
       this.posY = (window.innerHeight - this.spriteSheet.height) / 2;
-      // Set a random target rotation between 20 and 30 parts (each part is 1/10th of a full rotation)
+
+      this.holdTimer = 0; //reset hold timer
+      this.rotationAngle = 0; //reset rotation angle
+      this.totalRotation = 0; //reset total rotation
+
+      // Set a new random target rotation (20 to 30 segments, each segment is 1/10 of a full rotation)
       this.targetRotation =
         (Math.floor(Math.random() * 11) + 20) * ((2 * Math.PI) / 10);
-      this.totalRotation = 0;
     }
   }
 
   render() {
     if (this.turnReady && this.doRender) {
-      // Increase rotation angle
-      const rotationStep = Math.PI / 15; // Rotate by 1 degree
-      this.rotationAngle += rotationStep;
-      this.totalRotation += rotationStep;
+      const remainingRotation = this.targetRotation - this.totalRotation; //calculate remaining rotation
 
-      // Save the current context
-      ctx.save();
+      if (remainingRotation <= Math.PI / 150) { //check if close to target rotation
+        //snap to final rotation
+        this.totalRotation = this.targetRotation;
+        this.rotationAngle = this.targetRotation % (2 * Math.PI);
 
-      // Move to the center of the wheel
-      ctx.translate(
-        this.posX + this.spriteSheet.width / 2,
-        this.posY + this.spriteSheet.height / 2
-      );
+        // Save the current context
+        ctx.save();
 
-      // Rotate the context
-      ctx.rotate(this.rotationAngle);
+        // Move to the center of the wheel
+        ctx.translate(
+          this.posX + this.spriteSheet.width / 2,
+          this.posY + this.spriteSheet.height / 2
+        );
 
-      // Draw the wheel
-      ctx.drawImage(
-        // Spritesheet image
-        this.spriteSheet.img,
-        // Source X in the spritesheet
-        0,
-        // Source Y
-        0,
-        // Source width and height (original frame dimensions)
-        this.spriteSheet.img.width,
-        this.spriteSheet.img.height,
-        // Destination X and Y (adjusted for rotation)
-        -this.spriteSheet.width / 2,
-        -this.spriteSheet.height / 2,
-        // Destination width and height (scaled dimensions)
-        this.spriteSheet.width,
-        this.spriteSheet.height
-      );
+        // Rotate the context
+        ctx.rotate(this.rotationAngle); //rotate to the final angle
 
-      // Restore the context to its original state
-      ctx.restore();
+        // Draw the wheel
+        ctx.drawImage(
+          // Spritesheet image
+          this.spriteSheet.img,
+          // Source X in the spritesheet
+          0,
+          // Source Y
+          0,
+          // Source width and height (original frame dimensions)
+          this.spriteSheet.img.width,
+          this.spriteSheet.img.height,
+          // Destination X and Y (adjusted for rotation)
+          -this.spriteSheet.width / 2,
+          -this.spriteSheet.height / 2,
+          // Destination width and height (scaled dimensions)
+          this.spriteSheet.width,
+          this.spriteSheet.height
+        );
 
-      // Stop rendering after reaching the target rotation
-      if (this.totalRotation >= this.targetRotation) {
-        this.rotationAngle = 0;
-        this.doRender = false;
-        this.determineReward(); // Determine reward based on final position
+        // Restore the context to its original state
+        ctx.restore();
+
+        //start hold timer
+        if (this.holdTimer === 0) {
+          this.holdTimer = Date.now();
+        }
+
+        //check if hold time has passed before stopping
+        if (Date.now() - this.holdTimer >= this.holdDuration) {
+          this.doRender = false;
+          this.determineReward(); // Determine reward based on final position
+        }
+      }
+      else {
+        //easing function for slowing down
+        const rotationStep = Math.max(
+          Math.PI / 150, //min rotation speed
+          (remainingRotation / this.targetRotation) * Math.PI / 15 //scaled speed
+        );
+
+        //increase rotation angle
+        this.rotationAngle += rotationStep;
+        this.totalRotation += rotationStep;
+
+        // Save the current context
+        ctx.save();
+
+        // Move to the center of the wheel
+        ctx.translate(
+          this.posX + this.spriteSheet.width / 2,
+          this.posY + this.spriteSheet.height / 2
+        );
+
+        // Rotate the context
+        ctx.rotate(this.rotationAngle);
+
+        // Draw the wheel
+        ctx.drawImage(
+          // Spritesheet image
+          this.spriteSheet.img,
+          // Source X in the spritesheet
+          0,
+          // Source Y
+          0,
+          // Source width and height (original frame dimensions)
+          this.spriteSheet.img.width,
+          this.spriteSheet.img.height,
+          // Destination X and Y (adjusted for rotation)
+          -this.spriteSheet.width / 2,
+          -this.spriteSheet.height / 2,
+          // Destination width and height (scaled dimensions)
+          this.spriteSheet.width,
+          this.spriteSheet.height
+        );
+
+        // Restore the context to its original state
+        ctx.restore();
       }
     }
   }
