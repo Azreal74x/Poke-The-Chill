@@ -61,7 +61,12 @@ class Coin {
 
   reset() {}
 
-  start() {}
+  start() {
+    //start hold timer
+    if (this.holdTimer === 0) {
+      this.holdTimer = Date.now();
+    }
+  }
 
   update(dt) {}
 
@@ -96,8 +101,9 @@ class Coin {
       ctx.drawImage(
         // Spritesheet image
         this.spriteSheet.img,
-        // Source X in the spritesheet
-        frameWidth * this.spriteSheet.curerentFrame,
+        // Source X in the spritesheet // changed
+        (this.spriteSheet.img.width / this.spriteSheet.totalFrames) *
+          this.spriteSheet.curerentFrame,
         // Source Y
         0,
         // Source width and height (original frame dimensions)

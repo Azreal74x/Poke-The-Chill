@@ -41,7 +41,7 @@ canvas.addEventListener(
     var rect = canvas.getBoundingClientRect();
     var mouseX = event.clientX - rect.left;
     var mouseY = event.clientY - rect.top;
-    console.log("Mouse click at:", mouseX, mouseY);
+    //console.log("Mouse click at:", mouseX, mouseY);
 
     if (m_Shop.isVisible) {
       m_Shop.click(mouseX, mouseY);
@@ -80,30 +80,34 @@ function CheckClickOnThisButton(clickX, clickY, thisButton) {
     if (thisButton === m_BtnShop) {
       m_Shop.show();
     }
-    if (thisButton === m_BtnClickUpdate) {
-      damageScore += damageScoreMultiplier;
-    } else if (thisButton === m_BtnScoreUpdate) {
-      scoreMultiplier += scoreMultUpgrade;
-    } else if (thisButton === m_BtnAutoClickUnlock) {
-      isAutoClickActive = true;
-      m_BtnAutoClickUnlock.remove();
-      m_BtnAutoClickDmgUpgrade = new Button(
-        canvas.width - 75 * 5 - 50,
-        300,
-        75,
-        "Auto Click Damage",
-        50
-      );
-    } else if (thisButton === m_BtnAutoClickDmgUpgrade) {
-      autoClickDamage += autoClickDamageMult;
-    } else if (thisButton === m_BtnRarityUpdate) {
-      if (m_TierLevel < m_maxTierLevel) {
-        m_TierLevel++;
-      } else {
-        m_BtnRarityUpdate.remove();
+
+    if (thisButton.buttonPressed()) {
+      console.log(`${thisButton.text} button clicked`);
+      if (thisButton === m_BtnClickUpdate) {
+        damageScore += damageScoreMultiplier;
+      } else if (thisButton === m_BtnScoreUpdate) {
+        scoreMultiplier += scoreMultUpgrade;
+      } else if (thisButton === m_BtnAutoClickUnlock) {
+        isAutoClickActive = true;
+        m_BtnAutoClickUnlock.remove();
+        m_BtnAutoClickDmgUpgrade = new Button(
+          canvas.width - 75 * 5 - 50,
+          300,
+          75,
+          "Auto Click Damage",
+          50
+        );
+      } else if (thisButton === m_BtnAutoClickDmgUpgrade) {
+        autoClickDamage += autoClickDamageMult;
+      } else if (thisButton === m_BtnRarityUpdate) {
+        if (m_TierLevel < m_maxTierLevel) {
+          m_TierLevel++;
+        } else {
+          m_BtnRarityUpdate.remove();
+        }
       }
     }
-    console.log(`${thisButton.text} button clicked`);
+    //console.log(`${thisButton.text} button clicked`);
     thisButton.buttonPressed();
   }
 }
@@ -120,35 +124,16 @@ function CheckClickOnEnemies(clickX, clickY) {
 }
 
 function PayoutReward() {
-  //check if its not "teachers (red), simona (blue) or show guy (yellow)"
-  if (
-    m_CurrentEnemy.enemyName != "Teacher" &&
-    m_CurrentEnemy.enemyName != "Moni" &&
-    m_CurrentEnemy.enemyName != "ShowGuy"
-  ) {
-    m_CurrencyManager.AddCurrencyAmount(
-      "noChill",
-      m_CurrentEnemy.GetReward() * scoreMultiplier
-    );
-  }
-  //check if it is "teacher1 (red)"
-  else if (m_CurrentEnemy.enemyName == "Teacher") {
-    m_CurrencyManager.AddCurrencyAmount(
-      "fGrade",
-      m_CurrentEnemy.GetReward() * scoreMultiplier
-    );
-  }
-  //check if it is "simona (blue)"
-  else if (m_CurrentEnemy.enemyName == "Moni") {
-    m_CurrencyManager.AddCurrencyAmount(
-      "moni",
-      m_CurrentEnemy.GetReward() * scoreMultiplier
-    );
-  }
-  //check if it is "showGuy (yellow)"
-  else {
+  //check if its the special character for wheel game
+  var currencyReward = m_CurrentEnemy.GetCurrencyReward();
+
+  if (currencyReward === 0) {
     m_Wheel.DoRenderOnce();
-    //trigger wheel spinning event here
+  } else {
+    m_CurrencyManager.AddCurrencyAmount(
+      m_CurrentEnemy.GetCurrencyReward(),
+      m_CurrentEnemy.GetReward() * scoreMultiplier
+    );
   }
 }
 
@@ -222,7 +207,7 @@ var render = function () {
   enemySpawner.render();
   m_Coin.render();
   m_Explosion.render();
-  m_Wheel.render();
+  m_Wheel.render(ctx);
   m_BtnClickUpdate.render();
   m_BtnScoreUpdate.render();
   if (isAutoClickActive) {
@@ -314,12 +299,13 @@ var autoClickDamageMult = 0.1;
 var m_CurrentEnemy = null;
 var m_Coin = new Coin(canvas.width / 2, canvas.height / 2);
 var m_Explosion = new Explosion(canvas.width / 2, canvas.height / 2);
-var m_Wheel = new Wheel(canvas.width / 2, canvas.height / 2);
+// Initialize the wheel
+const m_Wheel = new Wheel(canvas.width / 2, canvas.height / 2);
 
 var m_TimeBetweenAutoClicks = 5;
 var m_CurrentTimeBetweenAutoClicks = 0;
 
-var m_CoinMinigame = new CoinMinigame(30); // 30 seconds minigame
+var m_CoinMinigame = new CoinMinigame(10); // 30 seconds minigame
 
 var m_BtnClickUpdate = new Button(
   canvas.width - 75 * 5 - 50,

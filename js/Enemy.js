@@ -1,11 +1,12 @@
 class Enemy {
-  constructor(posX, posY, lifePoints, reward, enemyName) {
+  constructor(posX, posY, lifePoints, reward, currencyReward, enemyName) {
     //positions
     this.posX = posX;
     this.posY = posY;
 
     this.lifePoints = lifePoints;
     this.reward = reward;
+    this.currencyReward = currencyReward;
     this.enemyName = enemyName;
 
     //spritesheet
@@ -89,6 +90,10 @@ class Enemy {
 
   GetReward() {
     return this.reward;
+  }
+
+  GetCurrencyReward() {
+    return this.currencyReward;
   }
 
   GetDamage(damageScore) {
