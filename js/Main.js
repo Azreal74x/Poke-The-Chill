@@ -113,7 +113,9 @@ function CheckClickOnEnemies(clickX, clickY) {
 
 function PayoutReward() {
   //check if its the special character for wheel game
-  if (m_CurrentEnemy.GetCurrencyReward === 0) {
+  var currencyReward = m_CurrentEnemy.GetCurrencyReward();
+
+  if (currencyReward === 0) {
     m_Wheel.DoRenderOnce();
   } else{
     m_CurrencyManager.AddCurrencyAmount(
