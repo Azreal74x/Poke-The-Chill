@@ -1,8 +1,9 @@
 class Coin {
-  constructor(posX, posY) {
+  constructor(posX, posY, type) {
     // Positions
     this.posX = posX;
     this.posY = posY;
+    this.type = type;
 
     // Spritesheet stuff
     // Image that will get rendered on each frame
@@ -15,7 +16,17 @@ class Coin {
     this.doRender = false;
 
     //we create a promise with the image we need
-    var spritesheetPath = "images/coins.png";
+    let spritesheetPath;
+    if (type === "noChill") {
+      spritesheetPath = "images/noChill_coin.png";
+    } else if (type === "fGrade") {
+      spritesheetPath = "images/fGrade_coin.png";
+    } else if (type === "moni") {
+      spritesheetPath = "images/moni_coin.png";
+    } else {
+      spritesheetPath = "images/coins.png";
+    }
+
     const promise = this.loadImage(spritesheetPath);
     // wait for the promise to be completed
     this.promiseCoinReady = Promise.all([promise]).then(() => {
@@ -55,7 +66,7 @@ class Coin {
   update(dt) {}
 
   DoRenderOnce(posX, posY) {
-    this.posX = posX;
+    this.posX = posX - 400;
     this.posY = posY;
     this.doRender = true;
   }
@@ -77,23 +88,27 @@ class Coin {
         this.currentFrequency++;
       }
 
+      const frameWidth =
+        this.spriteSheet.img.width / this.spriteSheet.totalFrames;
+      const frameHeight = this.spriteSheet.img.height;
+      const scale = 1.5; // Scale factor to make the coin 1.5 times bigger
+
       ctx.drawImage(
         // Spritesheet image
         this.spriteSheet.img,
-        // Source X in the spritesheet // changed
-        (this.spriteSheet.img.width / this.spriteSheet.totalFrames) *
-          this.spriteSheet.curerentFrame,
+        // Source X in the spritesheet
+        frameWidth * this.spriteSheet.curerentFrame,
         // Source Y
         0,
-        // Source width and height (original frame dimensions) changed
-        this.spriteSheet.img.width / this.spriteSheet.totalFrames,
-        this.spriteSheet.img.height,
+        // Source width and height (original frame dimensions)
+        frameWidth,
+        frameHeight,
         // Destination X and Y
         this.posX,
         this.posY,
         // Destination width and height (scaled dimensions)
-        this.spriteSheet.width,
-        this.spriteSheet.height
+        frameWidth * scale,
+        frameHeight * scale
       );
     }
   }

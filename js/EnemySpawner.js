@@ -4,10 +4,7 @@ class EnemySpawner {
   }
 
   spawnEnemy() {
-    var enemyNames = [
-      ["Default"],
-      ["Moni", "Teacher", "ShowGuy"]
-    ];
+    var enemyNames = [["Default"], ["Moni", "Teacher", "ShowGuy"]];
 
     //First gets a random number between 0 and m_TierLevel.
     //Then gets another random number between 0 and length of that tier.
@@ -17,10 +14,10 @@ class EnemySpawner {
     const randomEnemyIndex = Math.floor(Math.random() * tierEnemies.length);
     const enemyName = tierEnemies[randomEnemyIndex];
     const enemy = new EnemyTypes(
-        canvas.width / 2,
-        canvas.height / 2,
-        enemyName,
-        randomTier
+      canvas.width / 2,
+      canvas.height / 2,
+      enemyName,
+      randomTier
     );
     this.enemies.push(enemy);
     return enemy;
@@ -57,6 +54,16 @@ class EnemySpawner {
       coinPosX = Math.max(0, Math.min(canvas.width - m_Coin.width, coinPosX));
       coinPosY = Math.max(0, Math.min(canvas.height - m_Coin.height, coinPosY));
 
+      let coinType;
+      if (this.lastDefeatedEnemy.enemyName === "Teacher") {
+        coinType = "fGrade";
+      } else if (this.lastDefeatedEnemy.enemyName === "Moni") {
+        coinType = "moni";
+      } else {
+        coinType = "noChill";
+      }
+
+      m_Coin = new Coin(coinPosX, coinPosY, coinType);
       m_Coin.DoRenderOnce(coinPosX, coinPosY);
       this.lastDefeatedEnemy = null;
     }

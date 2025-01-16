@@ -1,8 +1,5 @@
 class Enemy {
-
   constructor(posX, posY, lifePoints, reward, enemyName) {
-
-
     //positions
     this.posX = posX;
     this.posY = posY;
@@ -42,35 +39,30 @@ class Enemy {
       this.width = this.image.width;
       this.height = this.image.height;
 
-      this.idleSpriteSheet =
-          {
-            img: this.images[0],
-            frequency: 5,
-            curerentFrame: -1,
-            totalFrames: this.images[0].width / this.images[0].height,
-            x: 0,
-            y: 0,                        //---------------------totalFrames-----------//
-            width: this.images[0].height * this.scale, // Each frame is a square, so width = height * scale
-            height: this.images[0].height * this.scale // Changed
+      this.idleSpriteSheet = {
+        img: this.images[0],
+        frequency: 5,
+        curerentFrame: -1,
+        totalFrames: this.images[0].width / this.images[0].height,
+        x: 0,
+        y: 0, //---------------------totalFrames-----------//
+        width: this.images[0].height * this.scale, // Each frame is a square, so width = height * scale
+        height: this.images[0].height * this.scale, // Changed
+      };
 
-          }
-
-      this.damageSpriteSheet =
-          {
-            img: this.images[1],
-            frequency: 5,
-            curerentFrame: -1,
-            totalFrames: this.images[1].width / this.images[1].height,
-            x: 0,
-            y: 0,                        //---------------------totalFrames-----------//
-            width: this.images[1].height * this.scale, // Each frame is a square, so width = height * scale
-            height: this.images[1].height * this.scale // Changed
-
-          }
+      this.damageSpriteSheet = {
+        img: this.images[1],
+        frequency: 5,
+        curerentFrame: -1,
+        totalFrames: this.images[1].width / this.images[1].height,
+        x: 0,
+        y: 0, //---------------------totalFrames-----------//
+        width: this.images[1].height * this.scale, // Each frame is a square, so width = height * scale
+        height: this.images[1].height * this.scale, // Changed
+      };
 
       this.enemyReady = true;
     });
-
   }
 
   loadImage(src, index) {
@@ -80,28 +72,20 @@ class Enemy {
       image.onload = () => {
         //on "images" i insert the each one of thne images of the spritesheets(image)
         this.images.splice(index, 0, image);
-        if (index == 0)
-            //if the index was set to 0, it means is the "initial" image
-        {
+        if (index == 0) {
+          //if the index was set to 0, it means is the "initial" image
           this.image = image;
         }
         resolve();
-      }
+      };
     });
-
   }
 
-  reset() {
+  reset() {}
 
-  }
+  start() {}
 
-  start() {
-
-  }
-
-  update(dt) {
-
-  }
+  update(dt) {}
 
   GetReward() {
     return this.reward;
@@ -135,7 +119,10 @@ class Enemy {
         // We set the new frame
         this.currentSpriteSheet.curerentFrame++;
         // If we surpass the amount of frames
-        if (this.currentSpriteSheet.curerentFrame >= this.currentSpriteSheet.totalFrames) {
+        if (
+          this.currentSpriteSheet.curerentFrame >=
+          this.currentSpriteSheet.totalFrames
+        ) {
           this.currentSpriteSheet.curerentFrame = 0;
           if (this.beingDamaged) {
             this.beingDamaged = false;
@@ -144,10 +131,29 @@ class Enemy {
           // ALSO 0, then, the enemy is no longer "ready"
           if (this.lifePoints <= 0) {
             this.enemyReady = false;
-            m_Explosion.DoRenderOnce(this.posX + this.currentSpriteSheet.width / 2,
-                this.posY + this.currentSpriteSheet.height / 2);
-            m_Coin.DoRenderOnce(this.posX + this.currentSpriteSheet.width / 2,
-                this.posY + this.currentSpriteSheet.height / 2);
+            m_Explosion.DoRenderOnce(
+              this.posX + this.currentSpriteSheet.width / 2,
+              this.posY + this.currentSpriteSheet.height / 2
+            );
+
+            let coinType;
+            if (this.enemyName === "Teacher") {
+              coinType = "fGrade";
+            } else if (this.enemyName === "Moni") {
+              coinType = "moni";
+            } else {
+              coinType = "noChill";
+            }
+
+            m_Coin = new Coin(
+              this.posX + this.currentSpriteSheet.width / 2,
+              this.posY + this.currentSpriteSheet.height / 2,
+              coinType
+            );
+            m_Coin.DoRenderOnce(
+              this.posX + this.currentSpriteSheet.width / 2,
+              this.posY + this.currentSpriteSheet.height / 2
+            );
           }
         }
       } else {
@@ -155,21 +161,23 @@ class Enemy {
       }
 
       ctx.drawImage(
-          // Which spritesheet to render
-          this.currentSpriteSheet.img,
-          // Start point in x
-          this.currentSpriteSheet.img.width / this.currentSpriteSheet.totalFrames * this.currentSpriteSheet.curerentFrame,
-          // Start point in y
-          0,
-          // Final X coordinates relative to the origin
-          this.currentSpriteSheet.img.width / this.currentSpriteSheet.totalFrames,
-          // Final X coordinates relative to the origin
-          this.currentSpriteSheet.img.height,
-          // Now where we draw it
-          this.posX,
-          this.posY,
-          this.currentSpriteSheet.width,
-          this.currentSpriteSheet.height,
+        // Which spritesheet to render
+        this.currentSpriteSheet.img,
+        // Start point in x
+        (this.currentSpriteSheet.img.width /
+          this.currentSpriteSheet.totalFrames) *
+          this.currentSpriteSheet.curerentFrame,
+        // Start point in y
+        0,
+        // Final X coordinates relative to the origin
+        this.currentSpriteSheet.img.width / this.currentSpriteSheet.totalFrames,
+        // Final X coordinates relative to the origin
+        this.currentSpriteSheet.img.height,
+        // Now where we draw it
+        this.posX,
+        this.posY,
+        this.currentSpriteSheet.width,
+        this.currentSpriteSheet.height
       );
     }
   }

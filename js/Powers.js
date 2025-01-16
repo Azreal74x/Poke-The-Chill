@@ -17,7 +17,7 @@ class Power {
   }
 
   buttonPressed() {
-    if (this.canBeBought) {
+    if (this.canBeBought && !this.isActive) {
       this.canBeBought = false;
       m_CurrencyManager.RemoveCurrencyAmount("moni", this.price);
       this.activatePower();
@@ -50,12 +50,12 @@ class Power {
   }
 
   render() {
-    if (this.canBeBought) {
-      ctx.fillStyle = "Blue";
-    } else if (!this.canBeBought && !this.isActive) {
-      ctx.fillStyle = "Gray";
-    } else if (this.isActive) {
+    if (this.isActive) {
       ctx.fillStyle = "Red";
+    } else if (this.canBeBought) {
+      ctx.fillStyle = "Blue";
+    } else {
+      ctx.fillStyle = "Gray";
     }
 
     ctx.beginPath();

@@ -42,6 +42,11 @@ canvas.addEventListener(
     var mouseX = event.clientX - rect.left;
     var mouseY = event.clientY - rect.top;
     console.log("Mouse click at:", mouseX, mouseY);
+
+    if (m_Shop.isVisible) {
+      m_Shop.click(mouseX, mouseY);
+      return; // Prevent other clicks when the shop is open
+    }
     // Call our click function
     Click(mouseX, mouseY);
     m_CoinMinigame.click(mouseX, mouseY);
@@ -62,6 +67,7 @@ function Click(clickX, clickY) {
   CheckClickOnThisButton(clickX, clickY, m_BtnRarityUpdate);
   CheckClickOnThisButton(clickX, clickY, m_Power1);
   CheckClickOnThisButton(clickX, clickY, m_Power2);
+  CheckClickOnThisButton(clickX, clickY, m_BtnShop);
 }
 
 function CheckClickOnThisButton(clickX, clickY, thisButton) {
@@ -71,6 +77,9 @@ function CheckClickOnThisButton(clickX, clickY, thisButton) {
     clickY > thisButton.posY &&
     clickY < thisButton.posY + thisButton.height
   ) {
+    if (thisButton === m_BtnShop) {
+      m_Shop.show();
+    }
     if (thisButton === m_BtnClickUpdate) {
       damageScore += damageScoreMultiplier;
     } else if (thisButton === m_BtnScoreUpdate) {
@@ -189,6 +198,7 @@ var update = function (dt) {
   // Update power buttons
   m_Power1.update(dt);
   m_Power2.update(dt);
+  m_BtnShop.update();
 };
 
 function AutoClick(dt) {
@@ -232,6 +242,10 @@ var render = function () {
   // Render power buttons
   m_Power1.render();
   m_Power2.render();
+
+  m_BtnShop.render();
+
+  m_Shop.render();
 
   // Finally, we render the UI, an score for example
   ctx.font = "30px Arial";
@@ -353,5 +367,8 @@ var m_Power2 = new Power(
   "Communist Gain (Double Tokens)",
   200
 );
+
+var m_BtnShop = new Button(10, 10, 75, "Shop", 0);
+m_BtnShop.width = m_BtnShop.height;
 
 initGame();
