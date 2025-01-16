@@ -60,6 +60,8 @@ function Click(clickX, clickY) {
     CheckClickOnThisButton(clickX, clickY, m_BtnAutoClickDmgUpgrade);
   }
   CheckClickOnThisButton(clickX, clickY, m_BtnRarityUpdate);
+  CheckClickOnThisButton(clickX, clickY, m_Power1);
+  CheckClickOnThisButton(clickX, clickY, m_Power2);
 }
 
 function CheckClickOnThisButton(clickX, clickY, thisButton) {
@@ -77,15 +79,15 @@ function CheckClickOnThisButton(clickX, clickY, thisButton) {
       isAutoClickActive = true;
       m_BtnAutoClickUnlock.remove();
       m_BtnAutoClickDmgUpgrade = new Button(
-          canvas.width - 75 * 5 - 50,
-          300,
-          75,
-          "Auto Click Damage",
-          50
+        canvas.width - 75 * 5 - 50,
+        300,
+        75,
+        "Auto Click Damage",
+        50
       );
     } else if (thisButton === m_BtnAutoClickDmgUpgrade) {
       autoClickDamage += autoClickDamageMult;
-    } else if (thisButton === m_BtnRarityUpdate)  {
+    } else if (thisButton === m_BtnRarityUpdate) {
       if (m_TierLevel < m_maxTierLevel) {
         m_TierLevel++;
       } else {
@@ -115,10 +117,10 @@ function PayoutReward() {
     m_CurrentEnemy.enemyName != "Moni" &&
     m_CurrentEnemy.enemyName != "ShowGuy"
   ) {
-      m_CurrencyManager.AddCurrencyAmount(
-          "noChill",
-          m_CurrentEnemy.GetReward() * scoreMultiplier
-      );
+    m_CurrencyManager.AddCurrencyAmount(
+      "noChill",
+      m_CurrentEnemy.GetReward() * scoreMultiplier
+    );
   }
   //check if it is "teacher1 (red)"
   else if (m_CurrentEnemy.enemyName == "Teacher") {
@@ -182,6 +184,11 @@ var update = function (dt) {
   }
   m_BtnClickUpdate.update();
   m_BtnScoreUpdate.update();
+  m_CoinMinigame.update(dt);
+
+  // Update power buttons
+  m_Power1.update(dt);
+  m_Power2.update(dt);
 };
 
 function AutoClick(dt) {
@@ -221,6 +228,10 @@ var render = function () {
   m_CoinMinigame.render();
 
   m_CurrencyManager.render();
+
+  // Render power buttons
+  m_Power1.render();
+  m_Power2.render();
 
   // Finally, we render the UI, an score for example
   ctx.font = "30px Arial";
@@ -265,7 +276,7 @@ async function initGame() {
 }
 
 var m_TierLevel = 0;
-var m_maxTierLevel = 1
+var m_maxTierLevel = 1;
 
 // We initialize the initial time of the game
 var then = 0;
@@ -319,13 +330,28 @@ var m_BtnAutoClickUnlock = new Button(
 );
 var m_BtnAutoClickDmgUpgrade = null;
 var m_BtnRarityUpdate = new Button(
-    canvas.width - 75 * 5 - 50,
-    400,
-    75,
-    "Rarity Update",
-    50
+  canvas.width - 75 * 5 - 50,
+  400,
+  75,
+  "Rarity Update",
+  50
 );
 
 var m_CurrencyManager = new CurrencyManager(10, 200, 0, 0, 0, 10);
+
+var m_Power1 = new Power(
+  canvas.width - 75 * 5 - 50,
+  500,
+  50,
+  "Balkan Anger (Double Damage)",
+  100
+);
+var m_Power2 = new Power(
+  canvas.width - 75 * 5 - 50,
+  650,
+  50,
+  "Communist Gain (Double Tokens)",
+  200
+);
 
 initGame();
