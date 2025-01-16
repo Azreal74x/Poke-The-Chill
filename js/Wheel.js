@@ -126,7 +126,7 @@ class Wheel {
     const segment = Math.floor(finalAngle / (Math.PI / 5));
     // Calculate the reward based on the segment and multiply by 100
     const reward = (segment + 1) * 1000; // Rewards are 1000, 2000, ..., 10000
-    m_CurrencyManager.AddCurrencyAmount("noChill", reward);
+    m_CurrencyManager.AddCurrencyAmount(1, reward);
     console.log(`Wheel reward: ${reward} no chill tokens`);
     m_CoinMinigame.start();
   }

@@ -44,30 +44,30 @@ class CurrencyManager {
     });
   }
 
-  AddCurrencyAmount(currencyName, amount) {
-    if (currencyName == "noChill") {
+  AddCurrencyAmount(currency, amount) {
+    if (currency === 1) {
       this.noChillAmount += amount;
     }
-    else if (currencyName == "fGrade") {
+    else if (currency === 2) {
       this.fGradeAmount += amount;
     }
-    else if (currencyName == "moni") {
+    else if (currency === 3) {
       this.moniAmount += amount;
     }
   }
 
-  RemoveCurrencyAmount(currencyName, amount) {
-    if (currencyName == "noChill" && amount <= this.noChillAmount) {
+  RemoveCurrencyAmount(currency, amount) {
+    if (currency === 1 && amount <= this.noChillAmount) {
       this.noChillAmount -= amount;
     }
-    else if (currencyName == "fGrade" && amount <= this.fGradeAmount) {
+    else if (currency === 2 && amount <= this.fGradeAmount) {
       this.fGradeAmount -= amount;
     }
-    else if (currencyName == "moni" && amount <= this.moniAmount) {
+    else if (currency === 3 && amount <= this.moniAmount) {
       this.moniAmount -= amount;
     }
     else {
-      debug.log("could not remove from currency");
+      console.log("could not remove from currency");
     }
   }
 
@@ -99,9 +99,9 @@ class CurrencyManager {
 
         //set correct amounts
         let amount = 0;
-        if (index === 0) amount = this.noChillAmount;
-        if (index === 1) amount = this.fGradeAmount;
-        if (index === 2) amount = this.moniAmount;
+        if (index === 0) amount = Math.floor(this.noChillAmount);
+        if (index === 1) amount = Math.floor(this.fGradeAmount);
+        if (index === 2) amount = Math.floor(this.moniAmount);
 
         //draw text next to imgs
         ctx.font = "50px Arial";

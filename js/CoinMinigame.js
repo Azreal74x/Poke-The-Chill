@@ -88,7 +88,7 @@ class CoinMinigame {
     console.log("CoinMinigame ended");
     this.isActive = false;
     const reward = this.coinsClicked * 100; // Reward 100 currency per coin clicked
-    m_CurrencyManager.AddCurrencyAmount("noChill", reward);
+    m_CurrencyManager.AddCurrencyAmount(1, reward);
     console.log(
       `Minigame ended. Coins clicked: ${this.coinsClicked}, Reward: ${reward} no chill tokens`
     );
