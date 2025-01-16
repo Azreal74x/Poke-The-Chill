@@ -69,27 +69,30 @@ function CheckClickOnThisButton(clickX, clickY, thisButton) {
     clickY > thisButton.posY &&
     clickY < thisButton.posY + thisButton.height
   ) {
-    if (thisButton === m_BtnClickUpdate) {
-      damageScore += damageScoreMultiplier;
-    } else if (thisButton === m_BtnScoreUpdate) {
-      scoreMultiplier += scoreMultUpgrade;
-    } else if (thisButton === m_BtnAutoClickUnlock) {
-      isAutoClickActive = true;
-      m_BtnAutoClickUnlock.remove();
-      m_BtnAutoClickDmgUpgrade = new Button(
-        canvas.width - 75 * 5 - 50,
-        300,
-        75,
-        "Auto Click Damage",
-        50
-      );
-    } else if (thisButton === m_BtnAutoClickDmgUpgrade) {
-      autoClickDamage += autoClickDamageMult;
-    } else if (thisButton === m_BtnRarityUpdate) {
-      if (m_TierLevel < m_maxTierLevel) {
-        m_TierLevel++;
-      } else {
-        m_BtnRarityUpdate.remove();
+    if (thisButton.buttonPressed()) {
+      console.log(`${thisButton.text} button clicked`);
+      if (thisButton === m_BtnClickUpdate) {
+        damageScore += damageScoreMultiplier;
+      } else if (thisButton === m_BtnScoreUpdate) {
+        scoreMultiplier += scoreMultUpgrade;
+      } else if (thisButton === m_BtnAutoClickUnlock) {
+        isAutoClickActive = true;
+        m_BtnAutoClickUnlock.remove();
+        m_BtnAutoClickDmgUpgrade = new Button(
+            canvas.width - 75 * 5 - 50,
+            300,
+            75,
+            "Auto Click Damage",
+            50
+        );
+      } else if (thisButton === m_BtnAutoClickDmgUpgrade) {
+        autoClickDamage += autoClickDamageMult;
+      } else if (thisButton === m_BtnRarityUpdate) {
+        if (m_TierLevel < m_maxTierLevel) {
+          m_TierLevel++;
+        } else {
+          m_BtnRarityUpdate.remove();
+        }
       }
     }
     //console.log(`${thisButton.text} button clicked`);
@@ -109,36 +112,16 @@ function CheckClickOnEnemies(clickX, clickY) {
 }
 
 function PayoutReward() {
-  //check if its not "teachers (red), simona (blue) or show guy (yellow)"
-  if (
-    m_CurrentEnemy.enemyName != "Teacher" &&
-    m_CurrentEnemy.enemyName != "Moni" &&
-    m_CurrentEnemy.enemyName != "ShowGuy"
-  ) {
-    m_CurrencyManager.AddCurrencyAmount(
-      "noChill",
-      m_CurrentEnemy.GetReward() * scoreMultiplier
-    );
+  //check if its the special character for wheel game
+  var currencyReward = m_CurrentEnemy.GetCurrencyReward();
+
+  if (currencyReward === 0) {
     m_Wheel.DoRenderOnce();
-  }
-  //check if it is "teacher1 (red)"
-  else if (m_CurrentEnemy.enemyName == "Teacher") {
+  } else{
     m_CurrencyManager.AddCurrencyAmount(
-      "fGrade",
-      m_CurrentEnemy.GetReward() * scoreMultiplier
+        m_CurrentEnemy.GetCurrencyReward(),
+        m_CurrentEnemy.GetReward() * scoreMultiplier
     );
-  }
-  //check if it is "simona (blue)"
-  else if (m_CurrentEnemy.enemyName == "Moni") {
-    m_CurrencyManager.AddCurrencyAmount(
-      "moni",
-      m_CurrentEnemy.GetReward() * scoreMultiplier
-    );
-  }
-  //check if it is "showGuy (yellow)"
-  else {
-    //m_Wheel.DoRenderOnce();
-    //trigger wheel spinning event here
   }
 }
 

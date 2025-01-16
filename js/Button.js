@@ -18,12 +18,14 @@ class Button{
 	}
 
 	buttonPressed(){
-		if(this.canBeBought){
+		if(this.canBeBought) {
 			this.canBeBought = false;
-			m_CurrencyManager.RemoveCurrencyAmount("noChill", this.price);
+			m_CurrencyManager.RemoveCurrencyAmount(1, this.price);
 			this.price = parseInt(this.price * this.priceMultiplier);
 			// Apply the effect
+			return true;
 		}
+		return false;
 	}
 
 	render(){

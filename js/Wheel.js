@@ -121,7 +121,7 @@ class Wheel {
 
   determineReward(reward) {
     // Add currency based on reward
-    m_CurrencyManager.AddCurrencyAmount("noChill", reward);
+    m_CurrencyManager.AddCurrencyAmount(1, reward);
 
     if (!m_CoinMinigame.isActive) {
       m_CoinMinigame.start();
