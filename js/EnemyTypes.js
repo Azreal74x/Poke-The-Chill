@@ -25,13 +25,13 @@ class EnemyTypes extends Enemy {
     if (index === -1) {
       throw new Error("Invalid enemy name");
     }
-    console.log("Enemy index:", index);
+    //console.log("Enemy index:", index);
     super(posX, posY, EnemyTypes.lifePoints[tierLevel][index], EnemyTypes.rewards[tierLevel][index], EnemyTypes.currencyRewards[tierLevel][index], enemyName);
-    console.log(
+    /*console.log(
       "Enemy created with lifePoints:",
         EnemyTypes.lifePoints[tierLevel][index],
       "and rewards:",
         EnemyTypes.rewards[tierLevel][index]
-    );
+    );*/
   }
 }

@@ -1,133 +1,132 @@
 class Wheel {
   constructor(posX, posY) {
-    // Positions
     this.posX = posX;
     this.posY = posY;
+    this.rewards = [
+      "50", "750", "5000", "7", "3000",
+      "1000", "250", "500", "10000",
+    ];
+    this.colors = [
+      "#B8D430", "#3AB745", "#029990", "#3501CB", "#2E2C75",
+      "#673A7E", "#CC0071", "#F80120", "#F35B20",
+    ];
+    this.startAngle = 0;
+    this.arc = (2 * Math.PI) / this.rewards.length;
+    this.spinTimeout = null;
+    this.spinAngleStart = 0;
+    this.spinTime = 0;
+    this.spinTimeTotal = 0;
+    this.isVisible = false; // Determines if the wheel is visible
 
-    // Spritesheet stuff
-    // Image that will get rendered on each frame
-    this.image = null;
-    // Var to control when we turn
-    this.turnReady = false;
-    // If true we play the animation;
-    this.doRender = false;
-    // Rotation angle
-    this.rotationAngle = 0;
-    // Total rotation amount
-    this.totalRotation = 0;
-    // Target rotation amount
-    this.targetRotation = 0;
-
-    //we create a promise with the image we need
-    var spritesheetPath = "images/Wheel.png";
-    const promise = this.loadImage(spritesheetPath);
-    // wait for the promise to be completed
-    this.promiseTurnReady = Promise.all([promise]).then(() => {
-      this.scale = 1; // Adjusted scale to fit the screen
-      this.width = this.image.width / 10; // 10 pieces
-      this.height = this.image.height;
-
-      // Calculate the size of the square
-      const squareSize = window.innerHeight;
-
-      this.spriteSheet = {
-        img: this.image,
-        totalFrames: 10, // 10 pieces
-        width: squareSize, // Each frame is a piece, so width = square size
-        height: squareSize, // Changed to square size
-      };
-      this.turnReady = true;
-    });
+    // Temporary canvas for drawing the wheel
+    this.canvas = document.createElement("canvas");
+    this.canvas.width = 500;
+    this.canvas.height = 500;
+    this.ctx = this.canvas.getContext("2d");
   }
 
-  loadImage(src) {
-    const image = new Image();
-    image.src = src;
-    return new Promise((resolve) => {
-      image.onload = () => {
-        this.image = image;
-        resolve();
-      };
-    });
+  drawRouletteWheel() {
+    const ctx = this.ctx;
+    const outsideRadius = 200;
+    const textRadius = 160;
+    const insideRadius = 125;
+
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    for (let i = 0; i < this.rewards.length; i++) {
+      const angle = this.startAngle + i * this.arc;
+      ctx.fillStyle = this.colors[i % this.colors.length];
+
+      ctx.beginPath();
+      ctx.arc(250, 250, outsideRadius, angle, angle + this.arc, false);
+      ctx.arc(250, 250, insideRadius, angle + this.arc, angle, true);
+      ctx.fill();
+
+      // Add reward text
+      ctx.save();
+      ctx.fillStyle = "black";
+      ctx.font = "bold 14px Helvetica, Arial";
+      ctx.translate(
+        250 + Math.cos(angle + this.arc / 2) * textRadius,
+        250 + Math.sin(angle + this.arc / 2) * textRadius
+      );
+      ctx.rotate(angle + this.arc / 2 + Math.PI / 2);
+      const text = this.rewards[i];
+      ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
+      ctx.restore();
+    }
+
+    // Draw pointer
+    ctx.fillStyle = "black";
+    ctx.beginPath();
+    ctx.moveTo(250 - 4, 250 - (outsideRadius + 5));
+    ctx.lineTo(250 + 4, 250 - (outsideRadius + 5));
+    ctx.lineTo(250 + 4, 250 - (outsideRadius - 5));
+    ctx.lineTo(250 + 9, 250 - (outsideRadius - 5));
+    ctx.lineTo(250 + 0, 250 - (outsideRadius - 13));
+    ctx.lineTo(250 - 9, 250 - (outsideRadius - 5));
+    ctx.lineTo(250 - 4, 250 - (outsideRadius - 5));
+    ctx.lineTo(250 - 4, 250 - (outsideRadius + 5));
+    ctx.fill();
   }
 
-  reset() {}
+  spin() {
+    this.spinAngleStart = Math.random() * 10 + 10;
+    this.spinTime = 0;
+    this.spinTimeTotal = Math.random() * 3 + 4 * 1000;
+    this.isVisible = true; // Make the wheel visible
+    this.rotateWheel();
+  }
 
-  start() {}
+  rotateWheel() {
+    this.spinTime += 30;
+    if (this.spinTime >= this.spinTimeTotal) {
+      this.stopRotateWheel();
+      return;
+    }
+    const spinAngle =
+      this.spinAngleStart - this.easeOut(this.spinTime, 0, this.spinAngleStart, this.spinTimeTotal);
+    this.startAngle += (spinAngle * Math.PI) / 180;
+    this.drawRouletteWheel();
+    this.spinTimeout = setTimeout(() => this.rotateWheel(), 30);
+  }
 
-  update(dt) {}
+  stopRotateWheel() {
+    clearTimeout(this.spinTimeout);
+    const degrees = (this.startAngle * 180) / Math.PI + 90;
+    const arcd = (this.arc * 180) / Math.PI;
+    const index = Math.floor((360 - (degrees % 360)) / arcd);
+    const reward = this.rewards[index];
+    console.log("Landed on reward:", reward);
+    this.determineReward(parseInt(reward, 10)); // Call determineReward with the selected reward
+    this.isVisible = false; // Hide the wheel after it stops spinning
+  }
+
+  easeOut(t, b, c, d) {
+    const ts = (t /= d) * t;
+    const tc = ts * t;
+    return b + c * (tc + -3 * ts + 3 * t);
+  }
 
   DoRenderOnce() {
-    if (this.turnReady && !this.doRender) {
-      this.doRender = true;
-      this.posX = (window.innerWidth - this.spriteSheet.width) / 2;
-      this.posY = (window.innerHeight - this.spriteSheet.height) / 2;
-      // Set a random target rotation between 20 and 30 parts (each part is 1/10th of a full rotation)
-      this.targetRotation =
-        (Math.floor(Math.random() * 11) + 20) * ((2 * Math.PI) / 10);
-      this.totalRotation = 0;
+    this.spin();
+  }
+
+  render(ctx) {
+    // Render the wheel only if it is visible
+    if (this.isVisible) {
+      ctx.drawImage(this.canvas, this.posX - 250, this.posY - 250);
     }
   }
 
-  render() {
-    if (this.turnReady && this.doRender) {
-      // Increase rotation angle
-      const rotationStep = Math.PI / 15; // Rotate by 1 degree
-      this.rotationAngle += rotationStep;
-      this.totalRotation += rotationStep;
-
-      // Save the current context
-      ctx.save();
-
-      // Move to the center of the wheel
-      ctx.translate(
-        this.posX + this.spriteSheet.width / 2,
-        this.posY + this.spriteSheet.height / 2
-      );
-
-      // Rotate the context
-      ctx.rotate(this.rotationAngle);
-
-      // Draw the wheel
-      ctx.drawImage(
-        // Spritesheet image
-        this.spriteSheet.img,
-        // Source X in the spritesheet
-        0,
-        // Source Y
-        0,
-        // Source width and height (original frame dimensions)
-        this.spriteSheet.img.width,
-        this.spriteSheet.img.height,
-        // Destination X and Y (adjusted for rotation)
-        -this.spriteSheet.width / 2,
-        -this.spriteSheet.height / 2,
-        // Destination width and height (scaled dimensions)
-        this.spriteSheet.width,
-        this.spriteSheet.height
-      );
-
-      // Restore the context to its original state
-      ctx.restore();
-
-      // Stop rendering after reaching the target rotation
-      if (this.totalRotation >= this.targetRotation) {
-        this.rotationAngle = 0;
-        this.doRender = false;
-        this.determineReward(); // Determine reward based on final position
-      }
-    }
-  }
-
-  determineReward() {
-    // Calculate the final angle
-    const finalAngle = this.totalRotation % (2 * Math.PI);
-    // Determine the segment (each segment is 36 degrees or PI/5 radians)
-    const segment = Math.floor(finalAngle / (Math.PI / 5));
-    // Calculate the reward based on the segment and multiply by 100
-    const reward = (segment + 1) * 1000; // Rewards are 1000, 2000, ..., 10000
+  determineReward(reward) {
+    // Add currency based on reward
     m_CurrencyManager.AddCurrencyAmount(1, reward);
-    console.log(`Wheel reward: ${reward} no chill tokens`);
-    m_CoinMinigame.start();
+
+    if (!m_CoinMinigame.isActive) {
+      m_CoinMinigame.start();
+    }
+
+    console.log("Reward determined:", reward);
   }
 }
