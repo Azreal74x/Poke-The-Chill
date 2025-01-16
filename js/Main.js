@@ -41,7 +41,7 @@ canvas.addEventListener(
     var rect = canvas.getBoundingClientRect();
     var mouseX = event.clientX - rect.left;
     var mouseY = event.clientY - rect.top;
-    console.log("Mouse click at:", mouseX, mouseY);
+    //console.log("Mouse click at:", mouseX, mouseY);
     // Call our click function
     Click(mouseX, mouseY);
     m_CoinMinigame.click(mouseX, mouseY);
@@ -77,22 +77,22 @@ function CheckClickOnThisButton(clickX, clickY, thisButton) {
       isAutoClickActive = true;
       m_BtnAutoClickUnlock.remove();
       m_BtnAutoClickDmgUpgrade = new Button(
-          canvas.width - 75 * 5 - 50,
-          300,
-          75,
-          "Auto Click Damage",
-          50
+        canvas.width - 75 * 5 - 50,
+        300,
+        75,
+        "Auto Click Damage",
+        50
       );
     } else if (thisButton === m_BtnAutoClickDmgUpgrade) {
       autoClickDamage += autoClickDamageMult;
-    } else if (thisButton === m_BtnRarityUpdate)  {
+    } else if (thisButton === m_BtnRarityUpdate) {
       if (m_TierLevel < m_maxTierLevel) {
         m_TierLevel++;
       } else {
         m_BtnRarityUpdate.remove();
       }
     }
-    console.log(`${thisButton.text} button clicked`);
+    //console.log(`${thisButton.text} button clicked`);
     thisButton.buttonPressed();
   }
 }
@@ -115,10 +115,11 @@ function PayoutReward() {
     m_CurrentEnemy.enemyName != "Moni" &&
     m_CurrentEnemy.enemyName != "ShowGuy"
   ) {
-      m_CurrencyManager.AddCurrencyAmount(
-          "noChill",
-          m_CurrentEnemy.GetReward() * scoreMultiplier
-      );
+    m_CurrencyManager.AddCurrencyAmount(
+      "noChill",
+      m_CurrentEnemy.GetReward() * scoreMultiplier
+    );
+    m_Wheel.DoRenderOnce();
   }
   //check if it is "teacher1 (red)"
   else if (m_CurrentEnemy.enemyName == "Teacher") {
@@ -136,7 +137,7 @@ function PayoutReward() {
   }
   //check if it is "showGuy (yellow)"
   else {
-    m_Wheel.DoRenderOnce();
+    //m_Wheel.DoRenderOnce();
     //trigger wheel spinning event here
   }
 }
@@ -161,7 +162,7 @@ function SpawnNewEnemies() {
 }
 
 // Reset the game when needed
-var reset = function () {};
+var reset = function () { };
 
 // Start function, initialize everything you need here
 var start = function () {
@@ -182,6 +183,7 @@ var update = function (dt) {
   }
   m_BtnClickUpdate.update();
   m_BtnScoreUpdate.update();
+  m_CoinMinigame.update();
 };
 
 function AutoClick(dt) {
@@ -205,7 +207,7 @@ var render = function () {
   enemySpawner.render();
   m_Coin.render();
   m_Explosion.render();
-  m_Wheel.render();
+  m_Wheel.render(ctx);
   m_BtnClickUpdate.render();
   m_BtnScoreUpdate.render();
   if (isAutoClickActive) {
@@ -289,12 +291,14 @@ var autoClickDamageMult = 0.1;
 var m_CurrentEnemy = null;
 var m_Coin = new Coin(canvas.width / 2, canvas.height / 2);
 var m_Explosion = new Explosion(canvas.width / 2, canvas.height / 2);
-var m_Wheel = new Wheel(canvas.width / 2, canvas.height / 2);
+// Initialize the wheel
+const m_Wheel = new Wheel(canvas.width / 2, canvas.height / 2);
+
 
 var m_TimeBetweenAutoClicks = 5;
 var m_CurrentTimeBetweenAutoClicks = 0;
 
-var m_CoinMinigame = new CoinMinigame(30); // 30 seconds minigame
+var m_CoinMinigame = new CoinMinigame(10); // 30 seconds minigame
 
 var m_BtnClickUpdate = new Button(
   canvas.width - 75 * 5 - 50,
@@ -319,11 +323,11 @@ var m_BtnAutoClickUnlock = new Button(
 );
 var m_BtnAutoClickDmgUpgrade = null;
 var m_BtnRarityUpdate = new Button(
-    canvas.width - 75 * 5 - 50,
-    400,
-    75,
-    "Rarity Update",
-    50
+  canvas.width - 75 * 5 - 50,
+  400,
+  75,
+  "Rarity Update",
+  50
 );
 
 var m_CurrencyManager = new CurrencyManager(10, 200, 0, 0, 0, 10);

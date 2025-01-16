@@ -48,11 +48,16 @@ class Coin {
     });
   }
 
-  reset() {}
+  reset() { }
 
-  start() {}
+  start() {
+    //start hold timer
+    if (this.holdTimer === 0) {
+      this.holdTimer = Date.now();
+    }
+  }
 
-  update(dt) {}
+  update(dt) { }
 
   DoRenderOnce(posX, posY) {
     this.posX = posX;
@@ -82,7 +87,7 @@ class Coin {
         this.spriteSheet.img,
         // Source X in the spritesheet // changed
         (this.spriteSheet.img.width / this.spriteSheet.totalFrames) *
-          this.spriteSheet.curerentFrame,
+        this.spriteSheet.curerentFrame,
         // Source Y
         0,
         // Source width and height (original frame dimensions) changed
