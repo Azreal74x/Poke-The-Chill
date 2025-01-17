@@ -1,6 +1,5 @@
 class Enemy {
   constructor(posX, posY, lifePoints, reward, currencyReward, enemyName) {
-    //positions
     this.posX = posX;
     this.posY = posY;
 
@@ -9,20 +8,12 @@ class Enemy {
     this.currencyReward = currencyReward;
     this.enemyName = enemyName;
 
-    //spritesheet
-    //image thatg render on each frame
     this.image = null;
-    // an array containing all images that the gameobject will use
     this.images = [];
-    //this variable will control the speed in which the animation works
     this.currentFrequency = 0;
-    //this var will con tain the spritesheets that is currently being player
     this.currentSpriteSheet = null;
-    //when this is true we will play the damaged sprintsheed once
     this.beingDamaged = false;
-    //var to control that everything within the enemy
     this.enemyReady = false;
-    // Control boolean
     this.enemyIsDead = false;
 
     //we create a promise with each image we need
@@ -34,7 +25,6 @@ class Enemy {
     const promise1 = this.loadImage(idleSpritesheetPath, 0);
     const promise2 = this.loadImage(damagedSpritesheetPath, 1);
 
-    // wait for the promises to be completed
     this.promiseEnemyReady = Promise.all([promise1, promise2]).then(() => {
       this.scale = 1;
       this.width = this.image.width;
@@ -46,9 +36,9 @@ class Enemy {
         curerentFrame: -1,
         totalFrames: this.images[0].width / this.images[0].height,
         x: 0,
-        y: 0, //---------------------totalFrames-----------//
+        y: 0,
         width: this.images[0].height * this.scale, // Each frame is a square, so width = height * scale
-        height: this.images[0].height * this.scale, // Changed
+        height: this.images[0].height * this.scale,
       };
 
       this.damageSpriteSheet = {
@@ -57,9 +47,9 @@ class Enemy {
         curerentFrame: -1,
         totalFrames: this.images[1].width / this.images[1].height,
         x: 0,
-        y: 0, //---------------------totalFrames-----------//
+        y: 0,
         width: this.images[1].height * this.scale, // Each frame is a square, so width = height * scale
-        height: this.images[1].height * this.scale, // Changed
+        height: this.images[1].height * this.scale,
       };
 
       this.enemyReady = true;
@@ -97,7 +87,7 @@ class Enemy {
   }
 
   GetDamage(damageScore) {
-    console.log(this.enemyName + " get " + damageScore + " damage");
+    console.log(this.enemyName + " was hit with " + damageScore + " damage.");
     if (this.lifePoints > 0 && !this.beingDamaged) {
       this.lifePoints -= damageScore;
       this.beingDamaged = true;
@@ -132,8 +122,7 @@ class Enemy {
           if (this.beingDamaged) {
             this.beingDamaged = false;
           }
-          // If by the end of the damage animation, the lifepoints are
-          // ALSO 0, then, the enemy is no longer "ready"
+          // If by the end of the damage animation, the lifepoints are also 0, then, the enemy is no longer "ready"
           if (this.lifePoints <= 0) {
             this.enemyReady = false;
             m_Explosion.DoRenderOnce(

@@ -2,7 +2,7 @@ class Monetization {
   constructor() {
     this.isVisible = false;
     this.monetizationImage = new Image();
-    this.monetizationImage.src = "images/monetization.png"; // Update the path to your image
+    this.monetizationImage.src = "images/monetization.png";
   }
 
   show() {
@@ -16,7 +16,6 @@ class Monetization {
   render() {
     if (!this.isVisible) return;
 
-    // Draw the shop window
     ctx.fillStyle = "rgba(87, 79, 79, 0.8)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -26,7 +25,6 @@ class Monetization {
       canvas.height / 2 - this.monetizationImage.height / 2
     );
 
-    // Draw the close button
     ctx.fillStyle = "red";
     ctx.fillRect(canvas.width - 60, 10, 50, 50);
     ctx.fillStyle = "white";
@@ -37,7 +35,6 @@ class Monetization {
   click(x, y) {
     if (!this.isVisible) return;
 
-    // Check if the close button is clicked
     if (x > canvas.width - 60 && x < canvas.width - 10 && y > 10 && y < 60) {
       this.hide();
     }

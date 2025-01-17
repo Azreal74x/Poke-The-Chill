@@ -114,7 +114,6 @@ class Button {
     }
 
     if (this.showValue) {
-      // Add the current value to the right middle of the button
       ctx.fillStyle = "black";
       ctx.font = "20px Arial";
       ctx.textAlign = "right";
@@ -139,7 +138,6 @@ class Button {
   }
 
   remove() {
-    // Set the button properties to null to stop updating and rendering it
     this.posX = null;
     this.posY = null;
     this.scale = null;

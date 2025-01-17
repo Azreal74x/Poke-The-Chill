@@ -8,19 +8,17 @@ class CurrencyManager {
     this.moniAmount = moniAmount;
 
     this.scale = scale;
-    //this.text = text;
 
     this.areImagesLoaded = false;
 
-    this.images = []; //store imgs
-    this.positions = []; //store y positions
+    this.images = [];
+    this.positions = [];
 
     //img path, index, yPos
     const promise1 = this.loadImage("images/NoChillToken.png", 0, 0);
     const promise2 = this.loadImage("images/FGradeToken.png", 1, 100);
     const promise3 = this.loadImage("images/MoniToken.png", 2, 200);
 
-    //wait for promise to be completed
     this.promiseReady = Promise.all([promise1, promise2, promise3]).then(() => {
       this.scale = 3;
       this.areImagesLoaded = true;
@@ -33,10 +31,10 @@ class CurrencyManager {
 
     return new Promise((resolve) => {
       image.onload = () => {
-        this.images[index] = image; //store img at index
+        this.images[index] = image;
         this.positions[index] = {
           x: this.posX,
-          y: this.posY + posYOffset, //add offset to y pos
+          y: this.posY + posYOffset,
         };
         resolve();
       };
@@ -61,7 +59,7 @@ class CurrencyManager {
     } else if (currency === 3 && amount <= this.moniAmount) {
       this.moniAmount -= amount;
     } else {
-      console.log("could not remove from currency");
+      console.log("Amount could not be removed from currency.");
     }
   }
 
@@ -76,7 +74,6 @@ class CurrencyManager {
       this.images.forEach((image, index) => {
         const position = this.positions[index];
 
-        //draw the imgs
         ctx.drawImage(
           image,
           position.x,
@@ -85,20 +82,18 @@ class CurrencyManager {
           image.height * this.scale
         );
 
-        //set correct amounts
         let amount = 0;
         if (index === 0) amount = Math.floor(this.noChillAmount);
         if (index === 1) amount = Math.floor(this.fGradeAmount);
         if (index === 2) amount = Math.floor(this.moniAmount);
 
-        //draw text next to imgs
         ctx.font = "50px Arial";
         ctx.fillStyle = "white";
         ctx.textAlign = "left";
         ctx.fillText(
-          `${amount}`, //displayed text
-          position.x + image.width * this.scale + 10, //x pos next to the imgs
-          position.y + (image.height * this.scale) / 2 + 17 //y pos centered with the imgs
+          `${amount}`,
+          position.x + image.width * this.scale + 10,
+          position.y + (image.height * this.scale) / 2 + 17
         );
       });
     }

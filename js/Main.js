@@ -1,4 +1,3 @@
-// Create the canvas
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
@@ -6,7 +5,6 @@ canvas.height = window.innerHeight;
 canvas.style.position = "absolute";
 document.body.appendChild(canvas);
 
-// We set the background
 var bgPattern;
 var tileReady = false;
 var tileImage = new Image();
@@ -16,7 +14,6 @@ tileImage.onload = function () {
 };
 tileImage.src = "images/bgPattern.png";
 
-// Handle keyboard controls
 var keysDown = {};
 
 addEventListener(
@@ -41,7 +38,6 @@ canvas.addEventListener(
     var rect = canvas.getBoundingClientRect();
     var mouseX = event.clientX - rect.left;
     var mouseY = event.clientY - rect.top;
-    //console.log("Mouse click at:", mouseX, mouseY);
 
     if (m_Shop.isVisible) {
       m_Shop.click(mouseX, mouseY);
@@ -50,9 +46,9 @@ canvas.addEventListener(
 
     if (m_Monetization.isVisible) {
       m_Monetization.click(mouseX, mouseY);
-      return;
+      return; // Prevent other clicks when the monetization tab is open
     }
-    // Call our click function
+
     Click(mouseX, mouseY);
     m_CoinMinigame.click(mouseX, mouseY);
   },
@@ -60,7 +56,6 @@ canvas.addEventListener(
 );
 
 function Click(clickX, clickY) {
-  //console.log("clickeeed");
   CheckClickOnEnemies(clickX, clickY);
   CheckClickOnThisButton(clickX, clickY, m_BtnClickUpdate);
   CheckClickOnThisButton(clickX, clickY, m_BtnScoreUpdate);
@@ -125,7 +120,6 @@ function CheckClickOnThisButton(clickX, clickY, thisButton) {
         }
       }
     }
-    //console.log(`${thisButton.text} button clicked`);
     thisButton.buttonPressed();
   }
 }
@@ -142,7 +136,7 @@ function CheckClickOnEnemies(clickX, clickY) {
 }
 
 function PayoutReward() {
-  //check if its the special character for wheel game
+  //Checks if the defeated enemy is one of the special characters
   var currencyReward = m_CurrentEnemy.GetCurrencyReward();
 
   if (currencyReward === 0) {
@@ -171,10 +165,8 @@ function DoDamageToEnemies(damageScore) {
   if (!m_CurrentEnemy.enemyIsDead) {
     m_CurrentEnemy.GetDamage(damageScore);
     if (m_CurrentEnemy.lifePoints <= 0) {
-      // We increase the score
       PayoutReward();
 
-      // We spawn a new enemy
       setTimeout(SpawnNewEnemies, 2000);
     }
   }
@@ -186,16 +178,10 @@ function SpawnNewEnemies() {
   m_CurrentEnemy = enemySpawner.spawnEnemy();
 }
 
-// Reset the game when needed
 var reset = function () {};
 
-// Start function, initialize everything you need here
-var start = function () {
-  // setInterval(functionX, 10000);
-};
+var start = function () {};
 
-// Actual gameplay, call all functions needed to make you game work
-// Game's logic
 var update = function (dt) {
   if (isAutoClickActive) {
     m_BtnAutoClickDmgUpgrade.update();
@@ -208,8 +194,6 @@ var update = function (dt) {
   m_BtnClickUpdate.update();
   m_BtnScoreUpdate.update();
   m_CoinMinigame.update(dt);
-
-  // Update power buttons
   m_Power1.update(dt);
   m_Power2.update(dt);
   m_BtnShop.update();
@@ -225,15 +209,12 @@ function AutoClick(dt) {
   }
 }
 
-// Draw everything
 var render = function () {
-  // Render background first
   if (tileReady) {
     ctx.fillStyle = bgPattern;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
-  // Render everything else from back to front
   enemySpawner.render();
   m_Coin.render();
   m_Explosion.render();
@@ -252,7 +233,6 @@ var render = function () {
 
   m_CurrencyManager.render();
 
-  // Render power buttons
   m_Power1.render();
   m_Power2.render();
 
@@ -262,11 +242,9 @@ var render = function () {
   m_Shop.render();
   m_Monetization.render();
 
-  // Finally, we render the UI, an score for example
   ctx.font = "30px Arial";
 };
 
-// The main game loop
 var main = function () {
   var now = Date.now();
   var delta = now - then;
@@ -276,11 +254,9 @@ var main = function () {
 
   then = now;
 
-  // Request to do this again ASAP
   requestAnimationFrame(main);
 };
 
-// Cross-browser support for requestAnimationFrame
 var w = window;
 requestAnimationFrame =
   w.requestAnimationFrame ||
@@ -289,28 +265,33 @@ requestAnimationFrame =
   w.mozRequestAnimationFrame;
 
 async function initGame() {
-  // Wait for all images to be ready
-  //await m_Paddle.allImagesLoadedPromise;
   SpawnNewEnemies();
 
-  // We wait for the explosion to finish loading
   await m_Coin.coinReady;
   await m_Explosion;
 
-  // Let's play this game!
   then = Date.now();
   start();
 
   main();
 }
 
+var then = 0;
+
+// We initialize the GameObjects and variables
+var m_CurrentEnemy = null;
+var m_Coin = new Coin(canvas.width / 2, canvas.height / 2);
+var m_Explosion = new Explosion(canvas.width / 2, canvas.height / 2);
+
+// Initialize the wheel
+const m_Wheel = new Wheel(canvas.width / 2, canvas.height / 2);
+
+var m_TimeBetweenAutoClicks = 5;
+var m_CurrentTimeBetweenAutoClicks = 0;
+
 var m_TierLevel = 0;
 var m_maxTierLevel = 1; // 5 yap sakın unutma!!! enemy sonrası
 
-// We initialize the initial time of the game
-var then = 0;
-
-//After upgrading each click will give 0.1 click more
 var damageScore = 1;
 var damageScoreMultiplier = 0.1;
 
@@ -324,16 +305,6 @@ var isAutoClickActive = false;
 //Auto click damage score
 var autoClickDamage = 1;
 var autoClickDamageMult = 0.1;
-
-// We initialize the GameObjects and variables
-var m_CurrentEnemy = null;
-var m_Coin = new Coin(canvas.width / 2, canvas.height / 2);
-var m_Explosion = new Explosion(canvas.width / 2, canvas.height / 2);
-// Initialize the wheel
-const m_Wheel = new Wheel(canvas.width / 2, canvas.height / 2);
-
-var m_TimeBetweenAutoClicks = 5;
-var m_CurrentTimeBetweenAutoClicks = 0;
 
 var m_CoinMinigame = new CoinMinigame(10); // 30 seconds minigame
 
@@ -368,7 +339,6 @@ var m_BtnAutoClickUnlock = new Button(
   false
 );
 var m_BtnAutoClickDmgUpgrade = null;
-
 var m_BtnRarityUpdate = new Button(
   canvas.width - 75 * 5 - 50,
   400,
@@ -380,9 +350,7 @@ var m_BtnRarityUpdate = new Button(
   true,
   [1000, 10000, 50000, 100000, "Maxed"]
 );
-
 var m_CurrencyManager = new CurrencyManager(10, 200, 0, 0, 0, 10);
-
 var m_Power1 = new Power(
   canvas.width - 75 * 5 - 50,
   500,
@@ -397,10 +365,8 @@ var m_Power2 = new Power(
   "Communist Gain (Double Tokens)",
   200
 );
-
 var m_BtnShop = new Button(10, 10, 75, "Shop", 0, "images/shop.png", false);
 m_BtnShop.width = m_BtnShop.height;
-
 var m_BtnMonetization = new Button(
   100,
   10,

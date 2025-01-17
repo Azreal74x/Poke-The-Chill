@@ -36,33 +36,29 @@ class Shop {
   render() {
     if (!this.isVisible) return;
 
-    // Draw the shop window
     ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Draw the close button
     ctx.fillStyle = "red";
     ctx.fillRect(canvas.width - 60, 10, 50, 50);
     ctx.fillStyle = "white";
     ctx.font = "30px Arial";
     ctx.fillText("X", canvas.width - 45, 45);
 
-    // Draw the items
     this.items.forEach((item, index) => {
       const canAfford = m_CurrencyManager.getFGradeToken() >= item.price;
       ctx.fillStyle = canAfford ? "white" : "gray";
       ctx.fillRect(150, 150 + index * 100, canvas.width - 300, 80);
       ctx.fillStyle = "black";
-      ctx.textAlign = "left"; // Align text to the left
+      ctx.textAlign = "left";
       let itemText = item.name;
       if (item.price > 0) {
         itemText += " - " + item.price + " ";
         ctx.fillText(itemText, 160, 200 + index * 100);
 
-        // Draw the F Grade Token image next to the price
-        const tokenImage = m_CurrencyManager.images[1]; // Assuming the F Grade Token image is at index 1
+        const tokenImage = m_CurrencyManager.images[1];
         const textWidth = ctx.measureText(itemText).width;
-        ctx.drawImage(tokenImage, 160 + textWidth, 180 + index * 100, 20, 20); // Adjust the position and size as needed
+        ctx.drawImage(tokenImage, 160 + textWidth, 180 + index * 100, 20, 20);
       } else {
         ctx.fillText(itemText, 160, 200 + index * 100);
       }
@@ -72,12 +68,10 @@ class Shop {
   click(x, y) {
     if (!this.isVisible) return;
 
-    // Check if the close button is clicked
     if (x > canvas.width - 60 && x < canvas.width - 10 && y > 10 && y < 60) {
       this.hide();
     }
 
-    // Check if an item is clicked
     this.items.forEach((item, index) => {
       if (
         x > 150 &&
@@ -86,10 +80,7 @@ class Shop {
         y < 230 + index * 100
       ) {
         console.log(item.name + " clicked");
-        // Handle item purchase logic here
-        // Ensure the price is not reset to 0
         if (m_CurrencyManager.getFGradeToken() >= item.price) {
-          // Deduct the price from the user's currency
           m_CurrencyManager.RemoveCurrencyAmount(2, item.price);
           item.price = 0;
 

@@ -30,7 +30,6 @@ class Power {
   activatePower() {
     this.isActive = true;
     if (this.text === "Balkan Anger (Double Damage)") {
-      // Double the damage score
       damageScore *= 2;
 
       // Set a timer to revert the damage score back after 30 seconds
@@ -40,7 +39,6 @@ class Power {
         this.isActive = false;
       }, 30000);
     } else if (this.text === "Communist Gain (Double Tokens)") {
-      // Double the income
       scoreMultiplier *= 2;
 
       // Set a timer to revert the income back after 30 seconds
@@ -63,11 +61,11 @@ class Power {
 
     ctx.beginPath();
     ctx.arc(
-      this.posX + this.width / 2, // x coordinate of the center
-      this.posY + this.height / 2, // y coordinate of the center
-      this.width / 2, // radius
-      0, // start angle
-      2 * Math.PI // end angle
+      this.posX + this.width / 2,
+      this.posY + this.height / 2,
+      this.width / 2,
+      0,
+      2 * Math.PI
     );
     ctx.fill();
 
