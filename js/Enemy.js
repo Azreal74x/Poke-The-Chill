@@ -10,15 +10,15 @@ class Enemy {
     this.enemyName = enemyName;
 
     //spritesheet
-    //image thatg render on each frame
+    //image that renders on each frame
     this.image = null;
     // an array containing all images that the gameobject will use
     this.images = [];
     //this variable will control the speed in which the animation works
     this.currentFrequency = 0;
-    //this var will con tain the spritesheets that is currently being player
+    //this var will contain the spritesheet that is currently being played
     this.currentSpriteSheet = null;
-    //when this is true we will play the damaged sprintsheed once
+    //when this is true we will play the damaged spritesheet once
     this.beingDamaged = false;
     //var to control that everything within the enemy
     this.enemyReady = false;
@@ -28,38 +28,42 @@ class Enemy {
     //we create a promise with each image we need
     // format of src = images/'enemyName' + "Enemy" + 'type'.png;
 
-    var idleSpritesheetPath = "images/" + enemyName + "Enemy.png";
-    var damagedSpritesheetPath = "images/" + enemyName + "EnemyDamaged.png";
+    var idleSpritesheetPath = "media/" + enemyName + "Enemy.png";
+    var damagedSpritesheetPath = "media/" + enemyName + "EnemyDamaged.png";
 
     const promise1 = this.loadImage(idleSpritesheetPath, 0);
     const promise2 = this.loadImage(damagedSpritesheetPath, 1);
 
     // wait for the promises to be completed
     this.promiseEnemyReady = Promise.all([promise1, promise2]).then(() => {
-      this.scale = 1;
-      this.width = this.image.width;
-      this.height = this.image.height;
+      // Set the scale to resize the sprite
+      this.scale = 0.5; // Adjust the scale value (e.g., 0.5 for half size)
 
+      // Use scaled dimensions for the sprite
+      this.width = this.image.width; // Original width of the image
+      this.height = this.image.height; // Original height of the image
+
+      // Correct frame width and height calculations
       this.idleSpriteSheet = {
         img: this.images[0],
         frequency: 5,
         curerentFrame: -1,
-        totalFrames: this.images[0].width / this.images[0].height,
+        totalFrames: Math.floor(this.images[0].width / this.images[0].height), // Total frames (horizontal frames)
         x: 0,
-        y: 0, //---------------------totalFrames-----------//
-        width: this.images[0].height * this.scale, // Each frame is a square, so width = height * scale
-        height: this.images[0].height * this.scale, // Changed
+        y: 0,
+        width: (this.images[0].width / Math.floor(this.images[0].width / this.images[0].height)) * this.scale, // Correct frame width scaled
+        height: this.images[0].height * this.scale, // Correct frame height scaled
       };
 
       this.damageSpriteSheet = {
         img: this.images[1],
         frequency: 5,
         curerentFrame: -1,
-        totalFrames: this.images[1].width / this.images[1].height,
+        totalFrames: Math.floor(this.images[1].width / this.images[1].height), // Total frames (horizontal frames)
         x: 0,
-        y: 0, //---------------------totalFrames-----------//
-        width: this.images[1].height * this.scale, // Each frame is a square, so width = height * scale
-        height: this.images[1].height * this.scale, // Changed
+        y: 0,
+        width: (this.images[1].width / Math.floor(this.images[1].width / this.images[1].height)) * this.scale, // Correct frame width scaled
+        height: this.images[1].height * this.scale, // Correct frame height scaled
       };
 
       this.enemyReady = true;
@@ -71,10 +75,10 @@ class Enemy {
     image.src = src;
     return new Promise((resolve) => {
       image.onload = () => {
-        //on "images" i insert the each one of thne images of the spritesheets(image)
+        //on "images" i insert each one of the images of the spritesheets(image)
         this.images.splice(index, 0, image);
         if (index == 0) {
-          //if the index was set to 0, it means is the "initial" image
+          //if the index was set to 0, it means it is the "initial" image
           this.image = image;
         }
         resolve();
@@ -82,11 +86,11 @@ class Enemy {
     });
   }
 
-  reset() {}
+  reset() { }
 
-  start() {}
+  start() { }
 
-  update(dt) {}
+  update(dt) { }
 
   GetReward() {
     return this.reward;
@@ -97,7 +101,7 @@ class Enemy {
   }
 
   GetDamage(damageScore) {
-    console.log(this.enemyName + " get " + damageScore + " damage");
+    console.log(this.enemyName + " gets " + damageScore + " damage");
     if (this.lifePoints > 0 && !this.beingDamaged) {
       this.lifePoints -= damageScore;
       this.beingDamaged = true;
@@ -111,7 +115,7 @@ class Enemy {
     if (this.enemyReady) {
       //we set the idle spritesheet as the default one
       var whichSpriteSheet = this.idleSpriteSheet;
-      //unless it is being damaged, then we changge the spritesheet
+      //unless it is being damaged, then we change the spritesheet
       if (this.beingDamaged) {
         whichSpriteSheet = this.damageSpriteSheet;
       }
@@ -171,7 +175,7 @@ class Enemy {
         // Start point in x
         (this.currentSpriteSheet.img.width /
           this.currentSpriteSheet.totalFrames) *
-          this.currentSpriteSheet.curerentFrame,
+        this.currentSpriteSheet.curerentFrame,
         // Start point in y
         0,
         // Final X coordinates relative to the origin

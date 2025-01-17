@@ -9,7 +9,7 @@ class EnemyTypes extends Enemy {
     ];
     //1 for noChill, 2 for fGrade, 3 for moni token and 0 for wheel game
     static currencyRewards = [
-        [0],
+        [1],
         [3, 2, 0]
     ]
     static enemyNames = [

@@ -14,7 +14,7 @@ tileImage.onload = function () {
   tileReady = true;
   bgPattern = ctx.createPattern(tileImage, "repeat");
 };
-tileImage.src = "images/bgPattern.png";
+tileImage.src = "media/bgPattern.png";
 
 // Handle keyboard controls
 var keysDown = {};
@@ -120,6 +120,9 @@ function CheckClickOnEnemies(clickX, clickY) {
     clickY < m_CurrentEnemy.posY + m_CurrentEnemy.currentSpriteSheet.height
   ) {
     DoDamageToEnemies(damageScore);
+
+    m_EnemyClickSound.play();
+
   }
 }
 
@@ -130,6 +133,7 @@ function PayoutReward() {
   if (currencyReward === 0) {
     m_Wheel.DoRenderOnce();
   } else {
+    m_EnemyRewardSound.play();
     m_CurrencyManager.AddCurrencyAmount(
       m_CurrentEnemy.GetCurrencyReward(),
       m_CurrentEnemy.GetReward() * scoreMultiplier
@@ -144,8 +148,14 @@ function DoDamageToEnemies(damageScore) {
       // We increase the score
       PayoutReward();
 
-      // We spawn a new enemy
-      setTimeout(SpawnNewEnemies, 2000);
+      if (m_WheelDoneSpinning) {
+        // We spawn a new enemy
+        setTimeout(SpawnNewEnemies, 2000);
+      }
+      else {
+        setTimeout(SpawnNewEnemies, 8000);
+      }
+
     }
   }
 }
@@ -157,7 +167,7 @@ function SpawnNewEnemies() {
 }
 
 // Reset the game when needed
-var reset = function () {};
+var reset = function () { };
 
 // Start function, initialize everything you need here
 var start = function () {
@@ -189,7 +199,10 @@ var update = function (dt) {
 function AutoClick(dt) {
   if (m_CurrentTimeBetweenAutoClicks > m_TimeBetweenAutoClicks) {
     m_CurrentTimeBetweenAutoClicks = 0;
-    DoDamageToEnemies(autoClickDamage);
+    if (!m_CurrentEnemy.enemyIsDead) {
+      m_DamageReceivedSound.play();
+      DoDamageToEnemies(autoClickDamage);
+    }
   } else {
     m_CurrentTimeBetweenAutoClicks += dt;
   }
@@ -233,7 +246,7 @@ var render = function () {
   m_Shop.render();
 
   // Finally, we render the UI, an score for example
-  ctx.font = "30px Arial";
+  ctx.font = "30px DiloWorld";
 };
 
 // The main game loop
@@ -272,6 +285,7 @@ async function initGame() {
   start();
 
   main();
+
 }
 
 var m_TierLevel = 0;
@@ -306,6 +320,70 @@ var m_TimeBetweenAutoClicks = 5;
 var m_CurrentTimeBetweenAutoClicks = 0;
 
 var m_CoinMinigame = new CoinMinigame(10); // 30 seconds minigame
+
+var m_WheelDoneSpinning = true;
+
+const font = new FontFace("DiloWorld", "url('media/DiloWorld.ttf')");
+
+font.load().then(() => {
+  document.fonts.add(font);
+  console.log("Font loaded and available.");
+}).catch((error) => {
+  console.error("Failed to load font:", error);
+});
+
+// Declare the global variable
+var m_BackgroundMusic;
+
+var m_ExplosionSound;
+var m_EnemyClickSound;
+var m_ButtonClickSound;
+var m_WheelFinishedSound;
+var m_DamageReceivedSound;
+
+var m_SingleCoinSound;
+var m_CoinMinigameRewardSound;
+var m_WheelRewardSound;
+var m_EnemyRewardSound;
+
+var m_BoostMusic;
+
+
+// Add event listener for DOMContentLoaded
+document.addEventListener("DOMContentLoaded", () => {
+  // Get the audio elements after DOM is fully loaded
+  m_BackgroundMusic = document.getElementById("BackgroundMusic");
+  m_ExplosionSound = document.getElementById("ExplosionSound"); // Assign value to global variable
+  m_EnemyClickSound = document.getElementById("EnemyClickSound"); // Assign value to global variable
+  m_ButtonClickSound = document.getElementById("ButtonClickSound");
+  m_WheelFinishedSound = document.getElementById("WheelFinishedSound");
+  m_DamageReceivedSound = document.getElementById("DamageReceivedSound");
+
+  m_SingleCoinSound = document.getElementById("SingleCoinSound");
+  m_CoinMinigameRewardSound = document.getElementById("CoinMinigameRewardSound");
+  m_WheelRewardSound = document.getElementById("WheelRewardSound");
+  m_EnemyRewardSound = document.getElementById("EnemyRewardSound");
+
+  m_BoostMusic = document.getElementById("BoostMusic");
+
+  if (m_BackgroundMusic) {
+    m_BackgroundMusic.loop = true; // Ensure the music loops
+
+    document.body.addEventListener(
+      "click",
+      function playMusicOnce() {
+        if (m_BackgroundMusic.paused) {
+          m_BackgroundMusic.play().catch((error) => {
+            console.error("Failed to play music:", error);
+          });
+        }
+        // Remove the event listener after the first click
+        document.body.removeEventListener("click", playMusicOnce);
+      }
+    );
+  }
+
+});
 
 var m_BtnClickUpdate = new Button(
   canvas.width - 75 * 5 - 50,

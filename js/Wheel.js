@@ -2,8 +2,11 @@ class Wheel {
   constructor(posX, posY) {
     this.posX = posX;
     this.posY = posY;
+
+    this.scale = 2; // Add scale property
+
     this.rewards = [
-      "50", "750", "5000", "7", "3000",
+      "50", "750", "5000", "1", "3000",
       "1000", "250", "500", "10000",
     ];
     this.colors = [
@@ -18,18 +21,21 @@ class Wheel {
     this.spinTimeTotal = 0;
     this.isVisible = false; // Determines if the wheel is visible
 
+    // Store the last reward
+    this.lastReward = null;
+
     // Temporary canvas for drawing the wheel
     this.canvas = document.createElement("canvas");
-    this.canvas.width = 500;
-    this.canvas.height = 500;
+    this.canvas.width = 500 * this.scale;
+    this.canvas.height = 500 * this.scale;
     this.ctx = this.canvas.getContext("2d");
   }
 
   drawRouletteWheel() {
     const ctx = this.ctx;
-    const outsideRadius = 200;
-    const textRadius = 160;
-    const insideRadius = 125;
+    const outsideRadius = 200 * this.scale;
+    const textRadius = 160 * this.scale;
+    const insideRadius = 125 * this.scale;
 
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -38,17 +44,17 @@ class Wheel {
       ctx.fillStyle = this.colors[i % this.colors.length];
 
       ctx.beginPath();
-      ctx.arc(250, 250, outsideRadius, angle, angle + this.arc, false);
-      ctx.arc(250, 250, insideRadius, angle + this.arc, angle, true);
+      ctx.arc(250 * this.scale, 250 * this.scale, outsideRadius, angle, angle + this.arc, false);
+      ctx.arc(250 * this.scale, 250 * this.scale, insideRadius, angle + this.arc, angle, true);
       ctx.fill();
 
       // Add reward text
       ctx.save();
-      ctx.fillStyle = "black";
-      ctx.font = "bold 14px Helvetica, Arial";
+      ctx.fillStyle = "white";
+      ctx.font = `${24 * this.scale}px DiloWorld, DiloWorld`;
       ctx.translate(
-        250 + Math.cos(angle + this.arc / 2) * textRadius,
-        250 + Math.sin(angle + this.arc / 2) * textRadius
+        250 * this.scale + Math.cos(angle + this.arc / 2) * textRadius,
+        250 * this.scale + Math.sin(angle + this.arc / 2) * textRadius
       );
       ctx.rotate(angle + this.arc / 2 + Math.PI / 2);
       const text = this.rewards[i];
@@ -57,17 +63,27 @@ class Wheel {
     }
 
     // Draw pointer
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "white";
     ctx.beginPath();
-    ctx.moveTo(250 - 4, 250 - (outsideRadius + 5));
-    ctx.lineTo(250 + 4, 250 - (outsideRadius + 5));
-    ctx.lineTo(250 + 4, 250 - (outsideRadius - 5));
-    ctx.lineTo(250 + 9, 250 - (outsideRadius - 5));
-    ctx.lineTo(250 + 0, 250 - (outsideRadius - 13));
-    ctx.lineTo(250 - 9, 250 - (outsideRadius - 5));
-    ctx.lineTo(250 - 4, 250 - (outsideRadius - 5));
-    ctx.lineTo(250 - 4, 250 - (outsideRadius + 5));
+    ctx.moveTo(250 * this.scale - 4 * this.scale, 250 * this.scale - (outsideRadius + 5 * this.scale));
+    ctx.lineTo(250 * this.scale + 4 * this.scale, 250 * this.scale - (outsideRadius + 5 * this.scale));
+    ctx.lineTo(250 * this.scale + 4 * this.scale, 250 * this.scale - (outsideRadius - 5 * this.scale));
+    ctx.lineTo(250 * this.scale + 9 * this.scale, 250 * this.scale - (outsideRadius - 5 * this.scale));
+    ctx.lineTo(250 * this.scale + 0 * this.scale, 250 * this.scale - (outsideRadius - 13 * this.scale));
+    ctx.lineTo(250 * this.scale - 9 * this.scale, 250 * this.scale - (outsideRadius - 5 * this.scale));
+    ctx.lineTo(250 * this.scale - 4 * this.scale, 250 * this.scale - (outsideRadius - 5 * this.scale));
+    ctx.lineTo(250 * this.scale - 4 * this.scale, 250 * this.scale - (outsideRadius + 5 * this.scale));
     ctx.fill();
+
+    if (this.lastReward != null) {
+      ctx.save();
+      ctx.fillStyle = "white"; // Set the color to ensure visibility
+      ctx.font = `${36 * this.scale}px DiloWorld`; // Use a simple, clear font for testing
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(this.lastReward, 250 * this.scale, 250 * this.scale); // Centered text
+      ctx.restore();
+    }
   }
 
   spin() {
@@ -79,6 +95,7 @@ class Wheel {
   }
 
   rotateWheel() {
+    m_WheelDoneSpinning = false;
     this.spinTime += 30;
     if (this.spinTime >= this.spinTimeTotal) {
       this.stopRotateWheel();
@@ -97,9 +114,25 @@ class Wheel {
     const arcd = (this.arc * 180) / Math.PI;
     const index = Math.floor((360 - (degrees % 360)) / arcd);
     const reward = this.rewards[index];
+    this.lastReward = reward; // Store the reward
     console.log("Landed on reward:", reward);
-    this.determineReward(parseInt(reward, 10)); // Call determineReward with the selected reward
-    this.isVisible = false; // Hide the wheel after it stops spinning
+
+    // Redraw the wheel to display the reward in the center
+    this.drawRouletteWheel();
+
+    m_WheelFinishedSound.play();
+    m_WheelDoneSpinning = true;
+
+    // Hide the wheel after showing the result
+    setTimeout(() => {
+      m_WheelRewardSound.play();
+      this.determineReward(parseInt(reward, 10)); // Call determineReward with the selected reward
+      this.isVisible = false; // Hide after a short delay to display the reward
+      this.lastReward = null; // Clear the last reward
+      if (!m_CoinMinigame.isActive) {
+        m_CoinMinigame.start();
+      }
+    }, 1000); // Adjust the delay as needed
   }
 
   easeOut(t, b, c, d) {
@@ -113,20 +146,15 @@ class Wheel {
   }
 
   render(ctx) {
-    // Render the wheel only if it is visible
     if (this.isVisible) {
-      ctx.drawImage(this.canvas, this.posX - 250, this.posY - 250);
+      // Draw the wheel if it's visible
+      ctx.drawImage(this.canvas, this.posX - 250 * this.scale, this.posY - 250 * this.scale);
     }
   }
 
   determineReward(reward) {
     // Add currency based on reward
     m_CurrencyManager.AddCurrencyAmount(1, reward);
-
-    if (!m_CoinMinigame.isActive) {
-      m_CoinMinigame.start();
-    }
-
     console.log("Reward determined:", reward);
   }
 }

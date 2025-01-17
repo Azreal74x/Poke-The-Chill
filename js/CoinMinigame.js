@@ -12,7 +12,7 @@ class CoinMinigame {
     this.holdDuration = duration * 1000; //hold time takes milliseconds so we convert
 
     // Load the image
-    this.loadImage("images/minigame.png").then(() => {
+    this.loadImage("media/minigame.png").then(() => {
       this.imageReady = true;
     });
   }
@@ -30,6 +30,8 @@ class CoinMinigame {
 
   start() {
     console.log("CoinMinigame started");
+    m_BackgroundMusic.pause();
+    m_BoostMusic.play();
     this.isActive = true;
     this.coinsClicked = 0;
     this.coins = []; // Reset coins array
@@ -100,6 +102,8 @@ class CoinMinigame {
         y < coin.posY + this.image.height
       ) {
         this.coinsClicked++;
+        m_SingleCoinSound.currentTime = 0; //remove if u dont want the sound to be cut off 
+        m_SingleCoinSound.play();
         //console.log("Coin clicked at:", coin.posX, coin.posY);
         return false;
       }
@@ -110,7 +114,8 @@ class CoinMinigame {
   end() {
     console.log("CoinMinigame ended");
     this.isActive = false;
-
+    m_BackgroundMusic.play();
+    m_CoinMinigameRewardSound.play();
     const reward = this.coinsClicked * 100; // Reward 100 currency per coin clicked
     m_CurrencyManager.AddCurrencyAmount(1, reward);
     console.log(

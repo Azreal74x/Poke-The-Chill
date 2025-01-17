@@ -5,17 +5,17 @@ class Shop {
       {
         name: "Item 1",
         price: 100,
-        cursor: "url('images/yellowcursor.png'), auto",
+        cursor: "url('media/yellowcursor.png'), auto",
       },
       {
         name: "Item 2",
         price: 200,
-        cursor: "url('images/purplecursor.png'), auto",
+        cursor: "url('media/purplecursor.png'), auto",
       },
       {
         name: "Item 3",
         price: 300,
-        cursor: "url('images/orangecursor.png'), auto",
+        cursor: "url('media/orangecursor.png'), auto",
       },
     ];
   }
@@ -39,7 +39,7 @@ class Shop {
     ctx.fillStyle = "red";
     ctx.fillRect(canvas.width - 60, 10, 50, 50);
     ctx.fillStyle = "white";
-    ctx.font = "30px Arial";
+    ctx.font = "30px DiloWorld";
     ctx.fillText("X", canvas.width - 45, 45);
 
     // Draw the items

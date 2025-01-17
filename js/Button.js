@@ -19,6 +19,8 @@ class Button {
 
   buttonPressed() {
     if (this.canBeBought) {
+      m_ButtonClickSound.currentTime = 0;
+      m_ButtonClickSound.play();
       this.canBeBought = false;
       m_CurrencyManager.RemoveCurrencyAmount(1, this.price);
       this.price = parseInt(this.price * this.priceMultiplier);
@@ -37,7 +39,7 @@ class Button {
     ctx.fillRect(this.posX, this.posY, this.width, this.height);
 
     ctx.fillStyle = "black";
-    ctx.font = "30px, Arial";
+    ctx.font = "30px, DiloWorld";
     ctx.fillText(this.text, this.posX + 30, this.posY + 30, this.width);
 
     if (this.price !== 0) {
