@@ -4,8 +4,6 @@ class EnemySpawner {
   }
 
   spawnEnemy() {
-    var enemyNames = [["Default"], ["Moni", "Teacher", "ShowGuy"]];
-
     //First gets a random number between 0 and m_TierLevel.
     //Then gets another random number between 0 and length of that tier.
     //All enemy spawn rates are the same

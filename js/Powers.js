@@ -19,7 +19,7 @@ class Power {
   buttonPressed() {
     if (this.canBeBought && !this.isActive) {
       this.canBeBought = false;
-      m_CurrencyManager.RemoveCurrencyAmount("moni", this.price);
+      m_CurrencyManager.RemoveCurrencyAmount(3, this.price);
       this.activatePower();
     }
   }

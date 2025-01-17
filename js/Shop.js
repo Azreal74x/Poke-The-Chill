@@ -3,18 +3,23 @@ class Shop {
     this.isVisible = false;
     this.items = [
       {
+        name: "Default",
+        price: 0,
+        cursor: "url('images/defaultcursor.png'), auto",
+      },
+      {
         name: "Item 1",
-        price: 100,
+        price: 1000,
         cursor: "url('images/yellowcursor.png'), auto",
       },
       {
         name: "Item 2",
-        price: 200,
+        price: 5000,
         cursor: "url('images/purplecursor.png'), auto",
       },
       {
         name: "Item 3",
-        price: 300,
+        price: 10000,
         cursor: "url('images/orangecursor.png'), auto",
       },
     ];
@@ -78,10 +83,12 @@ class Shop {
         // Ensure the price is not reset to 0
         if (item.price > 0) {
           // Deduct the price from the user's currency
-          m_CurrencyManager.RemoveCurrencyAmount("fGrade", item.price);
+          m_CurrencyManager.RemoveCurrencyAmount(2, item.price);
           item.price = 0;
 
-          document.body.style.cursor = item.cursor;
+          canvas.style.cursor = item.cursor;
+        } else if (item.price === 0) {
+          canvas.style.cursor = item.cursor;
         }
       }
     });
