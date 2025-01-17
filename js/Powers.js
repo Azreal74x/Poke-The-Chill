@@ -89,7 +89,7 @@ class Power {
     ctx.fillStyle = "darkblue";
     ctx.strokeStyle = "white";
     ctx.lineWidth = 3;
-    ctx.font = "1.3rem DiloWorld";
+    ctx.font = "1.75rem DiloWorld";
     ctx.textAlign = "left";
 
     ctx.strokeText(
