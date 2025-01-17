@@ -48,6 +48,8 @@ class Button {
 
   buttonPressed() {
     if (this.canBeBought) {
+      m_ButtonClickSound.currentTime = 0;
+      m_ButtonClickSound.play();
       this.canBeBought = false;
       m_CurrencyManager.RemoveCurrencyAmount(1, this.price);
       if (this.prices !== null) {
@@ -113,7 +115,7 @@ class Button {
 
     if (this.showText) {
       ctx.fillStyle = "black";
-      ctx.font = "30px Arial";
+      ctx.font = "30px DiloWorld";
       ctx.textAlign = "left";
 
       const textX = this.posX + 30;

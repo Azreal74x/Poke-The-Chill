@@ -12,8 +12,8 @@ class EnemySpawner {
     const randomEnemyIndex = Math.floor(Math.random() * tierEnemies.length);
     const enemyName = tierEnemies[randomEnemyIndex];
     const enemy = new EnemyTypes(
-      canvas.width / 2,
-      canvas.height / 2,
+      canvas.width / 2 - 400,
+      canvas.height / 2 - 300,
       enemyName,
       randomTier
     );

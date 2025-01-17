@@ -8,7 +8,7 @@ class Explosion {
     this.explosionReady = false;
     this.doRender = false;
 
-    var spritesheetPath = "images/Explosion.png";
+    var spritesheetPath = "media/Explosion.png";
     const promise = this.loadImage(spritesheetPath);
 
     this.promiseExplosionReady = Promise.all([promise]).then(() => {
@@ -54,9 +54,17 @@ class Explosion {
       this.posY = enemyCenterY - this.spriteSheet.height / 2;
     }
   }
+  DoRenderOnce(enemyCenterX, enemyCenterY) {
+    if (this.explosionReady && !this.doRender) {
+      this.doRender = true;
+      this.posX = enemyCenterX - this.spriteSheet.width / 2;
+      this.posY = enemyCenterY - this.spriteSheet.height / 2;
+    }
+  }
 
   render() {
     if (this.explosionReady && this.doRender) {
+      m_ExplosionSound.play();
       if (this.currentFrequency > this.spriteSheet.frequency) {
         this.currentFrequency = 0;
 

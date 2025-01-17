@@ -28,6 +28,8 @@ class Power {
   }
 
   activatePower() {
+    m_BackgroundMusic.pause();
+    m_BoostMusic.play();
     this.isActive = true;
     if (this.text === "Balkan Anger (Double Damage)") {
       damageScore *= 2;
@@ -37,7 +39,8 @@ class Power {
         damageScore /= 2;
         this.canBeBought = true; // Re-enable the button after the effect ends
         this.isActive = false;
-      }, 30000);
+        m_BackgroundMusic.play();
+      }, 10000);
     } else if (this.text === "Communist Gain (Double Tokens)") {
       scoreMultiplier *= 2;
 
@@ -46,7 +49,8 @@ class Power {
         scoreMultiplier /= 2;
         this.canBeBought = true; // Re-enable the button after the effect ends
         this.isActive = false;
-      }, 30000);
+        m_BackgroundMusic.play();
+      }, 10000);
     }
   }
 
@@ -72,7 +76,7 @@ class Power {
     ctx.fillStyle = "darkblue";
     ctx.strokeStyle = "white";
     ctx.lineWidth = 3;
-    ctx.font = "bold 20px Arial";
+    ctx.font = "bold 20px DiloWorld";
     ctx.textAlign = "left";
 
     ctx.strokeText(

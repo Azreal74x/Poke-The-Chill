@@ -6,7 +6,7 @@ canvas.style.position = "absolute";
 document.body.appendChild(canvas);
 
 var bgImage = new Image();
-bgImage.src = "images/background.png";
+bgImage.src = "media/background.png";
 var bgImageReady = false;
 bgImage.onload = function () {
   bgImageReady = true;
@@ -110,7 +110,7 @@ function CheckClickOnThisButton(clickX, clickY, thisButton) {
           75,
           "Auto Click Damage",
           50,
-          "images/NoChillToken.png",
+          "media/NoChillToken.png",
           true,
           true
         );
@@ -139,6 +139,8 @@ function CheckClickOnEnemies(clickX, clickY) {
     clickY < m_CurrentEnemy.posY + m_CurrentEnemy.currentSpriteSheet.height
   ) {
     DoDamageToEnemies(damageScore);
+
+    m_EnemyClickSound.play();
   }
 }
 
@@ -161,6 +163,7 @@ function PayoutReward() {
       m_CurrentEnemy.GetReward()
     );
   } else {
+    m_EnemyRewardSound.play();
     m_CurrencyManager.AddCurrencyAmount(
       currencyReward,
       m_CurrentEnemy.GetReward() * scoreMultiplier
@@ -177,7 +180,13 @@ function DoDamageToEnemies(damageScore) {
     if (m_CurrentEnemy.lifePoints <= 0) {
       PayoutReward();
 
+      // if (m_WheelDoneSpinning) {
+      // We spawn a new enemy
       setTimeout(SpawnNewEnemies, 2000);
+      //}
+      //else {
+      //setTimeout(SpawnNewEnemies, 8000);
+      // }
     }
   }
 }
@@ -222,7 +231,10 @@ var update = function (dt) {
 function AutoClick(dt) {
   if (m_CurrentTimeBetweenAutoClicks > m_TimeBetweenAutoClicks) {
     m_CurrentTimeBetweenAutoClicks = 0;
-    DoDamageToEnemies(autoClickDamage);
+    if (!m_CurrentEnemy.enemyIsDead) {
+      m_DamageReceivedSound.play();
+      DoDamageToEnemies(autoClickDamage);
+    }
   } else {
     m_CurrentTimeBetweenAutoClicks += dt;
   }
@@ -269,7 +281,8 @@ var render = function () {
   m_Shop.render();
   m_Monetization.render();
 
-  ctx.font = "30px Arial";
+  // Finally, we render the UI, an score for example
+  ctx.font = "30px DiloWorld";
 };
 
 var main = function () {
@@ -333,7 +346,81 @@ var isAutoClickActive = false;
 var autoClickDamage = 1;
 var autoClickDamageMult = 0.1;
 
-var m_CoinMinigame = new CoinMinigame(15); // 15 seconds minigame
+// We initialize the GameObjects and variables
+var m_CurrentEnemy = null;
+var m_Coin = new Coin(canvas.width / 2, canvas.height / 2);
+var m_Explosion = new Explosion(canvas.width / 2, canvas.height / 2);
+// Initialize the wheel
+const m_Wheel = new Wheel(canvas.width / 2, canvas.height / 2);
+
+var m_TimeBetweenAutoClicks = 5;
+var m_CurrentTimeBetweenAutoClicks = 0;
+
+var m_CoinMinigame = new CoinMinigame(10); // 30 seconds minigame
+
+var m_WheelDoneSpinning = true;
+
+const font = new FontFace("DiloWorld", "url('media/DiloWorld.ttf')");
+
+font
+  .load()
+  .then(() => {
+    document.fonts.add(font);
+    console.log("Font loaded and available.");
+  })
+  .catch((error) => {
+    console.error("Failed to load font:", error);
+  });
+
+// Declare the global variable
+var m_BackgroundMusic;
+
+var m_ExplosionSound;
+var m_EnemyClickSound;
+var m_ButtonClickSound;
+var m_WheelFinishedSound;
+var m_DamageReceivedSound;
+
+var m_SingleCoinSound;
+var m_CoinMinigameRewardSound;
+var m_WheelRewardSound;
+var m_EnemyRewardSound;
+
+var m_BoostMusic;
+
+// Add event listener for DOMContentLoaded
+document.addEventListener("DOMContentLoaded", () => {
+  // Get the audio elements after DOM is fully loaded
+  m_BackgroundMusic = document.getElementById("BackgroundMusic");
+  m_ExplosionSound = document.getElementById("ExplosionSound"); // Assign value to global variable
+  m_EnemyClickSound = document.getElementById("EnemyClickSound"); // Assign value to global variable
+  m_ButtonClickSound = document.getElementById("ButtonClickSound");
+  m_WheelFinishedSound = document.getElementById("WheelFinishedSound");
+  m_DamageReceivedSound = document.getElementById("DamageReceivedSound");
+
+  m_SingleCoinSound = document.getElementById("SingleCoinSound");
+  m_CoinMinigameRewardSound = document.getElementById(
+    "CoinMinigameRewardSound"
+  );
+  m_WheelRewardSound = document.getElementById("WheelRewardSound");
+  m_EnemyRewardSound = document.getElementById("EnemyRewardSound");
+
+  m_BoostMusic = document.getElementById("BoostMusic");
+
+  if (m_BackgroundMusic) {
+    m_BackgroundMusic.loop = true; // Ensure the music loops
+
+    document.body.addEventListener("click", function playMusicOnce() {
+      if (m_BackgroundMusic.paused) {
+        m_BackgroundMusic.play().catch((error) => {
+          console.error("Failed to play music:", error);
+        });
+      }
+      // Remove the event listener after the first click
+      document.body.removeEventListener("click", playMusicOnce);
+    });
+  }
+});
 
 var m_BtnClickUpdate = new Button(
   canvas.width - 75 * 5 - 50,
@@ -341,7 +428,7 @@ var m_BtnClickUpdate = new Button(
   75,
   "Click Multiplier",
   50,
-  "images/NoChillToken.png",
+  "media/NoChillToken.png",
   true,
   true
 );
@@ -351,7 +438,7 @@ var m_BtnScoreUpdate = new Button(
   75,
   "No Chill Multiplier",
   50,
-  "images/NoChillToken.png",
+  "media/NoChillToken.png",
   true,
   true
 );
@@ -361,7 +448,7 @@ var m_BtnAutoClickUnlock = new Button(
   75,
   "Unlock Auto Click",
   50,
-  "images/NoChillToken.png",
+  "media/NoChillToken.png",
   true,
   false
 );
@@ -372,7 +459,7 @@ var m_BtnRarityUpdate = new Button(
   75,
   "Tier Up",
   50,
-  "images/NoChillToken.png",
+  "media/NoChillToken.png",
   true,
   true,
   [1000, 10000, 50000, 100000, "Maxed"]
@@ -392,7 +479,7 @@ var m_Power2 = new Power(
   "Communist Gain (Double Tokens)",
   200
 );
-var m_BtnShop = new Button(10, 10, 75, "Shop", 0, "images/shop.png", false);
+var m_BtnShop = new Button(10, 10, 75, "Shop", 0, "media/shop.png", false);
 m_BtnShop.width = m_BtnShop.height;
 var m_BtnMonetization = new Button(
   100,
@@ -400,7 +487,7 @@ var m_BtnMonetization = new Button(
   75,
   "Monetization",
   0,
-  "images/cash.png",
+  "media/cash.png",
   false
 );
 m_BtnMonetization.width = m_BtnMonetization.height;
