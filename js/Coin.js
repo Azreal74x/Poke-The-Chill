@@ -18,13 +18,13 @@ class Coin {
     //we create a promise with the image we need
     let spritesheetPath;
     if (type === "noChill") {
-      spritesheetPath = "images/noChill_coin.png";
+      spritesheetPath = "media/noChill_coin.png";
     } else if (type === "fGrade") {
-      spritesheetPath = "images/fGrade_coin.png";
+      spritesheetPath = "media/fGrade_coin.png";
     } else if (type === "moni") {
-      spritesheetPath = "images/moni_coin.png";
+      spritesheetPath = "media/moni_coin.png";
     } else {
-      spritesheetPath = "images/coins.png";
+      spritesheetPath = "media/coins.png";
     }
 
     const promise = this.loadImage(spritesheetPath);

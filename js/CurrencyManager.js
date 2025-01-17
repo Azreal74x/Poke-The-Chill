@@ -17,9 +17,9 @@ class CurrencyManager {
     this.positions = []; //store y positions
 
     //img path, index, yPos
-    const promise1 = this.loadImage("images/NoChillToken.png", 0, 0);
-    const promise2 = this.loadImage("images/FGradeToken.png", 1, 100);
-    const promise3 = this.loadImage("images/MoniToken.png", 2, 200);
+    const promise1 = this.loadImage("media/NoChillToken.png", 0, 0);
+    const promise2 = this.loadImage("media/FGradeToken.png", 1, 100);
+    const promise3 = this.loadImage("media/MoniToken.png", 2, 200);
 
     //wait for promise to be completed
     this.promiseReady = Promise.all([promise1, promise2, promise3]).then(() => {
@@ -104,7 +104,7 @@ class CurrencyManager {
         if (index === 2) amount = Math.floor(this.moniAmount);
 
         //draw text next to imgs
-        ctx.font = "50px Arial";
+        ctx.font = "50px DiloWorld";
         ctx.fillStyle = "white";
         ctx.fillText(
           `${amount}`, //displayed text               
