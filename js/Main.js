@@ -84,9 +84,13 @@ function CheckClickOnThisButton(clickX, clickY, thisButton) {
     if (thisButton.buttonPressed()) {
       console.log(`${thisButton.text} button clicked`);
       if (thisButton === m_BtnClickUpdate) {
-        damageScore += damageScoreMultiplier;
+        damageScore = parseFloat(
+          (damageScore + damageScoreMultiplier).toFixed(2)
+        );
       } else if (thisButton === m_BtnScoreUpdate) {
-        scoreMultiplier += scoreMultUpgrade;
+        scoreMultiplier = parseFloat(
+          (scoreMultiplier + scoreMultUpgrade).toFixed(2)
+        );
       } else if (thisButton === m_BtnAutoClickUnlock) {
         isAutoClickActive = true;
         m_BtnAutoClickUnlock.remove();
@@ -95,15 +99,21 @@ function CheckClickOnThisButton(clickX, clickY, thisButton) {
           300,
           75,
           "Auto Click Damage",
-          50
+          50,
+          "images/NoChillToken.png",
+          true,
+          true
         );
       } else if (thisButton === m_BtnAutoClickDmgUpgrade) {
-        autoClickDamage += autoClickDamageMult;
+        autoClickDamage = parseFloat(
+          (autoClickDamage + autoClickDamageMult).toFixed(2)
+        );
       } else if (thisButton === m_BtnRarityUpdate) {
         if (m_TierLevel < m_maxTierLevel) {
           m_TierLevel++;
-        } else {
-          m_BtnRarityUpdate.remove();
+          if (m_TierLevel === m_maxTierLevel) {
+            m_BtnRarityUpdate.disable();
+          }
         }
       }
     }
@@ -129,9 +139,21 @@ function PayoutReward() {
 
   if (currencyReward === 0) {
     m_Wheel.DoRenderOnce();
+  } else if (currencyReward === 2) {
+    // F grade token
+    m_CurrencyManager.AddCurrencyAmount(
+      currencyReward,
+      m_CurrentEnemy.GetReward() * scoreMultiplier
+    );
+  } else if (currencyReward === 3) {
+    // Moni token
+    m_CurrencyManager.AddCurrencyAmount(
+      currencyReward,
+      m_CurrentEnemy.GetReward()
+    );
   } else {
     m_CurrencyManager.AddCurrencyAmount(
-      m_CurrentEnemy.GetCurrencyReward(),
+      currencyReward,
       m_CurrentEnemy.GetReward() * scoreMultiplier
     );
   }
@@ -173,9 +195,8 @@ var update = function (dt) {
   } else {
     m_BtnAutoClickUnlock.update();
   }
-  if (m_TierLevel < m_maxTierLevel) {
-    m_BtnRarityUpdate.update();
-  }
+
+  m_BtnRarityUpdate.update();
   m_BtnClickUpdate.update();
   m_BtnScoreUpdate.update();
   m_CoinMinigame.update(dt);
@@ -216,9 +237,7 @@ var render = function () {
     m_BtnAutoClickUnlock.render();
   }
 
-  if (m_TierLevel < m_maxTierLevel) {
-    m_BtnRarityUpdate.render();
-  }
+  m_BtnRarityUpdate.render();
 
   m_CoinMinigame.render();
 
@@ -275,7 +294,7 @@ async function initGame() {
 }
 
 var m_TierLevel = 0;
-var m_maxTierLevel = 1;
+var m_maxTierLevel = 1; // 5 yap sakın unutma!!! enemy sonrası
 
 // We initialize the initial time of the game
 var then = 0;
@@ -311,30 +330,44 @@ var m_BtnClickUpdate = new Button(
   canvas.width - 75 * 5 - 50,
   100,
   75,
-  "Upgrade click mult.",
-  50
+  "Click Multiplier",
+  50,
+  "images/NoChillToken.png",
+  true,
+  true
 );
 var m_BtnScoreUpdate = new Button(
   canvas.width - 75 * 5 - 50,
   200,
   75,
-  "Upgrade score mult",
-  50
+  "No Chill Multiplier",
+  50,
+  "images/NoChillToken.png",
+  true,
+  true
 );
 var m_BtnAutoClickUnlock = new Button(
   canvas.width - 75 * 5 - 50,
   300,
   75,
   "Unlock Auto Click",
-  50
+  50,
+  "images/NoChillToken.png",
+  true,
+  false
 );
 var m_BtnAutoClickDmgUpgrade = null;
+
 var m_BtnRarityUpdate = new Button(
   canvas.width - 75 * 5 - 50,
   400,
   75,
-  "Rarity Update",
-  50
+  "Tier Up",
+  50,
+  "images/NoChillToken.png",
+  true,
+  true,
+  [1000, 10000, 50000, 100000, "Maxed"]
 );
 
 var m_CurrencyManager = new CurrencyManager(10, 200, 0, 0, 0, 10);
@@ -354,7 +387,7 @@ var m_Power2 = new Power(
   200
 );
 
-var m_BtnShop = new Button(10, 10, 75, "Shop", 0);
+var m_BtnShop = new Button(10, 10, 75, "Shop", 0, "images/shop.png", false);
 m_BtnShop.width = m_BtnShop.height;
 
 initGame();

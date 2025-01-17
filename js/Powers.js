@@ -10,6 +10,9 @@ class Power {
     this.price = price;
     this.canBeBought = false;
     this.text = text;
+
+    this.moniTokenImage = new Image();
+    this.moniTokenImage.src = "images/MoniToken.png";
   }
 
   update(dt) {
@@ -79,9 +82,17 @@ class Power {
     );
 
     ctx.fillText(
-      "Price: " + this.price + " Moni Tokens",
+      this.price,
       this.posX + this.width + 10,
-      this.posY + this.height / 2 + 10
+      this.posY + this.height / 2 + 20
+    );
+    const textWidth = ctx.measureText(this.price).width;
+    ctx.drawImage(
+      this.moniTokenImage,
+      this.posX + this.width + 10 + textWidth + 5,
+      this.posY + this.height / 2,
+      25,
+      25
     );
   }
 }

@@ -1,6 +1,5 @@
 class CurrencyManager {
   constructor(posX, posY, noChillAmount, fGradeAmount, moniAmount, scale) {
-
     this.posX = posX;
     this.posY = posY;
 
@@ -47,11 +46,9 @@ class CurrencyManager {
   AddCurrencyAmount(currency, amount) {
     if (currency === 1) {
       this.noChillAmount += amount;
-    }
-    else if (currency === 2) {
+    } else if (currency === 2) {
       this.fGradeAmount += amount;
-    }
-    else if (currency === 3) {
+    } else if (currency === 3) {
       this.moniAmount += amount;
     }
   }
@@ -59,29 +56,20 @@ class CurrencyManager {
   RemoveCurrencyAmount(currency, amount) {
     if (currency === 1 && amount <= this.noChillAmount) {
       this.noChillAmount -= amount;
-    }
-    else if (currency === 2 && amount <= this.fGradeAmount) {
+    } else if (currency === 2 && amount <= this.fGradeAmount) {
       this.fGradeAmount -= amount;
-    }
-    else if (currency === 3 && amount <= this.moniAmount) {
+    } else if (currency === 3 && amount <= this.moniAmount) {
       this.moniAmount -= amount;
-    }
-    else {
+    } else {
       console.log("could not remove from currency");
     }
   }
 
-  reset() {
+  reset() {}
 
-  }
+  start() {}
 
-  start() {
-
-  }
-
-  update(dt) {
-
-  }
+  update(dt) {}
 
   render() {
     if (this.areImagesLoaded) {
@@ -106,10 +94,11 @@ class CurrencyManager {
         //draw text next to imgs
         ctx.font = "50px Arial";
         ctx.fillStyle = "white";
+        ctx.textAlign = "left";
         ctx.fillText(
-          `${amount}`, //displayed text               
-          position.x + (image.width * this.scale) + 10, //x pos next to the imgs
-          position.y + (image.height * this.scale) / 2 + 15  //y pos centered with the imgs
+          `${amount}`, //displayed text
+          position.x + image.width * this.scale + 10, //x pos next to the imgs
+          position.y + (image.height * this.scale) / 2 + 17 //y pos centered with the imgs
         );
       });
     }

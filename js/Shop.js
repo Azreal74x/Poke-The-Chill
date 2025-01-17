@@ -56,9 +56,16 @@ class Shop {
       ctx.textAlign = "left"; // Align text to the left
       let itemText = item.name;
       if (item.price > 0) {
-        itemText += " - " + item.price + " credits";
+        itemText += " - " + item.price + " ";
+        ctx.fillText(itemText, 160, 200 + index * 100);
+
+        // Draw the F Grade Token image next to the price
+        const tokenImage = m_CurrencyManager.images[1]; // Assuming the F Grade Token image is at index 1
+        const textWidth = ctx.measureText(itemText).width;
+        ctx.drawImage(tokenImage, 160 + textWidth, 180 + index * 100, 20, 20); // Adjust the position and size as needed
+      } else {
+        ctx.fillText(itemText, 160, 200 + index * 100);
       }
-      ctx.fillText(itemText, 160, 200 + index * 100);
     });
   }
 
@@ -81,7 +88,7 @@ class Shop {
         console.log(item.name + " clicked");
         // Handle item purchase logic here
         // Ensure the price is not reset to 0
-        if (item.price > 0) {
+        if (m_CurrencyManager.getFGradeToken() >= item.price) {
           // Deduct the price from the user's currency
           m_CurrencyManager.RemoveCurrencyAmount(2, item.price);
           item.price = 0;
@@ -89,6 +96,8 @@ class Shop {
           canvas.style.cursor = item.cursor;
         } else if (item.price === 0) {
           canvas.style.cursor = item.cursor;
+        } else {
+          console.log("Not enough F Grade Tokens to purchase " + item.name);
         }
       }
     });
