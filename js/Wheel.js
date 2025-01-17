@@ -3,12 +3,26 @@ class Wheel {
     this.posX = posX;
     this.posY = posY;
     this.rewards = [
-      "50", "750", "5000", "7", "3000",
-      "1000", "250", "500", "10000",
+      "50",
+      "750",
+      "5000",
+      "7",
+      "3000",
+      "1000",
+      "250",
+      "500",
+      "10000",
     ];
     this.colors = [
-      "#B8D430", "#3AB745", "#029990", "#3501CB", "#2E2C75",
-      "#673A7E", "#CC0071", "#F80120", "#F35B20",
+      "#B8D430",
+      "#3AB745",
+      "#029990",
+      "#3501CB",
+      "#2E2C75",
+      "#673A7E",
+      "#CC0071",
+      "#F80120",
+      "#F35B20",
     ];
     this.startAngle = 0;
     this.arc = (2 * Math.PI) / this.rewards.length;
@@ -85,7 +99,8 @@ class Wheel {
       return;
     }
     const spinAngle =
-      this.spinAngleStart - this.easeOut(this.spinTime, 0, this.spinAngleStart, this.spinTimeTotal);
+      this.spinAngleStart -
+      this.easeOut(this.spinTime, 0, this.spinAngleStart, this.spinTimeTotal);
     this.startAngle += (spinAngle * Math.PI) / 180;
     this.drawRouletteWheel();
     this.spinTimeout = setTimeout(() => this.rotateWheel(), 30);
@@ -122,10 +137,6 @@ class Wheel {
   determineReward(reward) {
     // Add currency based on reward
     m_CurrencyManager.AddCurrencyAmount(1, reward);
-
-    if (!m_CoinMinigame.isActive) {
-      m_CoinMinigame.start();
-    }
 
     console.log("Reward determined:", reward);
   }

@@ -41,11 +41,24 @@ class CoinMinigame {
   spawnCoin() {
     if (!this.isActive) return;
 
-    const sideLength = canvas.height / 3;
-    const minX = (canvas.width - sideLength) / 2;
-    const minY = 0;
-    const posX = minX + Math.random() * sideLength;
-    const posY = minY + Math.random() * sideLength;
+    const widthFraction = 1 / 2;
+    const heightFraction = 8 / 10;
+    const sideWidth = canvas.width * widthFraction;
+    const sideHeight = canvas.height * heightFraction;
+    const minX = (canvas.width - sideWidth) / 2;
+    const minY = (canvas.height - sideHeight) / 10;
+    let posX, posY;
+    let isOverlapping;
+
+    do {
+      posX = minX + Math.random() * sideWidth;
+      posY = minY + Math.random() * sideHeight;
+      isOverlapping = this.coins.some(
+        (coin) =>
+          Math.abs(coin.posX - posX) < this.image.width &&
+          Math.abs(coin.posY - posY) < this.image.height
+      );
+    } while (isOverlapping);
 
     this.coins.push({ posX, posY });
 
@@ -90,7 +103,9 @@ class CoinMinigame {
     console.log("CoinMinigame ended");
     this.isActive = false;
 
-    const reward = this.coinsClicked * 100;
+    const latestEnemyReward = m_CurrentEnemy.GetReward();
+    const reward =
+      this.coinsClicked * (latestEnemyReward / 4) * scoreMultiplier;
     m_CurrencyManager.AddCurrencyAmount(1, reward);
     console.log(
       `Minigame ended. Coins clicked: ${this.coinsClicked}, Reward: ${reward} no chill tokens.`

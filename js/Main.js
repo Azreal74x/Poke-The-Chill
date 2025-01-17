@@ -53,7 +53,6 @@ canvas.addEventListener(
     }
 
     if (m_Wheel.isVisible) {
-      m_wheel.click(mouseX, mouseY);
       return; // Prevent other clicks when the monetization tab is open
     }
 
@@ -167,6 +166,9 @@ function PayoutReward() {
       m_CurrentEnemy.GetReward() * scoreMultiplier
     );
   }
+  if (Math.random() < 1 / 15) {
+    m_CoinMinigame.start();
+  }
 }
 
 function DoDamageToEnemies(damageScore) {
@@ -191,11 +193,20 @@ var reset = function () {};
 var start = function () {};
 
 var update = function (dt) {
-  if (isAutoClickActive) {
-    m_BtnAutoClickDmgUpgrade.update();
-    AutoClick(dt);
-  } else {
-    m_BtnAutoClickUnlock.update();
+  if (
+    !(
+      m_Shop.isVisible ||
+      m_Monetization.isVisible ||
+      m_CoinMinigame.isActive ||
+      m_Wheel.isVisible
+    )
+  ) {
+    if (isAutoClickActive) {
+      m_BtnAutoClickDmgUpgrade.update();
+      AutoClick(dt);
+    } else {
+      m_BtnAutoClickUnlock.update();
+    }
   }
 
   m_BtnRarityUpdate.update();
@@ -221,6 +232,15 @@ var render = function () {
   if (bgImageReady) {
     ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
   }
+
+  // Draw beige background on 1/4th of the canvas on the left side
+  ctx.fillStyle = "rgba(245, 245, 220, 0.5)"; // Slight beige color with some transparency
+  ctx.fillRect(
+    (canvas.width * 61) / 80,
+    (canvas.height * 1) / 10,
+    (canvas.width * 19) / 80,
+    (canvas.height * 7.2) / 10
+  );
 
   enemySpawner.render();
   m_Coin.render();
@@ -367,7 +387,7 @@ var m_Power1 = new Power(
 );
 var m_Power2 = new Power(
   canvas.width - 75 * 5 - 50,
-  650,
+  600,
   35,
   "Communist Gain (Double Tokens)",
   200

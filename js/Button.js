@@ -75,7 +75,35 @@ class Button {
       ctx.fillStyle = "Gray";
     }
 
-    ctx.fillRect(this.posX, this.posY, this.width, this.height);
+    // Draw rounded rectangle
+    const radius = 10;
+    ctx.beginPath();
+    ctx.moveTo(this.posX + radius, this.posY);
+    ctx.lineTo(this.posX + this.width - radius, this.posY);
+    ctx.quadraticCurveTo(
+      this.posX + this.width,
+      this.posY,
+      this.posX + this.width,
+      this.posY + radius
+    );
+    ctx.lineTo(this.posX + this.width, this.posY + this.height - radius);
+    ctx.quadraticCurveTo(
+      this.posX + this.width,
+      this.posY + this.height,
+      this.posX + this.width - radius,
+      this.posY + this.height
+    );
+    ctx.lineTo(this.posX + radius, this.posY + this.height);
+    ctx.quadraticCurveTo(
+      this.posX,
+      this.posY + this.height,
+      this.posX,
+      this.posY + this.height - radius
+    );
+    ctx.lineTo(this.posX, this.posY + radius);
+    ctx.quadraticCurveTo(this.posX, this.posY, this.posX + radius, this.posY);
+    ctx.closePath();
+    ctx.fill();
 
     if (!this.showText && this.image) {
       const imgX = this.posX + (this.width - this.image.width) / 2;
