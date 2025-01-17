@@ -13,7 +13,7 @@ class Button {
     this.posX = posX;
     this.posY = posY;
 
-    this.scale = scale;
+    this.scale = scale * (canvas.width / 1000);
     this.width = 5.5 * scale;
     this.height = 1 * scale;
 
@@ -145,7 +145,7 @@ class Button {
 
     if (this.showValue) {
       ctx.fillStyle = "black";
-      ctx.font = "1.25rem Arial";
+      ctx.font = "1.25rem DiloWorld";
       ctx.textAlign = "right";
       let currentValue;
       if (this.text === "Click Multiplier") {

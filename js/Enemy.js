@@ -27,7 +27,7 @@ class Enemy {
 
     this.promiseEnemyReady = Promise.all([promise1, promise2]).then(() => {
       // Set the scale to resize the sprite
-      this.scale = 0.5; // Adjust the scale value (e.g., 0.5 for half size)
+      this.scale = 0.5 * (canvas.width / 2000); // Adjust the scale value (e.g., 0.5 for half size)
 
       // Use scaled dimensions for the sprite
       this.width = this.image.width; // Original width of the image

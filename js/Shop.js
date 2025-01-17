@@ -98,9 +98,9 @@ class Shop {
         ctx.drawImage(
           tokenImage,
           x + buttonWidth / 2 + ctx.measureText(itemText).width / 2,
-          y + buttonHeight / 2 - 10,
-          20,
-          20
+          y + buttonHeight / 2 - canvas.height / 75,
+          canvas.height / 40,
+          canvas.height / 40
         );
       } else {
         ctx.fillText(itemText, x + buttonWidth / 2, y + buttonHeight / 2);

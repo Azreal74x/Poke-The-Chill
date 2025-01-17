@@ -3,7 +3,7 @@ class Power {
     this.posX = posX;
     this.posY = posY;
 
-    this.scale = scale;
+    this.scale = scale * (canvas.width / 1000);
     this.width = 2 * scale;
     this.height = 2 * scale;
 

@@ -7,7 +7,7 @@ class CurrencyManager {
     this.fGradeAmount = fGradeAmount;
     this.moniAmount = moniAmount;
 
-    this.scale = scale;
+    this.scale = scale * (canvas.width / 2000);
 
     this.areImagesLoaded = false;
 
@@ -28,7 +28,7 @@ class CurrencyManager {
     );
 
     this.promiseReady = Promise.all([promise1, promise2, promise3]).then(() => {
-      this.scale = 3;
+      this.scale = 3 * (canvas.width / 2000);
       this.areImagesLoaded = true;
     });
   }

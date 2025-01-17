@@ -3,7 +3,7 @@ class Wheel {
     this.posX = posX;
     this.posY = posY;
 
-    this.scale = 2; // Add scale property
+    this.scale = 2 * (canvas.width / 2000); // Add scale property
 
     this.rewards = [
       "50",
@@ -134,7 +134,7 @@ class Wheel {
     if (this.lastReward != null) {
       ctx.save();
       ctx.fillStyle = "white"; // Set the color to ensure visibility
-      ctx.font = `10rem DiloWorld`; // Use a simple, clear font for testing
+      ctx.font = `10rem DiloWorld`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.strokeStyle = "black";

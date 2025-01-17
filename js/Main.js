@@ -154,7 +154,7 @@ function PayoutReward() {
     // F grade token
     m_CurrencyManager.AddCurrencyAmount(
       currencyReward,
-      m_CurrentEnemy.GetReward() * scoreMultiplier
+      m_CurrentEnemy.GetReward()
     );
   } else if (currencyReward === 3) {
     // Moni token

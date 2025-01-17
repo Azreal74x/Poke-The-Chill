@@ -26,7 +26,7 @@ class Coin {
     const promise = this.loadImage(spritesheetPath);
 
     this.promiseCoinReady = Promise.all([promise]).then(() => {
-      this.scale = 1;
+      this.scale = 2 * (canvas.width / 1000);
       this.width = this.image.width / 2;
       this.height = this.image.height / 2;
 
@@ -90,7 +90,7 @@ class Coin {
       const frameWidth =
         this.spriteSheet.img.width / this.spriteSheet.totalFrames;
       const frameHeight = this.spriteSheet.img.height;
-      const scale = 1.5;
+      const scale = 2 * (canvas.width / 2000);
 
       ctx.drawImage(
         this.spriteSheet.img,
