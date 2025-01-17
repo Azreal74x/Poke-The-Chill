@@ -47,6 +47,11 @@ canvas.addEventListener(
       m_Shop.click(mouseX, mouseY);
       return; // Prevent other clicks when the shop is open
     }
+
+    if (m_Monetization.isVisible) {
+      m_Monetization.click(mouseX, mouseY);
+      return;
+    }
     // Call our click function
     Click(mouseX, mouseY);
     m_CoinMinigame.click(mouseX, mouseY);
@@ -68,6 +73,7 @@ function Click(clickX, clickY) {
   CheckClickOnThisButton(clickX, clickY, m_Power1);
   CheckClickOnThisButton(clickX, clickY, m_Power2);
   CheckClickOnThisButton(clickX, clickY, m_BtnShop);
+  CheckClickOnThisButton(clickX, clickY, m_BtnMonetization);
 }
 
 function CheckClickOnThisButton(clickX, clickY, thisButton) {
@@ -80,7 +86,9 @@ function CheckClickOnThisButton(clickX, clickY, thisButton) {
     if (thisButton === m_BtnShop) {
       m_Shop.show();
     }
-
+    if (thisButton === m_BtnMonetization) {
+      m_Monetization.show();
+    }
     if (thisButton.buttonPressed()) {
       console.log(`${thisButton.text} button clicked`);
       if (thisButton === m_BtnClickUpdate) {
@@ -205,6 +213,7 @@ var update = function (dt) {
   m_Power1.update(dt);
   m_Power2.update(dt);
   m_BtnShop.update();
+  m_BtnMonetization.update();
 };
 
 function AutoClick(dt) {
@@ -248,8 +257,10 @@ var render = function () {
   m_Power2.render();
 
   m_BtnShop.render();
+  m_BtnMonetization.render();
 
   m_Shop.render();
+  m_Monetization.render();
 
   // Finally, we render the UI, an score for example
   ctx.font = "30px Arial";
@@ -389,5 +400,16 @@ var m_Power2 = new Power(
 
 var m_BtnShop = new Button(10, 10, 75, "Shop", 0, "images/shop.png", false);
 m_BtnShop.width = m_BtnShop.height;
+
+var m_BtnMonetization = new Button(
+  100,
+  10,
+  75,
+  "Monetization",
+  0,
+  "images/cash.png",
+  false
+);
+m_BtnMonetization.width = m_BtnMonetization.height;
 
 initGame();
