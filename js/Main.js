@@ -318,17 +318,6 @@ async function initGame() {
 
 var then = 0;
 
-// We initialize the GameObjects and variables
-var m_CurrentEnemy = null;
-var m_Coin = new Coin(canvas.width / 2, canvas.height / 2);
-var m_Explosion = new Explosion(canvas.width / 2, canvas.height / 2);
-
-// Initialize the wheel
-const m_Wheel = new Wheel(canvas.width / 2, canvas.height / 2);
-
-var m_TimeBetweenAutoClicks = 5;
-var m_CurrentTimeBetweenAutoClicks = 0;
-
 var m_TierLevel = 0;
 var m_maxTierLevel = 1; // 5 yap sakın unutma!!! enemy sonrası
 
