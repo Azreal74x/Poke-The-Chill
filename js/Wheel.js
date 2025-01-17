@@ -133,6 +133,10 @@ class Wheel {
       ctx.font = `${36 * this.scale}px DiloWorld`; // Use a simple, clear font for testing
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 10 * this.scale;
+      ctx.strokeText(this.lastReward, 250 * this.scale, 250 * this.scale);
+
       ctx.fillText(this.lastReward, 250 * this.scale, 250 * this.scale); // Centered text
       ctx.restore();
     }
