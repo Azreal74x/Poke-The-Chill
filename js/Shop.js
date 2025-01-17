@@ -6,23 +6,31 @@ class Shop {
         name: "Default",
         price: 0,
         cursor: "url('media/defaultcursor.png'), auto",
+        imageSrc: "media/defaultcursor.png",
       },
       {
         name: "Item 1",
         price: 1000,
         cursor: "url('media/yellowcursor.png'), auto",
+        imageSrc: "media/yellowcursor.png",
       },
       {
         name: "Item 2",
         price: 5000,
         cursor: "url('media/purplecursor.png'), auto",
+        imageSrc: "media/purplecursor.png",
       },
       {
         name: "Item 3",
         price: 10000,
         cursor: "url('media/orangecursor.png'), auto",
+        imageSrc: "media/orangecursor.png",
       },
     ];
+    this.items.forEach((item) => {
+      item.image = new Image();
+      item.image.src = item.imageSrc;
+    });
   }
 
   show() {
@@ -104,6 +112,13 @@ class Shop {
         );
       } else {
         ctx.fillText(itemText, x + buttonWidth / 2, y + buttonHeight / 2);
+      }
+      if (item.image) {
+        const imgWidth = (item.image.width * canvas.height) / 600;
+        const imgHeight = (item.image.height * canvas.height) / 600;
+        const imgX = x + (buttonWidth - imgWidth) / 2;
+        const imgY = y + (buttonHeight - imgHeight) / 2 - canvas.height / 14;
+        ctx.drawImage(item.image, imgX, imgY, imgWidth, imgHeight);
       }
     });
   }

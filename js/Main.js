@@ -226,6 +226,7 @@ var update = function (dt) {
   m_Power2.update(dt);
   m_BtnShop.update();
   m_BtnMonetization.update();
+  m_Coin.update();
 };
 
 function AutoClick(dt) {

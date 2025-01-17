@@ -12,6 +12,10 @@ class Coin {
 
     this.doRender = false;
 
+    this.targetX = 0;
+    this.targetY = canvas.height - (canvas.height * 2) / 8;
+    this.speed = 15;
+
     let spritesheetPath;
     if (type === "noChill") {
       spritesheetPath = "media/noChill_coin.png";
@@ -63,7 +67,19 @@ class Coin {
     }
   }
 
-  update(dt) {}
+  update() {
+    const dx = this.targetX - this.posX;
+    const dy = this.targetY - this.posY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance > this.speed) {
+      this.posX += (dx / distance) * this.speed;
+      this.posY += (dy / distance) * this.speed;
+    } else {
+      this.posX = this.targetX;
+      this.posY = this.targetY;
+    }
+  }
 
   DoRenderOnce(posX, posY) {
     this.posX = posX - 400;
