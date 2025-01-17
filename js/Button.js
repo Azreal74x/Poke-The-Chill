@@ -14,8 +14,8 @@ class Button {
     this.posY = posY;
 
     this.scale = scale * (canvas.width / 1000);
-    this.width = 5.5 * scale * (canvas.width / 1000);
-    this.height = 1 * scale * (canvas.width / 1000);
+    this.width = 5.5 * scale * (canvas.width / 2000);
+    this.height = 1 * scale * (canvas.width / 2000);
 
     this.price = price;
     this.priceMultiplier = 1.1; // Multiplier of 10%
