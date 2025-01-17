@@ -16,8 +16,16 @@ class CurrencyManager {
 
     //img path, index, yPos
     const promise1 = this.loadImage("media/NoChillToken.png", 0, 0);
-    const promise2 = this.loadImage("media/FGradeToken.png", 1, 100);
-    const promise3 = this.loadImage("media/MoniToken.png", 2, 200);
+    const promise2 = this.loadImage(
+      "media/FGradeToken.png",
+      1,
+      canvas.height / 8
+    );
+    const promise3 = this.loadImage(
+      "media/MoniToken.png",
+      2,
+      canvas.height / 4
+    );
 
     this.promiseReady = Promise.all([promise1, promise2, promise3]).then(() => {
       this.scale = 3;
@@ -88,13 +96,13 @@ class CurrencyManager {
         if (index === 2) amount = Math.floor(this.moniAmount);
 
         //draw text next to imgs
-        ctx.font = "50px DiloWorld";
+        ctx.font = "3rem DiloWorld";
         ctx.fillStyle = "white";
         ctx.textAlign = "left";
         ctx.fillText(
           `${amount}`,
-          position.x + image.width * this.scale + 10,
-          position.y + (image.height * this.scale) / 2 + 17
+          position.x + image.width * this.scale + image.width / 2,
+          position.y + (image.height * this.scale) / 2 + canvas.height / 42
         );
       });
     }

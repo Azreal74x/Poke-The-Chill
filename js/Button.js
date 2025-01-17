@@ -115,11 +115,11 @@ class Button {
 
     if (this.showText) {
       ctx.fillStyle = "black";
-      ctx.font = "30px DiloWorld";
+      ctx.font = "2rem DiloWorld";
       ctx.textAlign = "left";
 
-      const textX = this.posX + 30;
-      const textY = this.posY + 30;
+      const textX = this.posX + canvas.width / 100;
+      const textY = this.posY + canvas.width / 60;
       ctx.fillText(this.text, textX, textY);
     }
 
@@ -127,25 +127,25 @@ class Button {
       const textWidth = ctx.measureText(this.price + " ").width;
       ctx.drawImage(
         this.image,
-        this.posX + 30 + textWidth,
-        this.posY + 40,
-        20,
-        20
+        this.posX + canvas.width / 70 + textWidth,
+        this.posY + canvas.width / 44,
+        canvas.width / 100,
+        canvas.width / 100
       );
     }
 
     if (this.price !== 0) {
       ctx.fillText(
         this.price + " ",
-        this.posX + 30,
-        this.posY + 60,
+        this.posX + canvas.width / 70,
+        this.posY + canvas.width / 30,
         this.width
       );
     }
 
     if (this.showValue) {
       ctx.fillStyle = "black";
-      ctx.font = "20px Arial";
+      ctx.font = "1.25rem Arial";
       ctx.textAlign = "right";
       let currentValue;
       if (this.text === "Click Multiplier") {
@@ -161,8 +161,8 @@ class Button {
       }
       ctx.fillText(
         "x" + currentValue,
-        this.posX + this.width - 10,
-        this.posY + this.height / 2 + 10
+        this.posX + this.width - canvas.width / 200,
+        this.posY + this.height / 2 + canvas.width / 300
       );
     }
   }

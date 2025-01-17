@@ -7,5 +7,5 @@ body {
 }
 
 canvas {
-  cursor: url(images/defaultcursor.png), auto;
+  cursor: url(media/defaultcursor.png), auto;
 }

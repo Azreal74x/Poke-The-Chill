@@ -79,13 +79,17 @@ class Wheel {
       // Add reward text
       ctx.save();
       ctx.fillStyle = "white";
-      ctx.font = `${24 * this.scale}px DiloWorld, DiloWorld`;
+      ctx.font = `3rem DiloWorld`;
       ctx.translate(
         250 * this.scale + Math.cos(angle + this.arc / 2) * textRadius,
         250 * this.scale + Math.sin(angle + this.arc / 2) * textRadius
       );
       ctx.rotate(angle + this.arc / 2 + Math.PI / 2);
       const text = this.rewards[i];
+
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 4 * this.scale;
+      ctx.strokeText(text, -ctx.measureText(text).width / 2, 0);
       ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
       ctx.restore();
     }
@@ -130,11 +134,11 @@ class Wheel {
     if (this.lastReward != null) {
       ctx.save();
       ctx.fillStyle = "white"; // Set the color to ensure visibility
-      ctx.font = `${36 * this.scale}px DiloWorld`; // Use a simple, clear font for testing
+      ctx.font = `10rem DiloWorld`; // Use a simple, clear font for testing
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.strokeStyle = "black";
-      ctx.lineWidth = 10 * this.scale;
+      ctx.lineWidth = 6 * this.scale;
       ctx.strokeText(this.lastReward, 250 * this.scale, 250 * this.scale);
 
       ctx.fillText(this.lastReward, 250 * this.scale, 250 * this.scale); // Centered text

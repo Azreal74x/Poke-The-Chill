@@ -105,8 +105,8 @@ function CheckClickOnThisButton(clickX, clickY, thisButton) {
         isAutoClickActive = true;
         m_BtnAutoClickUnlock.remove();
         m_BtnAutoClickDmgUpgrade = new Button(
-          canvas.width - 75 * 5 - 50,
-          300,
+          (canvas.width * 31) / 40,
+          (canvas.height * 36) / 100,
           75,
           "Auto Click Damage",
           50,
@@ -282,7 +282,7 @@ var render = function () {
   m_Monetization.render();
 
   // Finally, we render the UI, an score for example
-  ctx.font = "30px DiloWorld";
+  ctx.font = "1.5rem DiloWorld";
 };
 
 var main = function () {
@@ -412,8 +412,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 var m_BtnClickUpdate = new Button(
-  canvas.width - 75 * 5 - 50,
-  100,
+  (canvas.width * 31) / 40,
+  (canvas.height * 12) / 100,
   75,
   "Click Multiplier",
   50,
@@ -422,8 +422,8 @@ var m_BtnClickUpdate = new Button(
   true
 );
 var m_BtnScoreUpdate = new Button(
-  canvas.width - 75 * 5 - 50,
-  200,
+  (canvas.width * 31) / 40,
+  (canvas.height * 24) / 100,
   75,
   "No Chill Multiplier",
   50,
@@ -432,8 +432,8 @@ var m_BtnScoreUpdate = new Button(
   true
 );
 var m_BtnAutoClickUnlock = new Button(
-  canvas.width - 75 * 5 - 50,
-  300,
+  (canvas.width * 31) / 40,
+  (canvas.height * 36) / 100,
   75,
   "Unlock Auto Click",
   50,
@@ -443,8 +443,8 @@ var m_BtnAutoClickUnlock = new Button(
 );
 var m_BtnAutoClickDmgUpgrade = null;
 var m_BtnRarityUpdate = new Button(
-  canvas.width - 75 * 5 - 50,
-  400,
+  (canvas.width * 31) / 40,
+  (canvas.height * 48) / 100,
   75,
   "Tier Up",
   50,
@@ -453,26 +453,41 @@ var m_BtnRarityUpdate = new Button(
   true,
   [1000, 10000, 50000, 100000, "Maxed"]
 );
-var m_CurrencyManager = new CurrencyManager(10, 200, 0, 0, 0, 10);
+var m_CurrencyManager = new CurrencyManager(
+  (canvas.width * 1) / 100,
+  (canvas.height * 19) / 30,
+  0,
+  0,
+  0,
+  10
+);
 var m_Power1 = new Power(
-  canvas.width - 75 * 5 - 50,
-  500,
+  (canvas.width * 31) / 40,
+  (canvas.height * 60) / 100,
   35,
   "Balkan Anger (Double Damage)",
   100
 );
 var m_Power2 = new Power(
-  canvas.width - 75 * 5 - 50,
-  600,
+  (canvas.width * 31) / 40,
+  (canvas.height * 72) / 100,
   35,
   "Communist Gain (Double Tokens)",
   200
 );
-var m_BtnShop = new Button(10, 10, 75, "Shop", 0, "media/shop.png", false);
+var m_BtnShop = new Button(
+  (canvas.width * 1) / 100,
+  (canvas.height * 1) / 100,
+  75,
+  "Shop",
+  0,
+  "media/shop.png",
+  false
+);
 m_BtnShop.width = m_BtnShop.height;
 var m_BtnMonetization = new Button(
-  100,
-  10,
+  (canvas.width * 6) / 100,
+  (canvas.height * 1) / 100,
   75,
   "Monetization",
   0,
@@ -480,5 +495,44 @@ var m_BtnMonetization = new Button(
   false
 );
 m_BtnMonetization.width = m_BtnMonetization.height;
+
+function updateButtonPositions() {
+  m_BtnClickUpdate.posX = (canvas.width * 31) / 40;
+  m_BtnClickUpdate.posY = (canvas.height * 12) / 100;
+
+  m_BtnScoreUpdate.posX = (canvas.width * 31) / 40;
+  m_BtnScoreUpdate.posY = (canvas.height * 24) / 100;
+
+  if (isAutoClickActive) {
+    m_BtnAutoClickDmgUpgrade.posX = (canvas.width * 31) / 40;
+    m_BtnAutoClickDmgUpgrade.posY = (canvas.height * 36) / 100;
+  } else {
+    m_BtnAutoClickUnlock.posX = (canvas.width * 31) / 40;
+    m_BtnAutoClickUnlock.posY = (canvas.height * 36) / 100;
+  }
+
+  m_BtnRarityUpdate.posX = (canvas.width * 31) / 40;
+  m_BtnRarityUpdate.posY = (canvas.height * 48) / 100;
+
+  m_Power1.posX = (canvas.width * 31) / 40;
+  m_Power1.posY = (canvas.height * 60) / 100;
+
+  m_Power2.posX = (canvas.width * 31) / 40;
+  m_Power2.posY = (canvas.height * 72) / 100;
+
+  m_BtnShop.posX = (canvas.width * 1) / 100;
+  m_BtnShop.posY = (canvas.height * 1) / 100;
+
+  m_BtnMonetization.posX = (canvas.width * 6) / 100;
+  m_BtnMonetization.posY = (canvas.height * 1) / 100;
+}
+
+// Call updateButtonPositions initially and on window resize
+updateButtonPositions();
+window.addEventListener("resize", () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  updateButtonPositions();
+});
 
 initGame();

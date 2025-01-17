@@ -40,52 +40,70 @@ class Shop {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = "red";
-    ctx.fillRect(canvas.width - 60, 10, 50, 50);
+    const buttonSize = canvas.width / 40;
+    const buttonX = (canvas.width * 78) / 80;
+    const buttonY = (canvas.height * 1) / 160;
+    ctx.fillRect(buttonX, buttonY, buttonSize, buttonSize);
+
     ctx.fillStyle = "white";
-    ctx.font = "30px DiloWorld";
-    ctx.fillText("X", canvas.width - 45, 45);
+    ctx.font = "2rem DiloWorld";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("X", buttonX + buttonSize / 2, buttonY + buttonSize / 2);
+
+    const buttonWidth = canvas.height / 4;
+    const buttonHeight = canvas.height / 4;
+    const startX = (canvas.width - (canvas.height * 2) / 3) / 2;
+    const startY = canvas.height / 6;
+    const gap = canvas.height / 6;
+    const radius = 20;
 
     this.items.forEach((item, index) => {
       const canAfford = m_CurrencyManager.getFGradeToken() >= item.price;
       ctx.fillStyle = canAfford ? "white" : "gray";
+      const i = Math.floor(index / 2);
+      const j = index % 2;
+      const x = startX + j * (buttonWidth + gap);
+      const y = startY + i * (buttonHeight + gap);
 
-      // Draw rounded rectangle for item button
-      const radius = 10;
-      const x = 150;
-      const y = 150 + index * 100;
-      const width = canvas.width - 300;
-      const height = 80;
-
+      // Draw rounded rectangle
       ctx.beginPath();
       ctx.moveTo(x + radius, y);
-      ctx.lineTo(x + width - radius, y);
-      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-      ctx.lineTo(x + width, y + height - radius);
+      ctx.lineTo(x + buttonWidth - radius, y);
+      ctx.quadraticCurveTo(x + buttonWidth, y, x + buttonWidth, y + radius);
+      ctx.lineTo(x + buttonWidth, y + buttonHeight - radius);
       ctx.quadraticCurveTo(
-        x + width,
-        y + height,
-        x + width - radius,
-        y + height
+        x + buttonWidth,
+        y + buttonHeight,
+        x + buttonWidth - radius,
+        y + buttonHeight
       );
-      ctx.lineTo(x + radius, y + height);
-      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x + radius, y + buttonHeight);
+      ctx.quadraticCurveTo(x, y + buttonHeight, x, y + buttonHeight - radius);
       ctx.lineTo(x, y + radius);
       ctx.quadraticCurveTo(x, y, x + radius, y);
       ctx.closePath();
       ctx.fill();
 
       ctx.fillStyle = "black";
-      ctx.textAlign = "left";
+      ctx.textAlign = "center";
+      ctx.font = "1.5rem DiloWorld";
+
       let itemText = item.name;
       if (item.price > 0) {
         itemText += " - " + item.price + " ";
-        ctx.fillText(itemText, 160, 200 + index * 100);
+        ctx.fillText(itemText, x + buttonWidth / 2, y + buttonHeight / 2);
 
         const tokenImage = m_CurrencyManager.images[1];
-        const textWidth = ctx.measureText(itemText).width;
-        ctx.drawImage(tokenImage, 160 + textWidth, 180 + index * 100, 20, 20);
+        ctx.drawImage(
+          tokenImage,
+          x + buttonWidth / 2 + ctx.measureText(itemText).width / 2,
+          y + buttonHeight / 2 - 10,
+          20,
+          20
+        );
       } else {
-        ctx.fillText(itemText, 160, 200 + index * 100);
+        ctx.fillText(itemText, x + buttonWidth / 2, y + buttonHeight / 2);
       }
     });
   }
@@ -93,16 +111,29 @@ class Shop {
   click(x, y) {
     if (!this.isVisible) return;
 
-    if (x > canvas.width - 60 && x < canvas.width - 10 && y > 10 && y < 60) {
+    if (
+      x > (canvas.width * 78) / 80 &&
+      x < (canvas.width * 78) / 80 + canvas.width / 40 &&
+      y > (canvas.height * 1) / 160 &&
+      y < (canvas.height * 1) / 160 + canvas.width / 40
+    ) {
       this.hide();
     }
 
+    const buttonWidth = canvas.height / 4;
+    const buttonHeight = canvas.height / 4;
+    const startX = (canvas.width - (canvas.height * 2) / 3) / 2;
+    const startY = canvas.height / 6;
+    const gap = canvas.height / 6;
+
     this.items.forEach((item, index) => {
+      const buttonX = startX + (index % 2) * (buttonWidth + gap);
+      const buttonY = startY + Math.floor(index / 2) * (buttonHeight + gap);
       if (
-        x > 150 &&
-        x < canvas.width - 150 &&
-        y > 150 + index * 100 &&
-        y < 230 + index * 100
+        x > buttonX &&
+        x < buttonX + buttonWidth &&
+        y > buttonY &&
+        y < buttonY + buttonHeight
       ) {
         console.log(item.name + " clicked");
         if (m_CurrencyManager.getFGradeToken() >= item.price) {

@@ -26,16 +26,27 @@ class Monetization {
     );
 
     ctx.fillStyle = "red";
-    ctx.fillRect(canvas.width - 60, 10, 50, 50);
+    const buttonSize = canvas.width / 40;
+    const buttonX = (canvas.width * 78) / 80;
+    const buttonY = (canvas.height * 1) / 160;
+    ctx.fillRect(buttonX, buttonY, buttonSize, buttonSize);
+
     ctx.fillStyle = "white";
-    ctx.font = "30px Arial";
-    ctx.fillText("X", canvas.width - 45, 45);
+    ctx.font = "2rem DiloWorld";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("X", buttonX + buttonSize / 2, buttonY + buttonSize / 2);
   }
 
   click(x, y) {
     if (!this.isVisible) return;
 
-    if (x > canvas.width - 60 && x < canvas.width - 10 && y > 10 && y < 60) {
+    if (
+      x > (canvas.width * 78) / 80 &&
+      x < (canvas.width * 78) / 80 + canvas.width / 40 &&
+      y > (canvas.height * 1) / 160 &&
+      y < (canvas.height * 1) / 160 + canvas.width / 40
+    ) {
       this.hide();
     }
   }

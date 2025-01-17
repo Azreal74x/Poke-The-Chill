@@ -76,39 +76,39 @@ class Power {
     ctx.fillStyle = "darkblue";
     ctx.strokeStyle = "white";
     ctx.lineWidth = 3;
-    ctx.font = "bold 20px DiloWorld";
+    ctx.font = "1.3rem DiloWorld";
     ctx.textAlign = "left";
 
     ctx.strokeText(
       this.text,
-      this.posX + this.width + 10,
-      this.posY + this.height / 2 - 10
+      this.posX + this.width + canvas.width / 300,
+      this.posY + this.height / 2 - canvas.width / 300
     );
 
     ctx.fillText(
       this.text,
-      this.posX + this.width + 10,
-      this.posY + this.height / 2 - 10
+      this.posX + this.width + canvas.width / 300,
+      this.posY + this.height / 2 - canvas.width / 300
     );
 
     ctx.strokeText(
       this.price,
-      this.posX + this.width + 10,
-      this.posY + this.height / 2 + 20
+      this.posX + this.width + canvas.width / 300,
+      this.posY + this.height / 2 + canvas.width / 100
     );
 
     ctx.fillText(
       this.price,
-      this.posX + this.width + 10,
-      this.posY + this.height / 2 + 20
+      this.posX + this.width + canvas.width / 300,
+      this.posY + this.height / 2 + canvas.width / 100
     );
     const textWidth = ctx.measureText(this.price).width;
     ctx.drawImage(
       this.moniTokenImage,
-      this.posX + this.width + 10 + textWidth + 5,
+      this.posX + this.width + canvas.width / 200 + textWidth,
       this.posY + this.height / 2,
-      25,
-      25
+      canvas.width / 80,
+      canvas.width / 80
     );
   }
 }
