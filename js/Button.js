@@ -14,8 +14,8 @@ class Button {
     this.posY = posY;
 
     this.scale = scale * (canvas.width / 1000);
-    this.width = 5.5 * scale;
-    this.height = 1 * scale;
+    this.width = 5.75 * scale * (canvas.width / 2000);
+    this.height = 1.25 * scale * (canvas.width / 2000);
 
     this.price = price;
     this.priceMultiplier = 1.1; // Multiplier of 10%
@@ -115,7 +115,7 @@ class Button {
 
     if (this.showText) {
       ctx.fillStyle = "black";
-      ctx.font = "2rem DiloWorld";
+      ctx.font = "2.5rem DiloWorld";
       ctx.textAlign = "left";
 
       const textX = this.posX + canvas.width / 100;

@@ -98,27 +98,37 @@ class Shop {
       ctx.font = "1.5rem DiloWorld";
 
       let itemText = item.name;
+      ctx.fillText(
+        itemText,
+        x + buttonWidth / 2,
+        y + buttonHeight / 2 - canvas.height / 14
+      );
+
+      if (item.image) {
+        const imgWidth = (item.image.width * canvas.height) / 600;
+        const imgHeight = (item.image.height * canvas.height) / 600;
+        const imgX = x + (buttonWidth - imgWidth) / 2;
+        const imgY = y + (buttonHeight - imgHeight - canvas.height / 10);
+        ctx.drawImage(item.image, imgX, imgY, imgWidth, imgHeight);
+      }
+
       if (item.price > 0) {
-        itemText += " - " + item.price + " ";
-        ctx.fillText(itemText, x + buttonWidth / 2, y + buttonHeight / 2);
+        itemText = item.price + " ";
+        ctx.textAlign = "center";
+        ctx.fillText(
+          itemText,
+          x + buttonWidth / 2,
+          y + buttonHeight - canvas.height / 20
+        );
 
         const tokenImage = m_CurrencyManager.images[1];
         ctx.drawImage(
           tokenImage,
           x + buttonWidth / 2 + ctx.measureText(itemText).width / 2,
-          y + buttonHeight / 2 - canvas.height / 75,
+          y + buttonHeight - canvas.height / 20 - canvas.height / 80,
           canvas.height / 40,
           canvas.height / 40
         );
-      } else {
-        ctx.fillText(itemText, x + buttonWidth / 2, y + buttonHeight / 2);
-      }
-      if (item.image) {
-        const imgWidth = (item.image.width * canvas.height) / 600;
-        const imgHeight = (item.image.height * canvas.height) / 600;
-        const imgX = x + (buttonWidth - imgWidth) / 2;
-        const imgY = y + (buttonHeight - imgHeight) / 2 - canvas.height / 14;
-        ctx.drawImage(item.image, imgX, imgY, imgWidth, imgHeight);
       }
     });
   }

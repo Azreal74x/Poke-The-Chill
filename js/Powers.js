@@ -38,10 +38,12 @@ class Power {
 
       // Set a timer to revert the damage score back after 30 seconds
       setTimeout(() => {
-        damageScore = (
-          originalDamageScore +
-          (damageScore - originalDamageScore * 2)
-        ).toFixed(2);
+        damageScore = parseFloat(
+          (
+            originalDamageScore +
+            (damageScore - originalDamageScore * 2)
+          ).toFixed(2)
+        );
         this.canBeBought = true; // Re-enable the button after the effect ends
         this.isActive = false;
         m_BackgroundMusic.play();
@@ -52,10 +54,12 @@ class Power {
 
       // Set a timer to revert the income back after 30 seconds
       setTimeout(() => {
-        scoreMultiplier = (
-          originalScoreMultiplier +
-          (scoreMultiplier - originalScoreMultiplier * 2)
-        ).toFixed(2);
+        scoreMultiplier = parseFloat(
+          (
+            originalScoreMultiplier +
+            (scoreMultiplier - originalScoreMultiplier * 2)
+          ).toFixed(2)
+        );
         this.canBeBought = true; // Re-enable the button after the effect ends
         this.isActive = false;
         m_BackgroundMusic.play();
@@ -85,7 +89,7 @@ class Power {
     ctx.fillStyle = "darkblue";
     ctx.strokeStyle = "white";
     ctx.lineWidth = 3;
-    ctx.font = "1.3rem DiloWorld";
+    ctx.font = "1.75rem DiloWorld";
     ctx.textAlign = "left";
 
     ctx.strokeText(

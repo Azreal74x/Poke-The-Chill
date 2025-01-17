@@ -465,21 +465,21 @@ var m_CurrencyManager = new CurrencyManager(
 var m_Power1 = new Power(
   (canvas.width * 31) / 40,
   (canvas.height * 60) / 100,
-  35,
+  (16 * canvas.width) / 800,
   "Balkan Anger (Double Damage)",
   100
 );
 var m_Power2 = new Power(
   (canvas.width * 31) / 40,
   (canvas.height * 72) / 100,
-  35,
+  (16 * canvas.width) / 800,
   "Communist Gain (Double Tokens)",
   200
 );
 var m_BtnShop = new Button(
   (canvas.width * 1) / 100,
   (canvas.height * 1) / 100,
-  75,
+  (20 * canvas.width) / 800,
   "Shop",
   0,
   "media/shop.png",
@@ -489,7 +489,7 @@ m_BtnShop.width = m_BtnShop.height;
 var m_BtnMonetization = new Button(
   (canvas.width * 6) / 100,
   (canvas.height * 1) / 100,
-  75,
+  (20 * canvas.width) / 800,
   "Monetization",
   0,
   "media/cash.png",
