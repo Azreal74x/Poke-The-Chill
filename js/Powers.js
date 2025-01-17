@@ -69,14 +69,28 @@ class Power {
     );
     ctx.fill();
 
-    ctx.fillStyle = "white";
-    ctx.font = "20px Arial";
+    ctx.fillStyle = "darkblue";
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 3;
+    ctx.font = "bold 20px Arial";
     ctx.textAlign = "left";
+
+    ctx.strokeText(
+      this.text,
+      this.posX + this.width + 10,
+      this.posY + this.height / 2 - 10
+    );
 
     ctx.fillText(
       this.text,
       this.posX + this.width + 10,
       this.posY + this.height / 2 - 10
+    );
+
+    ctx.strokeText(
+      this.price,
+      this.posX + this.width + 10,
+      this.posY + this.height / 2 + 20
     );
 
     ctx.fillText(

@@ -14,7 +14,7 @@ class Button {
     this.posY = posY;
 
     this.scale = scale;
-    this.width = 5 * scale;
+    this.width = 5.5 * scale;
     this.height = 1 * scale;
 
     this.price = price;

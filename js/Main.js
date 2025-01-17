@@ -5,14 +5,12 @@ canvas.height = window.innerHeight;
 canvas.style.position = "absolute";
 document.body.appendChild(canvas);
 
-var bgPattern;
-var tileReady = false;
-var tileImage = new Image();
-tileImage.onload = function () {
-  tileReady = true;
-  bgPattern = ctx.createPattern(tileImage, "repeat");
+var bgImage = new Image();
+bgImage.src = "images/background.png";
+var bgImageReady = false;
+bgImage.onload = function () {
+  bgImageReady = true;
 };
-tileImage.src = "images/bgPattern.png";
 
 var keysDown = {};
 
@@ -46,6 +44,16 @@ canvas.addEventListener(
 
     if (m_Monetization.isVisible) {
       m_Monetization.click(mouseX, mouseY);
+      return; // Prevent other clicks when the monetization tab is open
+    }
+
+    if (m_CoinMinigame.isActive) {
+      m_CoinMinigame.click(mouseX, mouseY);
+      return; // Prevent other clicks when the minigame is active
+    }
+
+    if (m_Wheel.isVisible) {
+      m_wheel.click(mouseX, mouseY);
       return; // Prevent other clicks when the monetization tab is open
     }
 
@@ -210,9 +218,8 @@ function AutoClick(dt) {
 }
 
 var render = function () {
-  if (tileReady) {
-    ctx.fillStyle = bgPattern;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  if (bgImageReady) {
+    ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
   }
 
   enemySpawner.render();
@@ -306,7 +313,7 @@ var isAutoClickActive = false;
 var autoClickDamage = 1;
 var autoClickDamageMult = 0.1;
 
-var m_CoinMinigame = new CoinMinigame(10); // 30 seconds minigame
+var m_CoinMinigame = new CoinMinigame(15); // 15 seconds minigame
 
 var m_BtnClickUpdate = new Button(
   canvas.width - 75 * 5 - 50,
@@ -354,14 +361,14 @@ var m_CurrencyManager = new CurrencyManager(10, 200, 0, 0, 0, 10);
 var m_Power1 = new Power(
   canvas.width - 75 * 5 - 50,
   500,
-  50,
+  35,
   "Balkan Anger (Double Damage)",
   100
 );
 var m_Power2 = new Power(
   canvas.width - 75 * 5 - 50,
   650,
-  50,
+  35,
   "Communist Gain (Double Tokens)",
   200
 );
