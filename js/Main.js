@@ -169,7 +169,7 @@ function PayoutReward() {
       m_CurrentEnemy.GetReward() * scoreMultiplier
     );
   }
-  if (Math.random() < 1 / 15) {
+  if (Math.random() < 1 / 20) {
     m_CoinMinigame.start();
   }
 }

@@ -80,7 +80,13 @@ class CoinMinigame {
     if (!this.isActive || !this.imageReady) return;
 
     this.coins.forEach((coin) => {
-      ctx.drawImage(this.image, coin.posX, coin.posY);
+      ctx.drawImage(
+        this.image,
+        coin.posX,
+        coin.posY,
+        (this.image.width * 1.5 * canvas.width) / 2000,
+        (this.image.height * 1.5 * canvas.width) / 2000
+      );
     });
   }
 
