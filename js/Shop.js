@@ -5,7 +5,7 @@ class Shop {
       {
         name: "Default",
         price: 0,
-        cursor: "url('images/defaultcursor.png'), auto",
+        cursor: "url('media/defaultcursor.png'), auto",
       },
       {
         name: "Item 1",

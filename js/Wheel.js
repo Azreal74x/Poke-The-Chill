@@ -182,9 +182,6 @@ class Wheel {
       this.determineReward(parseInt(reward, 10)); // Call determineReward with the selected reward
       this.isVisible = false; // Hide after a short delay to display the reward
       this.lastReward = null; // Clear the last reward
-      if (!m_CoinMinigame.isActive) {
-        m_CoinMinigame.start();
-      }
     }, 1000); // Adjust the delay as needed
   }
 

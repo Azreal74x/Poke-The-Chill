@@ -12,7 +12,7 @@ class Power {
     this.text = text;
 
     this.moniTokenImage = new Image();
-    this.moniTokenImage.src = "images/MoniToken.png";
+    this.moniTokenImage.src = "media/MoniToken.png";
   }
 
   update(dt) {

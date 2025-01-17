@@ -2,7 +2,7 @@ class Monetization {
   constructor() {
     this.isVisible = false;
     this.monetizationImage = new Image();
-    this.monetizationImage.src = "images/monetization.png";
+    this.monetizationImage.src = "media/monetization.png";
   }
 
   show() {
