@@ -166,10 +166,13 @@ class Enemy {
               this.posY + this.currentSpriteSheet.height / 2,
               coinType
             );
-            m_Coin.DoRenderOnce(
-              this.posX + this.currentSpriteSheet.width / 2,
-              this.posY + this.currentSpriteSheet.height / 2
-            );
+            if (this.enemyName != "Show") {
+              m_Coin.DoRenderOnce(
+                this.posX + this.currentSpriteSheet.width / 2,
+                this.posY + this.currentSpriteSheet.height / 2
+              );
+            }
+            console.log("should render coin now");
           }
         }
       } else {

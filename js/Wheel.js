@@ -6,14 +6,14 @@ class Wheel {
     this.scale = 2 * (canvas.width / 2000); // Add scale property
 
     this.rewards = [
-      "50",
+      "1",
       "750",
       "5000",
-      "1",
-      "3000",
-      "1000",
-      "250",
       "500",
+      "3000",
+      "250",
+      "2000",
+      "50",
       "10000",
     ];
     this.colors = [

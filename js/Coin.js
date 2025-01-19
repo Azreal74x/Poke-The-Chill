@@ -18,13 +18,13 @@ class Coin {
 
     let spritesheetPath;
     if (type === "noChill") {
-      spritesheetPath = "media/noChill_coin.png";
+      spritesheetPath = "media/NoChillCoinSheet.png";
     } else if (type === "fGrade") {
-      spritesheetPath = "media/fGrade_coin.png";
+      spritesheetPath = "media/FGradeCoinSheet.png";
     } else if (type === "moni") {
-      spritesheetPath = "media/moni_coin.png";
+      spritesheetPath = "media/MoniCoinSheet.png";
     } else {
-      spritesheetPath = "media/coins.png";
+      spritesheetPath = "media/NoChillCoinSheet.png";
     }
 
     const promise = this.loadImage(spritesheetPath);

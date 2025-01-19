@@ -131,7 +131,7 @@ function CheckClickOnThisButton(clickX, clickY, thisButton) {
         }
       }
     }
-    thisButton.buttonPressed();
+    //thisButton.buttonPressed();
   }
 }
 
@@ -156,12 +156,14 @@ function PayoutReward() {
     m_Wheel.DoRenderOnce();
   } else if (currencyReward === 2) {
     // F grade token
+    m_EnemyRewardSound.play();
     m_CurrencyManager.AddCurrencyAmount(
       currencyReward,
       m_CurrentEnemy.GetReward()
     );
   } else if (currencyReward === 3) {
     // Moni token
+    m_EnemyRewardSound.play();
     m_CurrencyManager.AddCurrencyAmount(
       currencyReward,
       m_CurrentEnemy.GetReward()
@@ -173,7 +175,7 @@ function PayoutReward() {
       m_CurrentEnemy.GetReward() * scoreMultiplier
     );
   }
-  if (Math.random() < 1 / 20 && !m_Wheel.isActive && !m_Power1.isActive && !m_Power2.isActive) {
+  if (Math.random() < 1 / 10 && !m_Wheel.isActive && !m_Power1.isActive && !m_Power2.isActive) {
     m_CoinMinigame.start();
   }
 }
@@ -182,11 +184,13 @@ function DoDamageToEnemies(damageScore) {
   if (!m_CurrentEnemy.enemyIsDead) {
     m_CurrentEnemy.GetDamage(damageScore);
 
-    m_EnemyClickSound.play();
+    const randomClickSound = getRandomEnemyClickSound();
+    randomClickSound.currentTime = 0;
+    randomClickSound.play();
 
-    //optional if we want to have him grunt when we click him as well (so not only autoclicker)
-    m_DamageReceivedSound.currentTime = 0;
-    m_DamageReceivedSound.play();
+    const randomDamageSound = getRandomDamageReceivedSound();
+    randomDamageSound.currentTime = 0;
+    randomDamageSound.play();
 
     if (m_CurrentEnemy.lifePoints <= 0) {
       PayoutReward();
@@ -241,7 +245,7 @@ function AutoClick(dt) {
   if (m_CurrentTimeBetweenAutoClicks > m_TimeBetweenAutoClicks) {
     m_CurrentTimeBetweenAutoClicks = 0;
     if (!m_CurrentEnemy.enemyIsDead) {
-      m_DamageReceivedSound.play();
+      m_DamageReceivedSound5.play();
       DoDamageToEnemies(autoClickDamage);
     }
   } else {
@@ -370,14 +374,48 @@ font
     console.error("Failed to load font:", error);
   });
 
+function getRandomDamageReceivedSound() {
+  // Array of damage received sounds
+  const damageSounds = [
+    m_DamageReceivedSound,
+    m_DamageReceivedSound2,
+    m_DamageReceivedSound3,
+    m_DamageReceivedSound4,
+  ];
+
+  // Return a random sound from the array
+  return damageSounds[Math.floor(Math.random() * damageSounds.length)];
+}
+
+function getRandomEnemyClickSound() {
+  // Array of damage received sounds
+  const clickSounds = [
+    m_EnemyClickSound,
+    m_EnemyClickSound2,
+    m_EnemyClickSound3,
+  ];
+
+  // Return a random sound from the array
+  return clickSounds[Math.floor(Math.random() * clickSounds.length)];
+}
+
 // Declare the global variable
 var m_BackgroundMusic;
 
 var m_ExplosionSound;
+
 var m_EnemyClickSound;
+var m_EnemyClickSound2;
+var m_EnemyClickSound3;
+
 var m_ButtonClickSound;
 var m_WheelFinishedSound;
+
 var m_DamageReceivedSound;
+var m_DamageReceivedSound2;
+var m_DamageReceivedSound3;
+var m_DamageReceivedSound4;
+var m_DamageReceivedSound5;
 
 var m_SingleCoinSound;
 var m_CoinMinigameRewardSound;
@@ -390,11 +428,20 @@ var m_BoostMusic;
 document.addEventListener("DOMContentLoaded", () => {
   // Get the audio elements after DOM is fully loaded
   m_BackgroundMusic = document.getElementById("BackgroundMusic");
-  m_ExplosionSound = document.getElementById("ExplosionSound"); // Assign value to global variable
-  m_EnemyClickSound = document.getElementById("EnemyClickSound"); // Assign value to global variable
+  m_ExplosionSound = document.getElementById("ExplosionSound"); 
+
+  m_EnemyClickSound = document.getElementById("EnemyClickSound"); 
+  m_EnemyClickSound2 = document.getElementById("EnemyClickSound2");
+  m_EnemyClickSound3 = document.getElementById("EnemyClickSound3");
+
   m_ButtonClickSound = document.getElementById("ButtonClickSound");
   m_WheelFinishedSound = document.getElementById("WheelFinishedSound");
+
   m_DamageReceivedSound = document.getElementById("DamageReceivedSound");
+  m_DamageReceivedSound2 = document.getElementById("DamageReceivedSound2");
+  m_DamageReceivedSound3 = document.getElementById("DamageReceivedSound3");
+  m_DamageReceivedSound4 = document.getElementById("DamageReceivedSound4");
+  m_DamageReceivedSound5 = document.getElementById("DamageReceivedSound5");
 
   m_SingleCoinSound = document.getElementById("SingleCoinSound");
   m_CoinMinigameRewardSound = document.getElementById(
@@ -424,7 +471,7 @@ var m_BtnClickUpdate = new Button(
   (canvas.width * 31) / 40,
   (canvas.height * 12) / 100,
   75,
-  "Click Multiplier",
+  "Click Damage",
   50,
   "media/NoChillToken.png",
   true,
@@ -434,7 +481,7 @@ var m_BtnScoreUpdate = new Button(
   (canvas.width * 31) / 40,
   (canvas.height * 24) / 100,
   75,
-  "No Chill Multiplier",
+  "No Chill Reward",
   50,
   "media/NoChillToken.png",
   true,
@@ -464,7 +511,7 @@ var m_BtnRarityUpdate = new Button(
 );
 var m_CurrencyManager = new CurrencyManager(
   (canvas.width * 1) / 100,
-  (canvas.height * 19) / 30,
+  (canvas.height * 19) / 30 + 80,
   0,
   0,
   0,
@@ -474,14 +521,14 @@ var m_Power1 = new Power(
   (canvas.width * 31) / 40,
   (canvas.height * 60) / 100,
   (16 * canvas.width) / 800,
-  "Balkan Anger (Double Damage)",
+  "Balkan Anger",
   100
 );
 var m_Power2 = new Power(
   (canvas.width * 31) / 40,
   (canvas.height * 72) / 100,
   (16 * canvas.width) / 800,
-  "Communist Gain (Double Tokens)",
+  "Communist Gain",
   200
 );
 var m_BtnShop = new Button(
@@ -490,7 +537,7 @@ var m_BtnShop = new Button(
   (20 * canvas.width) / 800,
   "Shop",
   0,
-  "media/shop.png",
+  "media/SkinShop.png",
   false
 );
 m_BtnShop.width = m_BtnShop.height;
@@ -500,7 +547,7 @@ var m_BtnMonetization = new Button(
   (20 * canvas.width) / 800,
   "Monetization",
   0,
-  "media/cash.png",
+  "media/CoinShop.png",
   false
 );
 m_BtnMonetization.width = m_BtnMonetization.height;
