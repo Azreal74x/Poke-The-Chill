@@ -26,21 +26,24 @@ class Settings {
     const buttonY = (canvas.height * 1) / 160;
     ctx.fillRect(buttonX, buttonY, buttonSize, buttonSize);
 
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 4; 
     ctx.fillStyle = "white";
     ctx.font = `${canvas.height / 40}px DiloWorld`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
+    ctx.strokeText("X", buttonX + buttonSize / 2, buttonY + buttonSize / 2);
     ctx.fillText("X", buttonX + buttonSize / 2, buttonY + buttonSize / 2);
 
     const saveButtonWidth = canvas.width / 5;
-    const saveButtonHeight = canvas.height / 20;
+    const saveButtonHeight = canvas.height / 10;
     const saveButtonX = canvas.width / 2 - saveButtonWidth / 2;
-    const saveButtonY = canvas.height / 2 - saveButtonHeight * 1.5;
+    const saveButtonY = canvas.height / 2.5 - saveButtonHeight * 1.5;
 
     const loadButtonX = canvas.width / 2 - saveButtonWidth / 2;
-    const loadButtonY = canvas.height / 2 + saveButtonHeight * 0.5;
+    const loadButtonY = canvas.height / 2.5 + saveButtonHeight * 0.5;
 
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = "#384454";
     ctx.beginPath();
     ctx.roundRect(
       saveButtonX,
@@ -60,12 +63,24 @@ class Settings {
     );
     ctx.fill();
 
+    ctx.strokeStyle = "black"; 
+    ctx.lineWidth = 8; 
     ctx.fillStyle = "white";
-    ctx.font = `${canvas.height / 40}px DiloWorld`;
+    ctx.font = `${canvas.height / 20}px DiloWorld`;
+    ctx.strokeText(
+      "Save Game",
+      saveButtonX + saveButtonWidth / 2,
+      saveButtonY + saveButtonHeight / 2
+    );
     ctx.fillText(
       "Save Game",
       saveButtonX + saveButtonWidth / 2,
       saveButtonY + saveButtonHeight / 2
+    );
+    ctx.strokeText(
+      "Load Game",
+      loadButtonX + saveButtonWidth / 2,
+      loadButtonY + saveButtonHeight / 2
     );
     ctx.fillText(
       "Load Game",
@@ -74,7 +89,7 @@ class Settings {
     );
 
     const sliderX = canvas.width / 2 - saveButtonWidth / 2;
-    const sliderY = canvas.height / 2 + saveButtonHeight * 3;
+    const sliderY = canvas.height / 2.5 + saveButtonHeight * 3;
     const sliderWidth = saveButtonWidth;
     const sliderHeight = canvas.height / 40;
 
@@ -94,10 +109,17 @@ class Settings {
     );
     ctx.fill();
 
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 7;
     ctx.fillStyle = "white";
-    ctx.font = `${canvas.height / 60}px DiloWorld`;
+    ctx.font = `${canvas.height / 40}px DiloWorld`;
+    ctx.strokeText(
+      "Background Sound Volume",
+      sliderX + sliderWidth / 2,
+      sliderY - sliderHeight
+    );
     ctx.fillText(
-      "Sound Volume",
+      "Background Sound Volume",
       sliderX + sliderWidth / 2,
       sliderY - sliderHeight
     );
@@ -106,7 +128,7 @@ class Settings {
     const smallButtonWidth = sliderHeight;
     const smallButtonHeight = sliderHeight;
 
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = "#384454";
     ctx.beginPath();
     ctx.roundRect(
       sliderX - smallButtonWidth * 1.5,
@@ -117,7 +139,7 @@ class Settings {
     );
     ctx.fill();
 
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = "#384454";
     ctx.beginPath();
     ctx.roundRect(
       sliderX + sliderWidth + smallButtonWidth * 0.5,
@@ -128,8 +150,18 @@ class Settings {
     );
     ctx.fill();
 
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 4;
     ctx.fillStyle = "white";
     ctx.font = `${canvas.height / 60}px DiloWorld`;
+    ctx.strokeText(
+      "-", sliderX - smallButtonWidth, sliderY + sliderHeight / 2
+    );
+    ctx.strokeText(
+      "+",
+      sliderX + sliderWidth + smallButtonWidth,
+      sliderY + sliderHeight / 2
+    );
     ctx.fillText("-", sliderX - smallButtonWidth, sliderY + sliderHeight / 2);
     ctx.fillText(
       "+",
@@ -137,18 +169,28 @@ class Settings {
       sliderY + sliderHeight / 2
     );
 
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 5;
     ctx.fillStyle = "white";
     ctx.font = `${canvas.height / 40}px DiloWorld`;
     ctx.textAlign = "center";
+    ctx.strokeText(
+      "A game made by Burak, Emily, Simona and Ferhat!",
+      canvas.width / 2,
+      (canvas.height * 29) / 30
+    );
     ctx.fillText(
       "A game made by Burak, Emily, Simona and Ferhat!",
       canvas.width / 2,
       (canvas.height * 29) / 30
     );
 
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 15;
     ctx.fillStyle = "white";
     ctx.font = `${canvas.height / 10}px DiloWorld`;
     ctx.textAlign = "center";
+    ctx.strokeText("Poke The Chill!", canvas.width / 2, canvas.height / 10);
     ctx.fillText("Poke The Chill!", canvas.width / 2, canvas.height / 10);
 
     ctx.restore();
@@ -167,12 +209,12 @@ class Settings {
     }
 
     const saveButtonWidth = canvas.width / 5;
-    const saveButtonHeight = canvas.height / 20;
+    const saveButtonHeight = canvas.height / 10;
     const saveButtonX = canvas.width / 2 - saveButtonWidth / 2;
-    const saveButtonY = canvas.height / 2 - saveButtonHeight * 1.5;
+    const saveButtonY = canvas.height / 2.5 - saveButtonHeight * 1.5;
 
     const loadButtonX = canvas.width / 2 - saveButtonWidth / 2;
-    const loadButtonY = canvas.height / 2 + saveButtonHeight * 0.5;
+    const loadButtonY = canvas.height / 2.5 + saveButtonHeight * 0.5;
 
     if (
       x > saveButtonX &&
@@ -193,7 +235,7 @@ class Settings {
     }
 
     const sliderX = canvas.width / 2 - saveButtonWidth / 2;
-    const sliderY = canvas.height / 2 + saveButtonHeight * 3;
+    const sliderY = canvas.height / 2.5 + saveButtonHeight * 3;
     const sliderWidth = saveButtonWidth;
     const sliderHeight = canvas.height / 40;
 

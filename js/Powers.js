@@ -18,11 +18,11 @@ class Power {
     this.disabledImage = new Image();
 
     if (this.text === "Balkan Anger") {
-      this.enabledImage.src = "media/Balkan.png";
-      this.disabledImage.src = "media/BalkanDisabled.png";
+      this.enabledImage.src = "media/buttons/Balkan.png";
+      this.disabledImage.src = "media/buttons/BalkanDisabled.png";
     } else if (this.text === "Communist Gain") {
-      this.enabledImage.src = "media/Communist.png";
-      this.disabledImage.src = "media/CommunistDisabled.png";
+      this.enabledImage.src = "media/buttons/Communist.png";
+      this.disabledImage.src = "media/buttons/CommunistDisabled.png";
     }
 
     this.moniTokenImage = new Image();
@@ -121,7 +121,7 @@ class Power {
 
     // Draw the background image
     if (bgImage.complete) {
-      ctx.drawImage(bgImage, this.posX, this.posY, this.width + 20, this.height);
+      ctx.drawImage(bgImage, this.posX, this.posY, this.width, this.height);
     }
 
     // Render the text
