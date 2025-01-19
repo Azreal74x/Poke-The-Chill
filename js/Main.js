@@ -42,6 +42,11 @@ canvas.addEventListener(
       return; // Prevent other clicks when the shop is open
     }
 
+    if (m_Settings.isVisible) {
+      m_Settings.click(mouseX, mouseY);
+      return; // Prevent other clicks when the settings tab is open
+    }
+
     if (m_Monetization.isVisible) {
       m_Monetization.click(mouseX, mouseY);
       return; // Prevent other clicks when the monetization tab is open
@@ -80,6 +85,7 @@ function Click(clickX, clickY) {
   }
   CheckClickOnThisButton(clickX, clickY, m_BtnShop);
   CheckClickOnThisButton(clickX, clickY, m_BtnMonetization);
+  CheckClickOnThisButton(clickX, clickY, m_BtnSettings);
 }
 
 function CheckClickOnThisButton(clickX, clickY, thisButton) {
@@ -94,6 +100,9 @@ function CheckClickOnThisButton(clickX, clickY, thisButton) {
     }
     if (thisButton === m_BtnMonetization) {
       m_Monetization.show();
+    }
+    if (thisButton === m_BtnSettings) {
+      m_Settings.show();
     }
     if (thisButton.buttonPressed()) {
       console.log(`${thisButton.text} button clicked`);
@@ -143,8 +152,6 @@ function CheckClickOnEnemies(clickX, clickY) {
     clickY < m_CurrentEnemy.posY + m_CurrentEnemy.currentSpriteSheet.height
   ) {
     DoDamageToEnemies(damageScore);
-
-    
   }
 }
 
@@ -175,7 +182,12 @@ function PayoutReward() {
       m_CurrentEnemy.GetReward() * scoreMultiplier
     );
   }
-  if (Math.random() < 1 / 10 && !m_Wheel.isActive && !m_Power1.isActive && !m_Power2.isActive) {
+  if (
+    Math.random() < 1 / 10 &&
+    !m_Wheel.isActive &&
+    !m_Power1.isActive &&
+    !m_Power2.isActive
+  ) {
     m_CoinMinigame.start();
   }
 }
@@ -206,12 +218,11 @@ function SpawnNewEnemies() {
   m_CurrentEnemy = enemySpawner.spawnEnemy();
 }
 
-var reset = function () { };
+var reset = function () {};
 
-var start = function () { };
+var start = function () {};
 
 var update = function (dt) {
-
   enemySpawner.update(dt);
 
   if (
@@ -219,7 +230,8 @@ var update = function (dt) {
       m_Shop.isVisible ||
       m_Monetization.isVisible ||
       m_CoinMinigame.isActive ||
-      m_Wheel.isVisible
+      m_Wheel.isVisible ||
+      m_Settings.isVisible
     )
   ) {
     if (isAutoClickActive) {
@@ -238,6 +250,7 @@ var update = function (dt) {
   m_Power2.update(dt);
   m_BtnShop.update();
   m_BtnMonetization.update();
+  m_BtnSettings.update();
   m_Coin.update();
 };
 
@@ -281,18 +294,32 @@ var render = function () {
 
   m_BtnRarityUpdate.render();
 
-  m_CoinMinigame.render();
-
-  m_CurrencyManager.render();
-
   m_Power1.render();
   m_Power2.render();
 
   m_BtnShop.render();
   m_BtnMonetization.render();
+  m_BtnSettings.render();
+
+  m_CurrencyManager.render();
+
+  ctx.fillStyle = "white";
+  ctx.strokeStyle = "black";
+  ctx.lineWidth = 12;
+  ctx.font = "5rem DiloWorld";
+  ctx.textAlign = "right";
+  ctx.strokeText(
+    "Poke The Chill!",
+    (canvas.width * 79) / 80,
+    canvas.height / 15
+  );
+  ctx.fillText("Poke The Chill!", (canvas.width * 79) / 80, canvas.height / 15);
 
   m_Shop.render();
   m_Monetization.render();
+  m_Settings.render();
+
+  m_CoinMinigame.render();
 
   // Finally, we render the UI, an score for example
   ctx.font = "1.5rem DiloWorld";
@@ -332,7 +359,7 @@ async function initGame() {
 var then = 0;
 
 var m_TierLevel = 0;
-var m_maxTierLevel = 5; // 5 yap sakın unutma!!! enemy sonrası
+var m_maxTierLevel = 5;
 
 var damageScore = 1;
 var damageScoreMultiplier = 0.1;
@@ -428,9 +455,9 @@ var m_BoostMusic;
 document.addEventListener("DOMContentLoaded", () => {
   // Get the audio elements after DOM is fully loaded
   m_BackgroundMusic = document.getElementById("BackgroundMusic");
-  m_ExplosionSound = document.getElementById("ExplosionSound"); 
+  m_ExplosionSound = document.getElementById("ExplosionSound");
 
-  m_EnemyClickSound = document.getElementById("EnemyClickSound"); 
+  m_EnemyClickSound = document.getElementById("EnemyClickSound");
   m_EnemyClickSound2 = document.getElementById("EnemyClickSound2");
   m_EnemyClickSound3 = document.getElementById("EnemyClickSound3");
 
@@ -453,7 +480,7 @@ document.addEventListener("DOMContentLoaded", () => {
   m_BoostMusic = document.getElementById("BoostMusic");
 
   if (m_BackgroundMusic) {
-    m_BackgroundMusic.loop = true; 
+    m_BackgroundMusic.loop = true;
 
     document.body.addEventListener("click", function playMusicOnce() {
       if (m_BackgroundMusic.paused) {
@@ -537,7 +564,7 @@ var m_BtnShop = new Button(
   (20 * canvas.width) / 800,
   "Shop",
   0,
-  "media/SkinShop.png",
+  "media/buttons/SkinShop.png",
   false
 );
 m_BtnShop.width = m_BtnShop.height;
@@ -547,10 +574,20 @@ var m_BtnMonetization = new Button(
   (20 * canvas.width) / 800,
   "Monetization",
   0,
-  "media/CoinShop.png",
+  "media/buttons/CoinShop.png",
   false
 );
 m_BtnMonetization.width = m_BtnMonetization.height;
+var m_BtnSettings = new Button(
+  (canvas.width * 11) / 100,
+  (canvas.height * 1) / 100,
+  (20 * canvas.width) / 800,
+  "Settings",
+  0,
+  "media/buttons/Settings.png",
+  false
+);
+m_BtnSettings.width = m_BtnSettings.height;
 
 function updateButtonPositions() {
   m_BtnClickUpdate.posX = (canvas.width * 31) / 40;
@@ -581,6 +618,9 @@ function updateButtonPositions() {
 
   m_BtnMonetization.posX = (canvas.width * 6) / 100;
   m_BtnMonetization.posY = (canvas.height * 1) / 100;
+
+  m_BtnSettings.posX = (canvas.width * 11) / 100;
+  m_BtnSettings.posY = (canvas.height * 1) / 100;
 }
 
 // Call updateButtonPositions initially and on window resize
@@ -590,5 +630,4 @@ window.addEventListener("resize", () => {
   canvas.height = window.innerHeight;
   updateButtonPositions();
 });
-
 initGame();

@@ -103,7 +103,8 @@ class CurrencyManager {
         ctx.strokeStyle = "black";
         ctx.lineWidth = 5 * this.scale;
         ctx.strokeText(
-          `${amount}`, position.x + image.width * this.scale + image.width / 3,
+          `${amount}`,
+          position.x + image.width * this.scale + image.width / 3,
           position.y + (image.height * this.scale) / 2 + canvas.height / 60
         );
 
