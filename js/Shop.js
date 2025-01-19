@@ -5,37 +5,37 @@ class Shop {
       {
         name: "White",
         price: 0,
-        cursor: "url('media/cursors/DefaultCursor.png'), auto",
+        cursor: "url('media/cursors/DefaultCursor.png') 12 4, auto",
         imageSrc: "media/cursors/DefaultCursor.png",
       },
       {
         name: "Pink",
         price: 1000,
-        cursor: "url('media/cursors/PinkCursor.png'), auto",
+        cursor: "url('media/cursors/PinkCursor.png') 12 4, auto",
         imageSrc: "media/cursors/PinkCursor.png",
       },
       {
         name: "Pickle",
         price: 2000,
-        cursor: "url('media/cursors/PickleCursor.png'), auto",
+        cursor: "url('media/cursors/PickleCursor.png') 6 6, auto",
         imageSrc: "media/cursors/PickleCursor.png",
       },
       {
         name: "Sausage",
         price: 5000,
-        cursor: "url('media/cursors/SausageCursor.png'), auto",
+        cursor: "url('media/cursors/SausageCursor.png') 12 6, auto",
         imageSrc: "media/cursors/SausageCursor.png",
       },
       {
         name: "Super Tuna",
         price: 10000,
-        cursor: "url('media/cursors/SuperTunaCursor.png'), auto",
+        cursor: "url('media/cursors/SuperTunaCursor.png') 4 20, auto",
         imageSrc: "media/cursors/SuperTunaCursor.png",
       },
       {
         name: "Coquette Pickle",
         price: 25000,
-        cursor: "url('media/cursors/CoquettePickleCursor.png'), auto",
+        cursor: "url('media/cursors/CoquettePickleCursor.png') 6 6, auto",
         imageSrc: "media/cursors/CoquettePickleCursor.png",
       },
     ];
@@ -56,6 +56,8 @@ class Shop {
 
   render() {
     if (!this.isVisible) return;
+
+    ctx.save();
 
     ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -156,9 +158,11 @@ class Shop {
       ctx.font = "2.5rem DiloWorld";
 
       let itemText = item.name;
-      ctx.strokeText(itemText,
+      ctx.strokeText(
+        itemText,
         x + buttonWidth / 2,
-        y + buttonHeight / 2 - canvas.height / 14);
+        y + buttonHeight / 2 - canvas.height / 14
+      );
       ctx.fillText(
         itemText,
         x + buttonWidth / 2,
@@ -178,7 +182,8 @@ class Shop {
         ctx.lineWidth = 5;
         itemText = item.price + " ";
         ctx.textAlign = "center";
-        ctx.strokeText(itemText,
+        ctx.strokeText(
+          itemText,
           x + buttonWidth / 2,
           y + buttonHeight - canvas.height / 20
         );
@@ -198,6 +203,8 @@ class Shop {
         );
       }
     });
+
+    ctx.restore();
   }
 
   click(x, y) {
@@ -212,11 +219,11 @@ class Shop {
       this.hide();
     }
 
-    const buttonWidth = canvas.width / 7; 
-    const buttonHeight = canvas.height / 4; 
-    const startX = (canvas.width - buttonWidth * 3) / 2; 
-    const startY = canvas.height / 6; 
-    const gap = canvas.width / 30; 
+    const buttonWidth = canvas.width / 7;
+    const buttonHeight = canvas.height / 4;
+    const startX = (canvas.width - buttonWidth * 3) / 2;
+    const startY = canvas.height / 6;
+    const gap = canvas.width / 30;
 
     this.items.forEach((item, index) => {
       const buttonX = startX + (index % 3) * (buttonWidth + gap);

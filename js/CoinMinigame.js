@@ -44,7 +44,7 @@ class CoinMinigame {
   spawnCoin() {
     if (!this.isActive) return;
 
-    const widthFraction = 1 / 2;
+    const widthFraction = 2 / 6;
     const heightFraction = 8 / 10;
     const sideWidth = canvas.width * widthFraction - 150;
     const sideHeight = canvas.height * heightFraction;

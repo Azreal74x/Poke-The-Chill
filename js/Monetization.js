@@ -16,6 +16,8 @@ class Monetization {
   render() {
     if (!this.isVisible) return;
 
+    ctx.save();
+
     ctx.fillStyle = "rgba(87, 79, 79, 0.8)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -36,6 +38,8 @@ class Monetization {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText("X", buttonX + buttonSize / 2, buttonY + buttonSize / 2);
+
+    ctx.restore();
   }
 
   click(x, y) {
