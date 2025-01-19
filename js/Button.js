@@ -21,7 +21,7 @@ class Button {
     this.priceMultiplier = 1.1; // 10% multiplier
     this.canBeBought = false;
     this.text = text;
-    this.image = null;       // This can be your “coin” or “icon” image
+    this.image = null; // This can be your ï¿½coinï¿½ or ï¿½iconï¿½ image
     this.showText = showText;
     this.showValue = showValue;
     this.currentPriceIndex = 0;
@@ -35,7 +35,7 @@ class Button {
     this.bgDisabledImage = new Image();
     this.bgDisabledImage.src = "media/buttons/ButtonDisabled.png"; // or "disabled" background
 
-    // If you want a third “hover” or “canBuy” image,
+    // If you want a third ï¿½hoverï¿½ or ï¿½canBuyï¿½ image,
     // create and load it here, e.g.:
     // this.bgCanBuyImage = new Image();
     // this.bgCanBuyImage.src = "media/ButtonCanBuy.png";
@@ -93,16 +93,15 @@ class Button {
     // First check if it's disabled
     if (this.isDisabled) {
       bgImage = this.bgDisabledImage;
-    }
-    else {
+    } else {
       // Not disabled, so check if it can be bought
       if (this.canBeBought) {
-        // Optionally use a separate “canBuy” image if you have it:
+        // Optionally use a separate ï¿½canBuyï¿½ image if you have it:
         // bgImage = this.bgCanBuyImage;
-        // or just use the “enabled” background
+        // or just use the ï¿½enabledï¿½ background
         bgImage = this.bgEnabledImage;
       } else {
-        // Not disabled but also can’t be bought
+        // Not disabled but also canï¿½t be bought
         bgImage = this.bgDisabledImage;
       }
     }
@@ -110,22 +109,14 @@ class Button {
     // =============== DRAW THE BACKGROUND ===============
     // Make sure the image is loaded before drawing (bgImage.complete).
     if (bgImage && bgImage.complete) {
-      ctx.drawImage(
-        bgImage,
-        this.posX,
-        this.posY,
-        this.width,
-        this.height + 15
-      );
+      ctx.drawImage(bgImage, this.posX, this.posY, this.width, this.height);
     }
 
     // =============== DRAW ICON OR EXTRA IMAGE (IF NEEDED) ===============
-    // If !showText, you said you draw the “icon” big in the button, etc.
+    // If !showText, you said you draw the ï¿½iconï¿½ big in the button, etc.
     // Keep that logic the same; just do it after drawing the background.
     if (!this.showText && this.image) {
-      const imgX = this.posX + (this.width - this.image.width) / 2;
-      const imgY = this.posY + (this.height - this.image.height) / 2;
-      ctx.drawImage(this.image, imgX, imgY);
+      ctx.drawImage(this.image, this.posX, this.posY, this.width, this.height);
     }
 
     // =============== DRAW THE TEXT ===============
@@ -171,7 +162,7 @@ class Button {
       }
     }
 
-    // =============== DRAW THE “VALUE” (IF showValue === true) ===============
+    // =============== DRAW THE ï¿½VALUEï¿½ (IF showValue === true) ===============
     if (this.showValue) {
       ctx.fillStyle = "white";
       ctx.font = "2.25rem DiloWorld";
@@ -187,10 +178,10 @@ class Button {
       } else if (this.text === "Auto Click Damage") {
         currentValue = autoClickDamage;
       } else if (this.text === "Tier Up") {
-        currentValue = m_TierLevel;
+        currentValue = m_TierLevel + 1;
       }
 
-      // “x” + the current value
+      // ï¿½xï¿½ + the current value
       ctx.strokeText(
         "x" + currentValue,
         this.posX + this.width - canvas.width / 200 - 28,

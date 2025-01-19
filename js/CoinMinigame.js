@@ -126,7 +126,9 @@ class CoinMinigame {
     m_CurrencyManager.AddCurrencyAmount(1, reward);
 
     if (this.coinsClicked === 10) {
-      `Coin minigame ended. Coins clicked: ALL OF THEM!, Reward: ${reward} no chill tokens.`;
+      console.log(
+        `Coin minigame ended. Coins clicked: ALL OF THEM!, Reward: ${reward} no chill tokens.`
+      );
     } else {
       console.log(
         `Coin minigame ended. Coins clicked: ${this.coinsClicked}, Reward: ${reward} no chill tokens.`

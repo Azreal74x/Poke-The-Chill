@@ -47,6 +47,11 @@ canvas.addEventListener(
       return; // Prevent other clicks when the settings tab is open
     }
 
+    if (m_Info.isVisible) {
+      m_Info.click(mouseX, mouseY);
+      return; // Prevent other clicks when the info tab is open
+    }
+
     if (m_Monetization.isVisible) {
       m_Monetization.click(mouseX, mouseY);
       return; // Prevent other clicks when the monetization tab is open
@@ -58,7 +63,7 @@ canvas.addEventListener(
     }
 
     if (m_Wheel.isVisible) {
-      return; // Prevent other clicks when the monetization tab is open
+      return; // Prevent other clicks when the wheel is open
     }
 
     Click(mouseX, mouseY);
@@ -85,6 +90,7 @@ function Click(clickX, clickY) {
   }
   CheckClickOnThisButton(clickX, clickY, m_BtnShop);
   CheckClickOnThisButton(clickX, clickY, m_BtnMonetization);
+  CheckClickOnThisButton(clickX, clickY, m_BtnInfo);
   CheckClickOnThisButton(clickX, clickY, m_BtnSettings);
 }
 
@@ -100,6 +106,9 @@ function CheckClickOnThisButton(clickX, clickY, thisButton) {
     }
     if (thisButton === m_BtnMonetization) {
       m_Monetization.show();
+    }
+    if (thisButton === m_BtnInfo) {
+      m_Info.show();
     }
     if (thisButton === m_BtnSettings) {
       m_Settings.show();
@@ -229,6 +238,7 @@ var update = function (dt) {
     !(
       m_Shop.isVisible ||
       m_Monetization.isVisible ||
+      m_Info.isVisible ||
       m_CoinMinigame.isActive ||
       m_Wheel.isVisible ||
       m_Settings.isVisible
@@ -250,6 +260,7 @@ var update = function (dt) {
   m_Power2.update(dt);
   m_BtnShop.update();
   m_BtnMonetization.update();
+  m_BtnInfo.update();
   m_BtnSettings.update();
   m_Coin.update();
 };
@@ -299,6 +310,7 @@ var render = function () {
 
   m_BtnShop.render();
   m_BtnMonetization.render();
+  m_BtnInfo.render();
   m_BtnSettings.render();
 
   m_CurrencyManager.render();
@@ -317,6 +329,7 @@ var render = function () {
 
   m_Shop.render();
   m_Monetization.render();
+  m_Info.render();
   m_Settings.render();
 
   m_CoinMinigame.render();
@@ -530,11 +543,11 @@ var m_BtnRarityUpdate = new Button(
   (canvas.height * 48) / 100,
   75,
   "Tier Up",
-  50,
+  300,
   "media/NoChillToken.png",
   true,
   true,
-  [1000, 10000, 50000, 100000, "Maxed"]
+  [2000, 10000, 50000, 100000, "Maxed"]
 );
 var m_CurrencyManager = new CurrencyManager(
   (canvas.width * 1) / 100,
@@ -568,6 +581,7 @@ var m_BtnShop = new Button(
   false
 );
 m_BtnShop.width = m_BtnShop.height;
+
 var m_BtnMonetization = new Button(
   (canvas.width * 6) / 100,
   (canvas.height * 1) / 100,
@@ -578,9 +592,21 @@ var m_BtnMonetization = new Button(
   false
 );
 m_BtnMonetization.width = m_BtnMonetization.height;
+
+var m_BtnInfo = new Button(
+  (canvas.width * 88) / 100,
+  (canvas.height * 85) / 100,
+  (20 * canvas.width) / 800,
+  "Info",
+  0,
+  "media/buttons/InfoButton.png",
+  false
+);
+m_BtnInfo.width = m_BtnInfo.height;
+
 var m_BtnSettings = new Button(
-  (canvas.width * 11) / 100,
-  (canvas.height * 1) / 100,
+  (canvas.width * 93) / 100,
+  (canvas.height * 85) / 100,
   (20 * canvas.width) / 800,
   "Settings",
   0,
@@ -619,8 +645,11 @@ function updateButtonPositions() {
   m_BtnMonetization.posX = (canvas.width * 6) / 100;
   m_BtnMonetization.posY = (canvas.height * 1) / 100;
 
-  m_BtnSettings.posX = (canvas.width * 11) / 100;
-  m_BtnSettings.posY = (canvas.height * 1) / 100;
+  m_BtnSettings.posX = (canvas.width * 93) / 100;
+  m_BtnSettings.posY = (canvas.height * 85) / 100;
+
+  m_BtnInfo.posX = (canvas.width * 88) / 100;
+  m_BtnInfo.posY = (canvas.height * 85) / 100;
 }
 
 // Call updateButtonPositions initially and on window resize

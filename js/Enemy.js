@@ -113,7 +113,9 @@ class Enemy {
   }
 
   GetDamage(damageScore) {
-    console.log(this.enemyName + " was hit with " + damageScore + " damage.");
+    console.log(
+      this.enemyName + " enemy was hit with " + damageScore + " damage."
+    );
     if (this.lifePoints > 0 && !this.beingDamaged) {
       this.lifePoints -= damageScore;
       this.beingDamaged = true;
@@ -157,7 +159,7 @@ class Enemy {
             );
 
             let coinType;
-            if (this.enemyName === "Teacher") {
+            if (this.enemyName === "Sergio" || this.enemyName === "Enrique") {
               coinType = "fGrade";
             } else if (this.enemyName === "Moni") {
               coinType = "moni";

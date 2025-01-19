@@ -27,7 +27,7 @@ class Settings {
     ctx.fillRect(buttonX, buttonY, buttonSize, buttonSize);
 
     ctx.strokeStyle = "black";
-    ctx.lineWidth = 4; 
+    ctx.lineWidth = 4;
     ctx.fillStyle = "white";
     ctx.font = `${canvas.height / 40}px DiloWorld`;
     ctx.textAlign = "center";
@@ -63,8 +63,8 @@ class Settings {
     );
     ctx.fill();
 
-    ctx.strokeStyle = "black"; 
-    ctx.lineWidth = 8; 
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 8;
     ctx.fillStyle = "white";
     ctx.font = `${canvas.height / 20}px DiloWorld`;
     ctx.strokeText(
@@ -154,9 +154,7 @@ class Settings {
     ctx.lineWidth = 4;
     ctx.fillStyle = "white";
     ctx.font = `${canvas.height / 60}px DiloWorld`;
-    ctx.strokeText(
-      "-", sliderX - smallButtonWidth, sliderY + sliderHeight / 2
-    );
+    ctx.strokeText("-", sliderX - smallButtonWidth, sliderY + sliderHeight / 2);
     ctx.strokeText(
       "+",
       sliderX + sliderWidth + smallButtonWidth,
@@ -293,6 +291,7 @@ function saveGame() {
       ? m_BtnAutoClickDmgUpgrade.price
       : null,
     m_BtnRarityUpdatePrice: m_BtnRarityUpdate.price,
+    m_BtnRarityUpdateIndex: m_BtnRarityUpdate.currentPriceIndex,
     m_Power1Price: m_Power1.price,
     m_Power2Price: m_Power2.price,
     shopItems: m_Shop.items.map((item) => ({
@@ -323,8 +322,20 @@ function loadGame() {
     m_BtnAutoClickUnlock.price = gameData.m_BtnAutoClickUnlockPrice;
     if (m_BtnAutoClickDmgUpgrade) {
       m_BtnAutoClickDmgUpgrade.price = gameData.m_BtnAutoClickDmgUpgradePrice;
+    } else if (isAutoClickActive) {
+      m_BtnAutoClickDmgUpgrade = new Button(
+        (canvas.width * 31) / 40,
+        (canvas.height * 36) / 100,
+        75,
+        "Auto Click Damage",
+        gameData.m_BtnAutoClickDmgUpgradePrice,
+        "media/NoChillToken.png",
+        true,
+        true
+      );
     }
     m_BtnRarityUpdate.price = gameData.m_BtnRarityUpdatePrice;
+    m_BtnRarityUpdate.currentPriceIndex = gameData.m_BtnRarityUpdateIndex;
     m_Power1.price = gameData.m_Power1Price;
     m_Power2.price = gameData.m_Power2Price;
     m_Shop.items.forEach((item) => {
