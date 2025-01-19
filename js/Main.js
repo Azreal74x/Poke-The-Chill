@@ -573,7 +573,7 @@ var m_Power2 = new Power(
 );
 var m_BtnShop = new Button(
   (canvas.width * 1) / 100,
-  (canvas.height * 1) / 100,
+  (canvas.height * 34) / 100,
   (20 * canvas.width) / 800,
   "Shop",
   0,
@@ -583,8 +583,8 @@ var m_BtnShop = new Button(
 m_BtnShop.width = m_BtnShop.height;
 
 var m_BtnMonetization = new Button(
-  (canvas.width * 6) / 100,
-  (canvas.height * 1) / 100,
+  (canvas.width * 1) / 100,
+  (canvas.height * 23) / 100,
   (20 * canvas.width) / 800,
   "Monetization",
   0,
@@ -594,8 +594,8 @@ var m_BtnMonetization = new Button(
 m_BtnMonetization.width = m_BtnMonetization.height;
 
 var m_BtnInfo = new Button(
-  (canvas.width * 88) / 100,
-  (canvas.height * 85) / 100,
+  (canvas.width * 1) / 100,
+  (canvas.height * 1) / 100,
   (20 * canvas.width) / 800,
   "Info",
   0,
@@ -605,8 +605,8 @@ var m_BtnInfo = new Button(
 m_BtnInfo.width = m_BtnInfo.height;
 
 var m_BtnSettings = new Button(
-  (canvas.width * 93) / 100,
-  (canvas.height * 85) / 100,
+  (canvas.width * 1) / 100,
+  (canvas.height * 12) / 100,
   (20 * canvas.width) / 800,
   "Settings",
   0,
@@ -640,23 +640,24 @@ function updateButtonPositions() {
   m_Power2.posY = (canvas.height * 72) / 100;
 
   m_BtnShop.posX = (canvas.width * 1) / 100;
-  m_BtnShop.posY = (canvas.height * 1) / 100;
+  m_BtnShop.posY = (canvas.height * 34) / 100;
 
-  m_BtnMonetization.posX = (canvas.width * 6) / 100;
-  m_BtnMonetization.posY = (canvas.height * 1) / 100;
+  m_BtnMonetization.posX = (canvas.width * 1) / 100;
+  m_BtnMonetization.posY = (canvas.height * 23) / 100;
 
-  m_BtnSettings.posX = (canvas.width * 93) / 100;
-  m_BtnSettings.posY = (canvas.height * 85) / 100;
+  m_BtnSettings.posX = (canvas.width * 1) / 100;
+  m_BtnSettings.posY = (canvas.height * 12) / 100;
 
-  m_BtnInfo.posX = (canvas.width * 88) / 100;
-  m_BtnInfo.posY = (canvas.height * 85) / 100;
+  m_BtnInfo.posX = (canvas.width * 1) / 100;
+  m_BtnInfo.posY = (canvas.height * 1) / 100;
 }
 
-// Call updateButtonPositions initially and on window resize
-updateButtonPositions();
-window.addEventListener("resize", () => {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  // Call updateButtonPositions initially and on window resize
   updateButtonPositions();
-});
-initGame();
+  window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    updateButtonPositions();
+  });
+
+  initGame();

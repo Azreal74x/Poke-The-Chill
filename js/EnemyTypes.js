@@ -19,8 +19,8 @@ class EnemyTypes extends Enemy {
 
   static rewards = [
     [100], // Approx multiplier 1
-    [150, 500, 0], // Approx multiplier 1.5
-    [400, 600, 500], // Approx multiplier 3 with buff 4.5
+    [150, 250, 0], // Approx multiplier 1.5
+    [400, 600, 250], // Approx multiplier 3 with buff 4.5
     [1000, 1500, 2000], // Approx multiplier 5 with buff 7.5
     [3000, 3500, 4000], // Approx multiplier 6 with buff 8
     [10000, 20000, 30000],
