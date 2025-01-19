@@ -22,13 +22,14 @@ class EnemySpawner {
   }
 
   update(dt) {
-    this.enemies = this.enemies.filter((enemy) => {
+    /*this.enemies = this.enemies.filter((enemy) => {
       if (enemy.enemyIsDead) {
         this.lastDefeatedEnemy = enemy;
         return false;
       }
       return true;
-    });
+    });*/
+
     this.enemies.forEach((enemy) => enemy.update(dt));
 
     if (this.lastDefeatedEnemy) {
