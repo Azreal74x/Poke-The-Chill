@@ -12,7 +12,7 @@ class Explosion {
     const promise = this.loadImage(spritesheetPath);
 
     this.promiseExplosionReady = Promise.all([promise]).then(() => {
-      this.scale = 5 * (canvas.width / 2000);
+      this.scale = 1;
       this.width = this.image.width / 2;
       this.height = this.image.height / 2;
 

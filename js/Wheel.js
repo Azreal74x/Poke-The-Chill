@@ -190,6 +190,7 @@ class Wheel {
       this.determineReward(parseInt(reward, 10)); // Call determineReward with the selected reward
       this.isVisible = false; // Hide after a short delay to display the reward
       this.lastReward = null; // Clear the last reward
+      this.isActive = false;
     }, 1000); // Adjust the delay as needed
   }
 
@@ -200,6 +201,7 @@ class Wheel {
   }
 
   DoRenderOnce() {
+    this.isActive = true;
     this.spin();
   }
 

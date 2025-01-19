@@ -72,8 +72,12 @@ function Click(clickX, clickY) {
     CheckClickOnThisButton(clickX, clickY, m_BtnAutoClickDmgUpgrade);
   }
   CheckClickOnThisButton(clickX, clickY, m_BtnRarityUpdate);
-  CheckClickOnThisButton(clickX, clickY, m_Power1);
-  CheckClickOnThisButton(clickX, clickY, m_Power2);
+  if (!m_Power2.isActive) {
+    CheckClickOnThisButton(clickX, clickY, m_Power1);
+  }
+  if (!m_Power1.isActive) {
+    CheckClickOnThisButton(clickX, clickY, m_Power2);
+  }
   CheckClickOnThisButton(clickX, clickY, m_BtnShop);
   CheckClickOnThisButton(clickX, clickY, m_BtnMonetization);
 }
@@ -140,7 +144,7 @@ function CheckClickOnEnemies(clickX, clickY) {
   ) {
     DoDamageToEnemies(damageScore);
 
-    m_EnemyClickSound.play();
+    
   }
 }
 
@@ -169,7 +173,7 @@ function PayoutReward() {
       m_CurrentEnemy.GetReward() * scoreMultiplier
     );
   }
-  if (Math.random() < 1 / 20) {
+  if (Math.random() < 1 / 20 && !m_Wheel.isActive && !m_Power1.isActive && !m_Power2.isActive) {
     m_CoinMinigame.start();
   }
 }
@@ -177,16 +181,17 @@ function PayoutReward() {
 function DoDamageToEnemies(damageScore) {
   if (!m_CurrentEnemy.enemyIsDead) {
     m_CurrentEnemy.GetDamage(damageScore);
+
+    m_EnemyClickSound.play();
+
+    //optional if we want to have him grunt when we click him as well (so not only autoclicker)
+    m_DamageReceivedSound.currentTime = 0;
+    m_DamageReceivedSound.play();
+
     if (m_CurrentEnemy.lifePoints <= 0) {
       PayoutReward();
 
-      // if (m_WheelDoneSpinning) {
-      // We spawn a new enemy
       setTimeout(SpawnNewEnemies, 2000);
-      //}
-      //else {
-      //setTimeout(SpawnNewEnemies, 8000);
-      // }
     }
   }
 }
@@ -197,11 +202,14 @@ function SpawnNewEnemies() {
   m_CurrentEnemy = enemySpawner.spawnEnemy();
 }
 
-var reset = function () {};
+var reset = function () { };
 
-var start = function () {};
+var start = function () { };
 
 var update = function (dt) {
+
+  enemySpawner.update(dt);
+
   if (
     !(
       m_Shop.isVisible ||
@@ -320,7 +328,7 @@ async function initGame() {
 var then = 0;
 
 var m_TierLevel = 0;
-var m_maxTierLevel = 1; // 5 yap sakın unutma!!! enemy sonrası
+var m_maxTierLevel = 5; // 5 yap sakın unutma!!! enemy sonrası
 
 var damageScore = 1;
 var damageScoreMultiplier = 0.1;
@@ -398,7 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
   m_BoostMusic = document.getElementById("BoostMusic");
 
   if (m_BackgroundMusic) {
-    m_BackgroundMusic.loop = true; // Ensure the music loops
+    m_BackgroundMusic.loop = true; 
 
     document.body.addEventListener("click", function playMusicOnce() {
       if (m_BackgroundMusic.paused) {

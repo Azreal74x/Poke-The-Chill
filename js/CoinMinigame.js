@@ -29,7 +29,7 @@ class CoinMinigame {
   }
 
   start() {
-    console.log("CoinMinigame started");
+    //console.log("CoinMinigame started");
     m_BackgroundMusic.pause();
     m_BoostMusic.play();
     this.isActive = true;
