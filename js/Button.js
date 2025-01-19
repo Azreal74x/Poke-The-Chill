@@ -18,15 +18,29 @@ class Button {
     this.height = 1.25 * scale * (canvas.width / 2000);
 
     this.price = price;
-    this.priceMultiplier = 1.1; // Multiplier of 10%
+    this.priceMultiplier = 1.1; // 10% multiplier
     this.canBeBought = false;
     this.text = text;
-    this.image = null;
+    this.image = null;       // This can be your “coin” or “icon” image
     this.showText = showText;
     this.showValue = showValue;
     this.currentPriceIndex = 0;
     this.prices = prices;
     this.isDisabled = false;
+
+    // =============== LOAD BACKGROUND IMAGES ===============
+    this.bgEnabledImage = new Image();
+    this.bgEnabledImage.src = "media/Button.png"; // or any "enabled" background
+
+    this.bgDisabledImage = new Image();
+    this.bgDisabledImage.src = "media/ButtonDisabled.png"; // or "disabled" background
+
+    // If you want a third “hover” or “canBuy” image,
+    // create and load it here, e.g.:
+    // this.bgCanBuyImage = new Image();
+    // this.bgCanBuyImage.src = "media/ButtonCanBuy.png";
+
+    // =============== LOAD ICON IMAGE (e.g. coin) ===============
     if (imageSrc) {
       this.loadImage(imageSrc);
     }
@@ -51,11 +65,15 @@ class Button {
       m_ButtonClickSound.currentTime = 0;
       m_ButtonClickSound.play();
       this.canBeBought = false;
+
       m_CurrencyManager.RemoveCurrencyAmount(1, this.price);
+
       if (this.prices !== null) {
+        // If you have a fixed array of prices
         this.price = this.prices[this.currentPriceIndex];
         this.currentPriceIndex++;
       } else {
+        // Otherwise multiply by the multiplier
         this.price = parseInt(this.price * this.priceMultiplier);
       }
       return true;
@@ -69,100 +87,119 @@ class Button {
   }
 
   render() {
+    // ======================= CHOOSE BACKGROUND IMAGE =======================
+    let bgImage;
+
+    // First check if it's disabled
     if (this.isDisabled) {
-      ctx.fillStyle = "#2d2d2d";
-    } else if (this.canBeBought) {
-      ctx.fillStyle = "Yellow";
-    } else if (this.canBeBought !== null) {
-      ctx.fillStyle = "Gray";
+      bgImage = this.bgDisabledImage;
+    }
+    else {
+      // Not disabled, so check if it can be bought
+      if (this.canBeBought) {
+        // Optionally use a separate “canBuy” image if you have it:
+        // bgImage = this.bgCanBuyImage;
+        // or just use the “enabled” background
+        bgImage = this.bgEnabledImage;
+      } else {
+        // Not disabled but also can’t be bought
+        bgImage = this.bgDisabledImage;
+      }
     }
 
-    // Draw rounded rectangle
-    const radius = 10;
-    ctx.beginPath();
-    ctx.moveTo(this.posX + radius, this.posY);
-    ctx.lineTo(this.posX + this.width - radius, this.posY);
-    ctx.quadraticCurveTo(
-      this.posX + this.width,
-      this.posY,
-      this.posX + this.width,
-      this.posY + radius
-    );
-    ctx.lineTo(this.posX + this.width, this.posY + this.height - radius);
-    ctx.quadraticCurveTo(
-      this.posX + this.width,
-      this.posY + this.height,
-      this.posX + this.width - radius,
-      this.posY + this.height
-    );
-    ctx.lineTo(this.posX + radius, this.posY + this.height);
-    ctx.quadraticCurveTo(
-      this.posX,
-      this.posY + this.height,
-      this.posX,
-      this.posY + this.height - radius
-    );
-    ctx.lineTo(this.posX, this.posY + radius);
-    ctx.quadraticCurveTo(this.posX, this.posY, this.posX + radius, this.posY);
-    ctx.closePath();
-    ctx.fill();
+    // =============== DRAW THE BACKGROUND ===============
+    // Make sure the image is loaded before drawing (bgImage.complete).
+    if (bgImage && bgImage.complete) {
+      ctx.drawImage(
+        bgImage,
+        this.posX,
+        this.posY,
+        this.width,
+        this.height + 15
+      );
+    }
 
+    // =============== DRAW ICON OR EXTRA IMAGE (IF NEEDED) ===============
+    // If !showText, you said you draw the “icon” big in the button, etc.
+    // Keep that logic the same; just do it after drawing the background.
     if (!this.showText && this.image) {
       const imgX = this.posX + (this.width - this.image.width) / 2;
       const imgY = this.posY + (this.height - this.image.height) / 2;
       ctx.drawImage(this.image, imgX, imgY);
     }
 
+    // =============== DRAW THE TEXT ===============
     if (this.showText) {
-      ctx.fillStyle = "black";
+      ctx.fillStyle = "white";
       ctx.font = "2.5rem DiloWorld";
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 5;
       ctx.textAlign = "left";
 
-      const textX = this.posX + canvas.width / 100;
-      const textY = this.posY + canvas.width / 60;
+      // Title text
+      const textX = this.posX + canvas.width / 100 + 15;
+      const textY = this.posY + canvas.width / 43;
+      ctx.strokeText(this.text, textX, textY);
       ctx.fillText(this.text, textX, textY);
+
+      // If you want a coin image right next to the price
+      if (this.image) {
+        const textWidth = ctx.measureText(this.price + " ").width;
+        ctx.drawImage(
+          this.image,
+          this.posX + canvas.width / 70 + textWidth,
+          this.posY + canvas.width / 37,
+          canvas.width / 70,
+          canvas.width / 70
+        );
+      }
+
+      // Price text
+      if (this.price !== 0) {
+        ctx.strokeText(
+          this.price + " ",
+          this.posX + canvas.width / 60,
+          this.posY + canvas.width / 25,
+          this.width
+        );
+        ctx.fillText(
+          this.price + " ",
+          this.posX + canvas.width / 60,
+          this.posY + canvas.width / 25,
+          this.width
+        );
+      }
     }
 
-    if (this.image && this.showText) {
-      const textWidth = ctx.measureText(this.price + " ").width;
-      ctx.drawImage(
-        this.image,
-        this.posX + canvas.width / 70 + textWidth,
-        this.posY + canvas.width / 44,
-        canvas.width / 100,
-        canvas.width / 100
-      );
-    }
-
-    if (this.price !== 0) {
-      ctx.fillText(
-        this.price + " ",
-        this.posX + canvas.width / 70,
-        this.posY + canvas.width / 30,
-        this.width
-      );
-    }
-
+    // =============== DRAW THE “VALUE” (IF showValue === true) ===============
     if (this.showValue) {
-      ctx.fillStyle = "black";
-      ctx.font = "1.25rem DiloWorld";
+      ctx.fillStyle = "white";
+      ctx.font = "2.25rem DiloWorld";
       ctx.textAlign = "right";
-      let currentValue;
-      if (this.text === "Click Multiplier") {
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 5;
+
+      let currentValue = "";
+      if (this.text === "Click Damage") {
         currentValue = damageScore;
-      } else if (this.text === "No Chill Multiplier") {
+      } else if (this.text === "No Chill Reward") {
         currentValue = scoreMultiplier;
       } else if (this.text === "Auto Click Damage") {
         currentValue = autoClickDamage;
       } else if (this.text === "Tier Up") {
         currentValue = m_TierLevel;
-      } else {
-        currentValue = "";
       }
+
+      // “x” + the current value
+      ctx.strokeText(
+        "x" + currentValue,
+        this.posX + this.width - canvas.width / 200 - 28,
+        this.posY + this.height / 2 + canvas.width / 300 + 10
+      );
       ctx.fillText(
         "x" + currentValue,
-        this.posX + this.width - canvas.width / 200,
-        this.posY + this.height / 2 + canvas.width / 300
+        this.posX + this.width - canvas.width / 200 - 28,
+        this.posY + this.height / 2 + canvas.width / 300 + 10
       );
     }
   }

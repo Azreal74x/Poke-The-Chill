@@ -12,7 +12,7 @@ class CoinMinigame {
     this.holdDuration = duration * 1000;
 
     // Load the image
-    this.loadImage("media/minigame.png").then(() => {
+    this.loadImage("media/NoChillToken.png").then(() => {
       this.imageReady = true;
     });
   }
@@ -46,7 +46,7 @@ class CoinMinigame {
 
     const widthFraction = 1 / 2;
     const heightFraction = 8 / 10;
-    const sideWidth = canvas.width * widthFraction;
+    const sideWidth = canvas.width * widthFraction - 150;
     const sideHeight = canvas.height * heightFraction;
     const minX = (canvas.width - sideWidth) / 2;
     const minY = (canvas.height - sideHeight) / 10;
@@ -93,12 +93,15 @@ class CoinMinigame {
   click(x, y) {
     if (!this.isActive) return;
 
+    const scaledWidth = (this.image.width * 1.5 * canvas.width) / 2000;
+    const scaledHeight = (this.image.height * 1.5 * canvas.width) / 2000;
+
     this.coins = this.coins.filter((coin) => {
       if (
         x > coin.posX &&
-        x < coin.posX + this.image.width &&
+        x < coin.posX + scaledWidth &&
         y > coin.posY &&
-        y < coin.posY + this.image.height
+        y < coin.posY + scaledHeight
       ) {
         this.coinsClicked++;
         m_SingleCoinSound.currentTime = 0; //remove if u dont want the sound to be cut off
