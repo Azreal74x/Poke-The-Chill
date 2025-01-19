@@ -20,7 +20,8 @@ class Enemy {
     // format of src = images/'enemyName' + "Enemy" + 'type'.png;
 
     var idleSpritesheetPath = "media/spriteSheets/" + enemyName + "Enemy.png";
-    var damagedSpritesheetPath = "media/spriteSheets/" + enemyName + "EnemyDamaged.png";
+    var damagedSpritesheetPath =
+      "media/spriteSheets/" + enemyName + "EnemyDamaged.png";
 
     const promise1 = this.loadImage(idleSpritesheetPath, 0);
     const promise2 = this.loadImage(damagedSpritesheetPath, 1);
@@ -82,20 +83,23 @@ class Enemy {
     });
   }
 
-  reset() { }
+  reset() {}
 
-  start() { }
+  start() {}
 
   update(dt) {
     if (!this.enemyReady) {
       return; // Skip update if the enemy is not ready
     }
     //console.log("we are updating");
-    if (this.currentSpriteSheet == this.idleSpriteSheet && m_BoostMusic && !m_BoostMusic.paused) {
+    if (
+      this.currentSpriteSheet == this.idleSpriteSheet &&
+      m_BoostMusic &&
+      !m_BoostMusic.paused
+    ) {
       //console.log("AYO TURN IT UP");
       this.idleSpriteSheet.frequency = 1;
-    }
-    else {
+    } else {
       this.idleSpriteSheet.frequency = 10;
     }
   }
@@ -172,7 +176,6 @@ class Enemy {
                 this.posY + this.currentSpriteSheet.height / 2
               );
             }
-            console.log("should render coin now");
           }
         }
       } else {
@@ -185,7 +188,7 @@ class Enemy {
         // Start point in x
         (this.currentSpriteSheet.img.width /
           this.currentSpriteSheet.totalFrames) *
-        this.currentSpriteSheet.curerentFrame,
+          this.currentSpriteSheet.curerentFrame,
         // Start point in y
         0,
         // Final X coordinates relative to the origin

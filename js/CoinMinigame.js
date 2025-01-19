@@ -29,7 +29,7 @@ class CoinMinigame {
   }
 
   start() {
-    //console.log("CoinMinigame started");
+    console.log("CoinMinigame started");
     m_BackgroundMusic.pause();
     m_BoostMusic.play();
     this.isActive = true;
@@ -106,7 +106,6 @@ class CoinMinigame {
         this.coinsClicked++;
         m_SingleCoinSound.currentTime = 0; //remove if u dont want the sound to be cut off
         m_SingleCoinSound.play();
-        //console.log("Coin clicked at:", coin.posX, coin.posY);
         return false;
       }
       return true;
@@ -114,17 +113,25 @@ class CoinMinigame {
   }
 
   end() {
-    console.log("CoinMinigame ended");
     this.isActive = false;
     m_BackgroundMusic.play();
     m_CoinMinigameRewardSound.play();
     const latestEnemyReward = m_CurrentEnemy.GetReward();
-    const reward =
-      this.coinsClicked * (latestEnemyReward / 4) * scoreMultiplier;
+    let reward = 0;
+    if (m_CurrentEnemy.enemyName === "Show") {
+      reward = this.coinsClicked * scoreMultiplier * 100;
+    } else {
+      reward = this.coinsClicked * (latestEnemyReward / 4) * scoreMultiplier;
+    }
     m_CurrencyManager.AddCurrencyAmount(1, reward);
-    console.log(
-      `Minigame ended. Coins clicked: ${this.coinsClicked}, Reward: ${reward} no chill tokens.`
-    );
+
+    if (this.coinsClicked === 10) {
+      `Coin minigame ended. Coins clicked: ALL OF THEM!, Reward: ${reward} no chill tokens.`;
+    } else {
+      console.log(
+        `Coin minigame ended. Coins clicked: ${this.coinsClicked}, Reward: ${reward} no chill tokens.`
+      );
+    }
 
     this.coins = [];
     this.coinsClicked = 0;

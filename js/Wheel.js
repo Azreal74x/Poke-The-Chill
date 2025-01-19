@@ -176,7 +176,6 @@ class Wheel {
     const index = Math.floor((360 - (degrees % 360)) / arcd);
     const reward = this.rewards[index];
     this.lastReward = reward; // Store the reward
-    console.log("Landed on reward:", reward);
 
     // Redraw the wheel to display the reward in the center
     this.drawRouletteWheel();
@@ -219,6 +218,6 @@ class Wheel {
   determineReward(reward) {
     // Add currency based on reward
     m_CurrencyManager.AddCurrencyAmount(1, reward);
-    console.log("Reward determined:", reward);
+    console.log("Reward added:", reward);
   }
 }

@@ -385,7 +385,7 @@ const m_Wheel = new Wheel(canvas.width / 2, canvas.height / 2);
 var m_TimeBetweenAutoClicks = 5;
 var m_CurrentTimeBetweenAutoClicks = 0;
 
-var m_CoinMinigame = new CoinMinigame(10); // 30 seconds minigame
+var m_CoinMinigame = new CoinMinigame(10); // 10 seconds minigame
 
 var m_WheelDoneSpinning = true;
 
