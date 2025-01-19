@@ -30,10 +30,10 @@ class Button {
 
     // =============== LOAD BACKGROUND IMAGES ===============
     this.bgEnabledImage = new Image();
-    this.bgEnabledImage.src = "media/Button.png"; // or any "enabled" background
+    this.bgEnabledImage.src = "media/buttons/Button.png"; // or any "enabled" background
 
     this.bgDisabledImage = new Image();
-    this.bgDisabledImage.src = "media/ButtonDisabled.png"; // or "disabled" background
+    this.bgDisabledImage.src = "media/buttons/ButtonDisabled.png"; // or "disabled" background
 
     // If you want a third “hover” or “canBuy” image,
     // create and load it here, e.g.:

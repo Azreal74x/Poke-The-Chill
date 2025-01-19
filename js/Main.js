@@ -305,7 +305,7 @@ var render = function () {
 
   ctx.fillStyle = "white";
   ctx.strokeStyle = "black";
-  ctx.lineWidth = 15;
+  ctx.lineWidth = 12;
   ctx.font = "5rem DiloWorld";
   ctx.textAlign = "right";
   ctx.strokeText(
@@ -564,7 +564,7 @@ var m_BtnShop = new Button(
   (20 * canvas.width) / 800,
   "Shop",
   0,
-  "media/SkinShop.png",
+  "media/buttons/SkinShop.png",
   false
 );
 m_BtnShop.width = m_BtnShop.height;
@@ -574,7 +574,7 @@ var m_BtnMonetization = new Button(
   (20 * canvas.width) / 800,
   "Monetization",
   0,
-  "media/CoinShop.png",
+  "media/buttons/CoinShop.png",
   false
 );
 m_BtnMonetization.width = m_BtnMonetization.height;
@@ -584,7 +584,7 @@ var m_BtnSettings = new Button(
   (20 * canvas.width) / 800,
   "Settings",
   0,
-  "media/Settings.png",
+  "media/buttons/Settings.png",
   false
 );
 m_BtnSettings.width = m_BtnSettings.height;
